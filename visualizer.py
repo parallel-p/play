@@ -87,6 +87,7 @@ class VideoVisualizer:
         file_list = []
         self.ext = None
         for ind, jstate in enumerate(jstates):
+            print('Generated %d/%d images', ind, len(jstates))
             image = self.painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
