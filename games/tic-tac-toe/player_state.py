@@ -1,7 +1,14 @@
+def list_to_str(lst):
+    return ' '.join(map(str, lst))
+
+
 def serialize(ps, stream):
-    stream.write('\n'.join([' '.join([j \
-                            for j in ps.field[i * 3:(i + 1) * 3]]) \
-                            for i in range(3)]).encode())
+    representation = '\n'.join(
+        [list_to_str(ps.field[i]) for i in range(3)] +
+        [list_to_str(ps.field[i]) for i in range(3, 6)] +
+        [list_to_str(ps.field[i]) for i in range(6, 9)]
+    )
+    stream.write(representation.encode())
     stream.flush()
 
 
