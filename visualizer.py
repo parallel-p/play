@@ -87,7 +87,7 @@ class VideoVisualizer:
         file_list = []
         self.ext = None
         for ind, jstate in enumerate(jstates):
-            print('Generated {}/{} images'.format(ind+1, len(jstates)))
+            print('Generating {}/{} images'.format(ind, len(jstates)))
             image = self.painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
@@ -99,6 +99,7 @@ class VideoVisualizer:
                 im = Image.open(file_list[-1][1])
                 self.size = im.size
                 self.mode = im.mode
+        print('All images were generated')
         return file_list
 
     def generate_tournament_status(self, contr):
@@ -183,7 +184,7 @@ class VideoVisualizer:
             with open(os.devnull, 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
                                  self.ext, self.size[0], self.size[1], output_name)
-                                 .split(), stdout=fnull, stderr=fnull,
+                                 .split(), stderr=fnull,
                                  stdin=subprocess.PIPE).communicate(
                                  'y\n'.encode() * 10)
             self._change_path(0)
