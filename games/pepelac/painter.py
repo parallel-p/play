@@ -187,7 +187,7 @@ class Painter:
         '''
         del draw
 
-        image.save("test-1.png", "PNG")
+        #image.save("test-1.png", "PNG")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
