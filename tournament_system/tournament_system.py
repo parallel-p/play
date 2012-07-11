@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from game_supporting_classes import GameSignature
+from supporting_classes import GameSignature
 
 
 class Series:

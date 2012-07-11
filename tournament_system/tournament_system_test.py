@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch
-from game_supporting_classes import GameSignature
+from supporting_classes import GameSignature
 from tournament_system import Game, Series, Tournament, Round
 
 
