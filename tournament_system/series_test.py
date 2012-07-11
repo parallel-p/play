@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch
 from game_signature import GameSignature
-from tournament_system import Game, Series, Tournament, Round
+from series import Series
 
 
 class SeriesTest(unittest.TestCase):

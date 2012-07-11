@@ -1,5 +1,6 @@
 from game_signature import GameSignature
 from exceptions import NoResultsException
+from game import Game
 
 
 class Series:
