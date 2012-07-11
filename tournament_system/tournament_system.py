@@ -1,4 +1,4 @@
-from supporting_classes import GameSignature
+from game_signature import GameSignature
 from exceptions import NoResultsException
 
 
