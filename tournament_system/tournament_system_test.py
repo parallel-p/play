@@ -28,8 +28,8 @@ class SeriesTest(unittest.TestCase):
         signature = GameSignature(1, 1, 1, 1)
         series = Series([1], signature)
         self.assertRaises(Exception, series.get_results)
-        series.results = '123'
-        self.assertEqual('123', series.results)
+        series._results = '123'
+        self.assertEqual('123', series.get_results())
 
 
 if __name__ == '__main__':
