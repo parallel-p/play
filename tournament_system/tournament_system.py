@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from supporting_classes import GameSignature
 from exceptions import NoResultsException
 
@@ -28,10 +27,10 @@ class Series:
         for game_id, initial_jurystate in enumerate(
                 self._initial_jurystates_list):
             self._signature.game_id = game_id
-            _game = Game(initial_jurystate, self._signature, self._config,
+            game = Game(initial_jurystate, self._signature, self._config,
                               self._players_list)
-            _game.run_engine()
-            points = _game.get_results()
+            game.run_engine()
+            points = game.get_results()
             results[self._signature] = points
         self._results = results
 
