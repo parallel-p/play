@@ -8,13 +8,8 @@ class GameSignature:
         self.tournament_id = tournament_id
 
     def __lt__(self, signature):
-        if self.tournament_id == signature.tournament_id:
-            if self.series_id == signature.series_id:
-                if self.game_id == signature.game_id:
-                    return False
-                else:
-                    return self.game_id < signature.game_id
-            else:
-                return self.series_id < signature.series_id
-        else:
-            return self.tournament_id < signature.tournament_id
+        self_tuple = (self.tournament_id, self.round_id,
+                      self.series_id, self.game_id)
+        signature_tuple = (signature.tournament_id, signature.round_id,
+                           signature.series_id, signature.game_id)
+        return self_tuple < signature_tuple
