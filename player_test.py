@@ -4,7 +4,7 @@ from player import Player
 
 class PlayerTest(unittest.TestCase):
 
-    def test_player:
+    def test_player(self):
         player = Player('python3 bot143.py', 'VasyaPupkin', 'SuperMegaKiller')
         assert_equal(player.author_name, 'VasyaPupkin')
         assert_equal(player.bot_name, 'SuperMegaKiller')
