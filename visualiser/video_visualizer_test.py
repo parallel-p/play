@@ -6,6 +6,7 @@ import os
 import subprocess
 import pickle
 import shutil
+from ..game_controller import GameController
 
 
 class VideoVisualizerTest(unittest.TestCase):

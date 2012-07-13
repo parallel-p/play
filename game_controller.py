@@ -73,3 +73,6 @@ class GameController:
         for bot in self.bots:
             bot.kill_process()
         logger.info('all bots killed')
+
+    def __lt__(self, other):
+        return self.signature < other.signature

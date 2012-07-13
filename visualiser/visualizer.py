@@ -49,6 +49,7 @@ class VideoVisualizer:
             # Get size from tuple (type, width, height)
             self.size = [0, 0]
             ext, self.size[0], self.size[1] = getimageinfo.getImageInfo(image)
+            ext = ext.split('/')[1]
             self.file_list.append(os.path.join(self.working_dir, ('tempimage' +
                                   str(ind).zfill(zero_count) + '.' + ext)))
             with open(self.file_list[-1], "wb") as f:
@@ -84,6 +85,7 @@ class VideoVisualizer:
 
         controllers = list(sorted(controllers))
 
+        output_name = os.path.join(self.working_dir)
         name, extension = output_name.split(sep='.')
 
         with open(name + ".mpg", "wb") as result:
