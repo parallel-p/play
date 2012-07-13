@@ -31,11 +31,12 @@ class GameController:
         self.is_finished = 0
         self.bots = {}
 
-    def get_move(self, player, p_state, serialaizer, deserializer):
+    def get_move(self, player, player_state, serialaizer, deserializer):
         '''
         Gets move to Bot instance
         '''
-        new_move = bot[player].get_move(p_state, serialaizer, deserializer)
+        new_move = self.bots[player].get_move(player_state,
+                                              serialaizer, deserializer)
         logger.info('bot "%s" made a move', player.bot_name)
         return new_move
 
