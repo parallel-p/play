@@ -160,19 +160,20 @@ class Bot:
         except psutil.NoSuchProcess:
             return None
 
-    def get_move(self, player_state, move):
+    def get_move(self, player_state, serialize, deserialize):
         '''
         Serialize player_state and transfer it to bot,
         then deserialize output received from bot to `move`.
         '''
         if not self._is_running:
             raise ProcessNotRunningException
-        self._write(player_state)
-        self._read(move)
+        self._write(player_state, serialize)
+        move = self._read(deserialize)
+        return move
 
-    def _read(self, move):
+    def _read(self, deserialize):
         '''
-        Invokes move.deserialize with bot's `stdout`.
+        Deserialize move with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
         '''
 
@@ -184,14 +185,14 @@ class Bot:
         )
         time_cpu_limiter_thread.start()
         time_real_limiter_thread.start()
-        move.deserialize(self._process.stdout)
+        return deserialize(self._process.stdout)
 
-    def _write(self, player_state):
+    def _write(self, player_state, serialize):
         '''
-        Invokes player_state.serialize with bot's `stdin`.
+        Serialize player_state with bot's `stdin`.
         `stdin` is a stream opened to write per *byte*.
         '''
-        player_state.serialize(self._process.stdin)
+        player_state = serialize(self._process.stdin)
 
     def kill_process(self):
         '''
