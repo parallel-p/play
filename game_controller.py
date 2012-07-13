@@ -31,7 +31,7 @@ class GameController:
         self.is_finished = 0
         self.bots = {}
 
-    def get_move(self, player, p_state, move):
+    def get_move(self, player, p_state, move, serialaizer, deserializer):
         '''
         Gets move to Bot instance
         '''
