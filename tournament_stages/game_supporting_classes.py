@@ -6,3 +6,9 @@ class GameSignature:
         self.series_id = series_id
         self.game_id = game_id
         self.tournament_id = tournament_id
+
+
+class ConfigData:
+
+    def __init__(self):
+        pass
