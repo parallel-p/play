@@ -1,4 +1,5 @@
 import game_controller
+from log import logger
 
 
 class GameSimulator:
