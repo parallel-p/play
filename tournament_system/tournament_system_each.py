@@ -58,7 +58,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             table[(second_player, first_player)] =\
                   (second_score, first_score)
         #Width of the table with all separators
-        table_width = (len(self._players_list) + 1) * (width + 1)
+        table_width = (len(self._players_list) + 2) * (width + 1)
         #Print separator line
         yield self._print_separator(table_width)
         #Header
@@ -66,6 +66,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         for player in self._players_list:
             current_string += self._cut_string(str(player), width)
             current_string += '|'
+        current_string += ' ' * width + '|'
         yield current_string
         #Print separator line
         yield self._print_separator(table_width)
@@ -73,14 +74,19 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         for first_player in self._players_list:
             current_string = self._cut_string(str(first_player), width)
             current_string += '|'
+            current_sum = 0
             for second_player in self._players_list:
                 if first_player == second_player:
                     current_string += (' ' * width)
                 else:
-                    score = self._convert_score(table[(first_player,
-                                                       second_player)])
+                    score = table[(first_player, second_player)]
+                    current_sum += score[0]
+                    score = self._convert_score(score)
                     current_string += self._cut_string(score, width)
                 current_string += '|'
+            #Score cell
+            current_string += self._cut_string(str(current_sum), width)
+            current_string += '|'
             yield current_string
             #Print separator line
             yield self._print_separator(table_width)
