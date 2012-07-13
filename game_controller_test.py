@@ -10,7 +10,7 @@ class GameControllerTest(unittest.TestCase):
         self.num_players = 5
         self.config = 'cfg'
         player = Mock()
-        player.path_to_executable = 'bash'
+        player.command_line = 'bash'
         self.players = [copy.deepcopy(player) for i in range(self.num_players)]
         self.signature = ''
         self.jury_state = ''
