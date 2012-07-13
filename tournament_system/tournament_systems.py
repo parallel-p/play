@@ -1,4 +1,4 @@
 tournament_systems = {
-    "playoff": PlayoffTourtament,
+    "playoff": TournamentSystemOlympic,
     "round-robin": RoundRobinTourtament
 }
