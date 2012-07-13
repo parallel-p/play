@@ -56,7 +56,7 @@ class GameController:
 
     def create_bots(self):
         '''
-        Creates ALL bots
+        Creates bots for each player
         '''
         for player in self._players:
             self.bots[player] = bot.Bot(player.path_to_executable, self.config)

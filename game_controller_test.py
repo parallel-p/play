@@ -1,27 +1,28 @@
 import unittest
+import copy
+import bot
 from unittest.mock import Mock
 import game_controller
-import copy
 
 
 class GameControllerTest(unittest.TestCase):
     def setUp(self):
         self.num_players = 5
-        self.config = ''
+        self.config = 'cfg'
         player = Mock()
-        player.path_to_executable.return_value = ''
+        player.path_to_executable = 'bash'
         self.players = [copy.deepcopy(player) for i in range(self.num_players)]
         self.signature = ''
         self.jury_state = ''
         self.game = game_controller.GameController(self.config, self.players,
             self.signature, self.jury_state)
 
-    def tearDown(self):
-        pass
-
     def test_create_bots(self):
+        bot.Bot = Mock()
+        bot.Bot.return_value = True
         self.game.create_bots()
-        self.assertEqual(len(self.game.bots), self.num_players)
+        self.assertEqual(self.game.bots, dict(zip(self.players, [True] * self.num_players)))
+        self.assertEqual(bot.Bot.call_args_list, [(("bash", "cfg"),)] * self.num_players)
 
     def test_kill_bots(self):
         self.game.kill_bots()
