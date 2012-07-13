@@ -1,3 +1,5 @@
+import bot
+
 class GameController:
     '''
 
@@ -25,12 +27,13 @@ class GameController:
         self.signature = signature
         self.jury_states = [jury_state]
         self.is_finished = 0
+        self.bots = {}
 
-    def get_move(self, player, p_state, deserializer):
+    def get_move(self, player, p_state, move):
         '''
         Gets move to Bot instance
         '''
-        player.get_move(p_state, move, deserializer)
+        player.get_move(p_state, move)
 
     def report_state(self, jury_state):
         '''
@@ -55,12 +58,11 @@ class GameController:
         Creates ALL bots
         '''
         for player in self._players:
-            player.create_process()
+            self.bots[player] = (player.create_bot(config))
 
     def kill_bots(self):
         '''
         Killes ALL running bots
         '''
-        for player in self._players:
-            if player._is_running == True:
-                player.kill_process()
+        for bot in self.bots:
+            bot.kill_process()
