@@ -3,9 +3,8 @@ from jury_state import JuryState
 
 
 class Generator:
-    def __init__(self, max_stones_count, games_count):
-        self._max_stones_count = max_stones_count
-        self._games_count = games_count
+    _max_stones_count = 10
+    _games_count = 2
 
     def generate_start_positions(self, game_signature, players_count):
         '''Generates a list of start positions (Jury states)'''

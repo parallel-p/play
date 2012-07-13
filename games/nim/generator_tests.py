@@ -10,12 +10,7 @@ class GeneratorTests(unittest.TestCase):
         tests_count = 1000
         for test in range(tests_count):
             players = []
-            max_stones_count = random.randint(1, 10)
-            games_count = 2
-            generator_state = Generator(
-                max_stones_count,
-                games_count
-            )
+            generator_state = Generator()
 
             players_count = random.randint(1, 10)
             game_signature = None
@@ -24,11 +19,13 @@ class GeneratorTests(unittest.TestCase):
                 game_signature,
                 players_count
             )
-            self.assertEqual(len(list(positions)), games_count)
+            self.assertEqual(len(list(positions)),
+                             generator_state._games_count)
             for position in positions:
                 self.assertEqual(len(position.heaps_sizes), players_count)
                 for heap_size in position.heaps_sizes:
-                    self.assertTrue(1 <= heap_size <= max_stones_sizes)
+                    self.assertTrue(1 <= heap_size <=
+                                    generator_state._max_stones_sizes)
 
 if __name__ == '__main__':
     unittest.main()
