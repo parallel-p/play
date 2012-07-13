@@ -1,4 +1,5 @@
 import bot
+from .log import logger
 
 
 class GameController:
@@ -35,6 +36,7 @@ class GameController:
         Gets move to Bot instance
         '''
         player.get_move(p_state, move)
+        logger.info('bot "%s" made a move', player.bot_name)
 
     def report_state(self, jury_state):
         '''
@@ -47,6 +49,7 @@ class GameController:
         Finishes game
         '''
         self.kill_bots()
+        logger.info('game finished')
 
     def get_players(self):
         '''
@@ -60,6 +63,8 @@ class GameController:
         '''
         for player in self._players:
             self.bots[player] = bot.Bot(player.path_to_executable, self.config)
+            logger.debug('created bot "%s"', player.bot_name)
+        logger.info('all bots created')
 
     def kill_bots(self):
         '''
@@ -67,3 +72,4 @@ class GameController:
         '''
         for bot in self.bots:
             bot.kill_process()
+        logger.info('all bots killed')

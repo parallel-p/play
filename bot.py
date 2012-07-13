@@ -2,6 +2,7 @@ import psutil
 import threading
 import time
 from subprocess import PIPE
+from .log import logger
 
 
 '''
@@ -54,7 +55,7 @@ class Bot:
         Constructor for class Bot.
         player_command is a string which is used to invoke bot program.
         '''
-        self._player_command = player_command.split()
+        self._player_command = player_command
         self._process = None
         self._config = config
 
@@ -62,8 +63,9 @@ class Bot:
         '''
         Starts bot's process.
         '''
+        logger.info('executing "%s"', self._player_command)
         self._process = psutil.Popen(
-            self._player_command,
+            self._player_command.split(),
             stdout=PIPE,
             stdin=PIPE
         )
@@ -73,6 +75,7 @@ class Bot:
 
     def _check_memory_limits(self):
         '''
+
         This function is running in a separate thread
         and check process exceed memory limit every `CHECK_TIME_SECONDS`
         seconds.
@@ -92,6 +95,7 @@ class Bot:
                 process_memory = self._process.get_memory_info().rss / megabyte
             except psutil.NoSuchProcess:
                 return
+
             if process_memory > memory_limit_mb:
                 self.kill_process()
                 raise MemoryLimitException
@@ -200,6 +204,7 @@ class Bot:
             return
         self._process.kill()
         self._process.communicate()
+        logger.info('process with cmd line "%s" was killed', self._player_command)
 
     def _is_running(self):
         '''
@@ -213,3 +218,4 @@ class Bot:
         It automatically kills bot's process on delete.
         '''
         self.kill_process()
+

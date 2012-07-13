@@ -32,8 +32,11 @@ class Game:
 
     def run_engine(self):
         '''launches the engine'''
+        logger.info('launching engine')
         game_engine = engine.Engine(config, players, jury_state, game_info)
+        logger.info('starting game')
         self.game_controller = game_engine.play()
+        logger.info('writing logs')
         self._write_logs()
 
     def get_result(self):
