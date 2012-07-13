@@ -16,5 +16,5 @@ class TournamentSystemFactory:
             return all_ts.tournament_systems[config.tournament_system]()
         else:
             raise TournamentSystemNotFoundException(
-                "There is no such tourtament system"
+                "There is no such tournament system"
             )
