@@ -57,4 +57,3 @@ def players_parse(path):
     for line in lines:
         players_list.append(_return_player(line))
     return players_list
-
