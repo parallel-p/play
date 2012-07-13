@@ -1,5 +1,6 @@
 import bot
 
+
 class GameController:
     '''
 
@@ -58,7 +59,7 @@ class GameController:
         Creates ALL bots
         '''
         for player in self._players:
-            self.bots[player] = (player.create_bot(config))
+            self.bots[player] = player.create_bot(self.config)
 
     def kill_bots(self):
         '''
