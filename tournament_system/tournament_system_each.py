@@ -35,11 +35,11 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         '''
         return str(score[0]) + ':' + str(score[1])
 
-    def _print_separator(self, width):
+    def _print_separator(self, width, columns):
         '''
         Returns the line of separators '-'.
         '''
-        return str('-' * width)
+        return str('*' + '-' * width) * columns + '*'
 
     def get_table(self, width):
         '''
@@ -57,22 +57,22 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
                   (first_score, second_score)
             table[(second_player, first_player)] =\
                   (second_score, first_score)
-        #Width of the table with all separators
-        table_width = (len(self._players_list) + 2) * (width + 1)
+        #Quantity of columns
+        columns = len(self._players_list) + 2
         #Print separator line
-        yield self._print_separator(table_width)
+        yield self._print_separator(width, columns)
         #Header
-        current_string = ' ' * width + '|'
+        current_string = '|' + ' ' * width + '|'
         for player in self._players_list:
             current_string += self._cut_string(str(player), width)
             current_string += '|'
-        current_string += ' ' * width + '|'
+        current_string += self._cut_string('Sum', width) + '|'
         yield current_string
         #Print separator line
-        yield self._print_separator(table_width)
+        yield self._print_separator(width, columns)
         #Main data
         for first_player in self._players_list:
-            current_string = self._cut_string(str(first_player), width)
+            current_string = '|' + self._cut_string(str(first_player), width)
             current_string += '|'
             current_sum = 0
             for second_player in self._players_list:
@@ -89,4 +89,4 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             current_string += '|'
             yield current_string
             #Print separator line
-            yield self._print_separator(table_width)
+            yield self._print_separator(width, columns)
