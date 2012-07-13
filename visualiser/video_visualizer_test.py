@@ -31,13 +31,13 @@ class VideoVisualizerTest(unittest.TestCase):
         os.chdir('test')
 
         with GameController.game_signature as sign:
-            for sign.tournament_id in range(randint(3,10)):
-                for sign.round_id in range(randint(3,10)):
-                    for sign.series_id in range(randint(3,10)):
-                        for sign.game_id in range(randint(3,10)):
+            for sign.tournament_id in range(randint(3, 10)):
+                for sign.round_id in range(randint(3, 10)):
+                    for sign.series_id in range(randint(3, 10)):
+                        for sign.game_id in range(randint(3, 10)):
                             GameController.game_signature = sign
                             filenum = 0
-                            GameController.jury_states = [str(randrange(19) + 1).zfill(2) + '.png' for i in range(randint(3,20))]
+                            GameController.jury_states = [str(randrange(19) + 1).zfill(2) + '.png' for i in range(randint(3, 20))]
                             while os.path.exists('contr' + str(filenum) + '.gc'):
                                 filenum = randrange(1000)
                             with open('contr' + str(filenum) + '.gc', 'wb') as f:

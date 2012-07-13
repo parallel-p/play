@@ -175,8 +175,6 @@ class Bot:
         Invokes move.deserialize with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
         '''
-        real_time_limit_seconds = self._config.real_time_limit_seconds
-        cpu_time_limit_seconds = self._config.cpu_time_limit_seconds
 
         time_cpu_limiter_thread = threading.Thread(
             target=self._check_cpu_time_limit
