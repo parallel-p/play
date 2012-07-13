@@ -1,7 +1,10 @@
 import subprocess
 import os
-import re
 import pickle
+import imghdr
+import config
+import re
+import getimageinfo
 from math import log10
 # from PIL import Image, ImageDraw
 
@@ -11,70 +14,80 @@ class NoJuryStatesException(Exception):
     pass
 
 
-class Visualizer:
+class VideoVisualizer:
     '''Composes video file from game data.'''
 
-    def __init__(self, _painter_obj, _working_dir='.',
-                 _file_mask='.*\.jstate'):
+    def __init__(self, _file_mask, _working_dir='.'):
         '''Constructor. Parameters:
          - _painter_obj - painter object
-         - _working_dir - directory with jury states
-         - _file_mask - file mask of jury state files
+
         '''
-        self.painter = _painter_obj
-        self.working_dir = _working_dir
+        self.painter = config.Config.painter()
         self.file_mask = _file_mask
-        self.file_list = []
+        self.working_dir = _working_dir
+        self.framerate = config.Config.framerate
+        self.file_list = None
         self.imagefile_name = None
-        self.video_width, self.video_height = None, None
+        self.counter = 0
 
-    def get_jury_states(self):
-        '''Returns a list of all jury states from the specified directory.'''
-        path = list(os.walk(self.working_dir))
+    def _get_game_controller(self, filename):
+        with open(filename, "rb") as f:
+            return pickle.load(f)
 
-        if not path:
-            return []
+    def _generate_game_images(self, jstates):
+        '''Generates frames for video.'''
+        if not jstates:
+            raise NoJuryStatesException('GameController in file ' + filename +
+                                        ' contains no jury states.')
 
-        result = []
-        # We need the list of files in current directory
-        # path[0] -- current directory
-        # path[0][2] -- file list
-        # Check help(os.wals) for details
-        for fname in path[0][2]:
-            if re.search(self.file_mask, fname):
-                with open(os.path.join(self.working_dir, fname), 'rb') as file:
-                    result += pickle.load(file)
-        return result
+        # We need filenames with leading zeroes for ffmpeg
+        zero_count = int(log10(len(jstates)) + 1)
+        self.file_list = []
+        ext = None
+        for ind, jstate in enumerate(jstates):
+            image = self.painter.paint(jstate)
+            self.size = getimageinfo.getImageInfo(image)[1:]
+            ext = imghdr.what('', image)
+            self.file_list.append(os.path.join(self.working_dir, ('tempimage' +
+                                  str(ind).zfill(zero_count) + '.' + ext)))
+            with open(self.file_list[-1], "wb") as f:
+                f.write(image)
 
-    def collect_images2video(self):
+        self.imagefile_name = ('tempimage%0{}d.' + ext).format(zero_count)
+
+    def _collect_game_images_to_video(self, jstates):
         '''Composes a video file from painted images.'''
-        if not self.imagefile_name:
-            raise Exception("Frames have not been generated: please call"
-                            " generate_images() first.")
+        game_controller = self._get_game_controller(filename)
+        self._generate_game_images(game_controller.jury_states)
 
-        subprocess.Popen(('ffmpeg -f -i ' + os.path.join(self.working_dir,
-                         self.imagefile_name) + ' -r 2 -s ' +
-                         str(self.video_width) + 'x' + str(self.video_height)
-                         + ' result.avi').split())
+        subprocess.call(('ffmpeg -f -i ' + os.path.join(self.working_dir,
+                        self.imagefile_name) + ' -r ' + str(self.framerate) +
+                        ' -s ' + str(self.size[0]) + 'x' + str(self.size[1])
+                        + ' tempvideo{}.mpg'.format(self.counter)).split())
+        self.counter += 1
         # Removing generated images:
         for filename in self.file_list:
             os.remove(filename)
 
-    def generate_images(self):
-        '''Generates frames for video.'''
-        jstates = self.get_jury_states()
+    def _generate_tournament_status(self, game_controller):
+        pass
 
-        if not jstates:
-            raise NoJuryStatesException('Folder ' + self.working_dir +
-                                        ' is empty. No images to collect.')
-
-        # We need filenames with leading zeroes for ffmpeg
-        zero_count = int(log10(len(jstates)) + 1)
-        self.imagefile_name = 'tempimage%0{}d.png'.format(zero_count)
-
-        for ind, jstate in enumerate(jstates):
-            image = self.painter.paint(jstate).content
-            self.file_list.append(os.path.join(self.working_dir, ('tempimage{}'
-                                  '.png').format(str(ind).zfill(zero_count))))
-            image.save(self.file_list[-1], 'png')
-            self.video_width, self.video_height = image.size()
+    def compile(self, res_name):
+        contr_list = []
+        for filename in os.listdir(self.working_dir):
+            if re.search(self.file_mask, filename):
+                contr_list.append(self._get_game_controller(os.path.join(
+                                  self.working_dir, self.filename)))
+        contr_list = tuple(sorted(contr_list))
+        for cgame in contr_list:
+            self._generate_tournament_status(cgame)
+            self._collect_game_images_to_video(cgame.jstates)
+        old_ext = res_name[res_name.rfind('.'):]
+        res_name = res_name[:res_name.rfind('.')]
+        with open(res_name + ".mpg", "wb") as result:
+            for loop in range(self.counter):
+                with open('tempvideo' + str(loop) + '.mpg', 'rb') as tempfile:
+                    result.write(tempfile.read())
+                os.remove('tempvideo' + str(loop) + '.mpg')
+        subprocess.call(('ffmpeg -i ' + res_name + '.mpg -sameq ' + res_name +
+                        old_ext).split())

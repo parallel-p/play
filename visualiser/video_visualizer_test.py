@@ -7,7 +7,7 @@ import pickle
 import shutil
 
 
-class VisualizerTest(unittest.TestCase):
+class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
         painter_obj = Mock()
 
