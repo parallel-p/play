@@ -62,9 +62,9 @@ class GameController:
         Creates bots for each player
         '''
         for player in self._players:
-            self.bots[player] = bot.Bot(player.path_to_executable, self.config)
+            self.bots[player] = bot.Bot(player.cmd_line, self.config)
             logger.debug('created bot "%s"', player.bot_name)
-        logger.info('all bots created')
+            logger.info('all bots created')
 
     def kill_bots(self):
         '''

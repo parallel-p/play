@@ -21,8 +21,10 @@ class GameControllerTest(unittest.TestCase):
         bot.Bot = Mock()
         bot.Bot.return_value = True
         self.game.create_bots()
-        self.assertEqual(self.game.bots, dict(zip(self.players, [True] * self.num_players)))
-        self.assertEqual(bot.Bot.call_args_list, [(("bash", "cfg"),)] * self.num_players)
+        self.assertEqual(self.game.bots, dict(zip(self.players,
+            [True] * self.num_players)))
+        self.assertEqual(bot.Bot.call_args_list,
+            [(("bash", "cfg"),)] * self.num_players)
 
     def test_kill_bots(self):
         self.game.kill_bots()
