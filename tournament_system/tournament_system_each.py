@@ -47,6 +47,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         (string one by one), gets width of one column.
         '''
         table = {}
+        rows = []
         for game in self._results.values():
             current_game = []
             for player, score in game.items():
@@ -68,8 +69,6 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             current_string += '|'
         current_string += self._cut_string('Sum', width) + '|'
         yield current_string
-        #Print separator line
-        yield self._print_separator(width, columns)
         #Main data
         for first_player in self._players_list:
             current_string = '|' + self._cut_string(str(first_player), width)
@@ -87,6 +86,9 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             #Score cell
             current_string += self._cut_string(str(current_sum), width)
             current_string += '|'
-            yield current_string
-            #Print separator line
+            rows.append((current_sum, current_string))
+        rows.sort(reverse=1)
+        for row in rows:
             yield self._print_separator(width, columns)
+            yield row[1]
+        yield self._print_separator(width, columns)
