@@ -6,56 +6,77 @@ import os
 import subprocess
 import pickle
 import shutil
-from ..game_controller import GameController
+from game_signature import GameSignature
+
+
+# Unfortunately, Mock objects cannot be pickled, so we have to do like this:
+class GameController:
+    def __init__(self):
+        self.jury_states = []
+        self.signature = GameSignature()
+
+    def __lt__(self, other):
+        return self.signature < other.signature
 
 
 class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
-
-        def less_than(self, other):
-            return [self.game_signature.tournament_id,
-                    self.game_signature.round_id,
-                    self.game_signature.series_id,
-                    self.game_signature.game_id] < [
-                    other.game_signature.tournament_id,
-                    other.game_signature.round_id,
-                    other.game_signature.series_id,
-                    other.game_signature.game_id]
-
-        GameController = MagicMock()
-        GameController.__lt__ = less_than
-        GameController.game_signature = MagicMock()
-
         if not os.path.exists('test'):
             os.mkdir('test')
         os.chdir('test')
 
-        with GameController.game_signature as sign:
-            for sign.tournament_id in range(randint(3, 10)):
-                for sign.round_id in range(randint(3, 10)):
-                    for sign.series_id in range(randint(3, 10)):
-                        for sign.game_id in range(randint(3, 10)):
-                            GameController.game_signature = sign
-                            filenum = 0
-                            GameController.jury_states = [str(randrange(19) + 1).zfill(2) + '.png' for i in range(randint(3, 20))]
-                            while os.path.exists('contr' + str(filenum) + '.gc'):
-                                filenum = randrange(1000)
-                            with open('contr' + str(filenum) + '.gc', 'wb') as f:
-                                pickle.dump(GameController, f)
-
-        os.chdir('..')
-
+        # There should be an image folder containing GIF images with specified
+        # names (see below).   
         painter_obj = Mock()
-        painter_obj.paint = lambda x: open(os.path.join('images', x), 'rb').read()
+        painter_obj.paint = lambda x: open(os.path.join('images', x),
+                                           'rb').read()
+
+        self.viz = visualizer.VideoVisualizer(2, painter_obj, '.*\.gc', 'test')
 
     def test_collect_game_images_to_video(self):
-        pass
+        os.chdir('..')
+        if os.path.exists(visualizer.TEMPFILE_NAME):
+            os.remove(visualizer.TEMPFILE_NAME)
+
+        self.viz.collect_game_images_to_video([str(randrange(19) + 1).zfill(2)
+                                              + '.gif'
+                                              for i in range(randint(3, 20))])
+
+        self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME))
+        for fname in os.listdir('test'):
+            self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
 
     def test_compile(self):
-        pass
+        # Generate many random GameControllers.
+        gc = GameController()
+        for gc.signature.tournament_id in range(randint(1, 3)):
+            for gc.signature.round_id in range(randint(1, 3)):
+                for gc.signature.series_id in range(randint(1, 3)):
+                    for gc.signature.game_id in range(randint(1, 3)):
+                        filenum = 0
+                        gc.jury_states = [str(randrange(19) + 1).zfill(2) + '.'
+                                          'gif' for i in range(randint(3, 20))]
+                        while os.path.exists('contr' + str(filenum) + '.gc'):
+                            filenum = randrange(10000000000)
+                        with open('contr' + str(filenum) + '.gc', 'wb') as f:
+                            pickle.dump(gc, f)
+        os.chdir('..')
+        if os.path.exists(visualizer.TEMPFILE_NAME):
+            os.remove(visualizer.TEMPFILE_NAME)
+
+        self.viz.compile('result.avi')
+
+        self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME))
+        self.assertFalse(os.path.exists('result.avi'))
+        # Check whether all images have been removed:
+        for fname in os.listdir('test'):
+            self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
 
     def tearDown(self):
-        pass
+        # To be able to watch the resulting video file manually, let's copy it.
+        if os.path.exists(os.path.join('test', 'result.avi')):
+            shutil.copyfile(os.path.join('test', 'result.avi'), 'result.avi')
+        shutil.rmtree('test')
 
 if __name__ == '__main__':
     unittest.main()
