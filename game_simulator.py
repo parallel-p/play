@@ -16,8 +16,8 @@ class GameSimulator:
         '''
         self._game_controller = game_controller.GameController(config,
                                 players, game_signature, jury_state)
-        self._game_master =\
-             config.game_master_constructor(self._game_controller, jury_state)
+        self._game_master = config.GameMaster(self._game_controller,
+                                              jury_state)
 
     def play(self):
         '''
