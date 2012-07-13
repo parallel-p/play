@@ -8,20 +8,20 @@ from generator import Generator
 class GameMasterTests(unittest.TestCase):
     def setUp(self):
         players = [Mock(name='player 0'), Mock(name='player 1')]
-        generator = Generator(20, 3)
+        generator = Generator()
         start_states = list(generator.generate_start_positions(Mock(), 2))
-        start_state = random.choice(start_states)
+        self._start_state = random.choice(start_states)
         self._controller = self._get_controller(players)
-        self._master = GameMaster(self._controller, start_state)
+        self._master = GameMaster(self._controller, self._start_state)
 
     def test_that_in_the_end_of_the_game_we_have_empty_heaps(self):
-        self._master.tick()
+        self._master.tick(self._start_state)
         last_state = self._controller.get_states()[-1]
         empty_heap_sizes = [0] * len(last_state.heap_sizes)
         self.assertEqual(last_state.heap_sizes, empty_heap_sizes)
 
     def test_that_only_one_player_wins(self):
-        self._master.tick()
+        self._master.tick(self._start_state)
         scores = self._controller.get_scores()
         scores_values = list(scores.values())
         players = self._controller.get_players()
