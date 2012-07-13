@@ -1,5 +1,5 @@
 from unittest.mock import Mock, patch
-import tournament_system as ts
+from tournament_system import tournament_system as ts
 from game_supporting_classes import GameSignature
 
 

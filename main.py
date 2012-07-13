@@ -1,15 +1,22 @@
 import sys
+import os
 from unittest.mock import Mock, MagicMock
 import config_helpers
 import config
+from tournament_stages.tournament import Tournament
 
 tournament_id = 1
+
+PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 
 class Main:
 
-    def __init__(self):
+    def __init__(self, game_path, tournament_id):
         self.players_list = None
+        self.tournament_id = tournament_id
 
     def load_config(self):
         '''
@@ -30,23 +37,24 @@ class Main:
         '''
         Run tournament and get it's results
         '''
-        tournament = Tournament(self.players_list, tournament_id)
-        tournament.run()
-        self.tournament_results = tournament.get_results()
+        self.tournament = Tournament(self.players_list,
+                                                self.tournament_id)
+        self.tournament.run()
+        self.tournament_results = self.tournament.get_results()
 
     def show_result(self):
-        return tournament_results
+        return self.tournament_results
 
-    def main(self, game_path):
-        main = Main()
-        main.load_config()
-        main.load_players()
-        main.run_tournament()
+    def main(self):
+        self.load_config()
+        self.load_players()
+        self.run_tournament()
 
 if (__name__ == '__main__'):
+    main = Main(game_path, 1)
     if len(sys.argv) > 1:
         game_path = sys.argv[1]
     else:
         game_path = "C:\\Users\\Admin\\smth\\play"
     main = Main()
-    main.main(game_path)
+    main.main()
