@@ -1,15 +1,16 @@
-import Config
-from tourtament_systems import tourtament_systems
+import config
+from tournament_systems import tournament_systems
 
 
-class NoSuchTourtamentSystemException:
+class NoSuchTournamentSystemException:
     pass
 
 
-class TourtamentSystemFactory:
+class TournamentSystemFactory:
     def run(config):
-        if (config.tourtament_system in tourtament_systems):
-            return tourtament_systems[config.tourtament_system]
+        if (config.tournament_system in tournament_systems):
+            return tournament_systems[config.tournament_system]
         else:
-            raise NoSuchTourtamentSystemException("There is no such tourtament system")
-           
+            raise NoSuchTournamentSystemException(
+                "There is no such tourtament system"
+            )
