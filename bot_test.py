@@ -11,9 +11,11 @@ ML_PLAYER_COMMAND = 'python3 test_game2.py'
 WRONG_PLAYER_COMMAND = 'fffaaasd test_game.py'
 
 CONFIG = Mock()
+# check 'time_limit' every 'frequency_of_inspection_time' moves
 CONFIG.real_time_limit_seconds = 5.0
 CONFIG.cpu_time_limit_seconds = 10.0
 CONFIG.memory_limit_mb = 15.0
+CONFIG.frequency_of_inspection_time = 1000
 TIME = CONFIG.real_time_limit_seconds
 MEMORY = CONFIG.memory_limit_mb
 NORMAL_TIME = TIME / 5
