@@ -44,8 +44,8 @@ class TournamentSystem:
         '''
         pass
 
-    def print_table(self):
+    def get_table(self):
         '''
-        Print table in console
+        Return list of strings
         '''
-        pass
+        return ['']
