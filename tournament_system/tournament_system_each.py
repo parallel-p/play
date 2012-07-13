@@ -52,7 +52,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             current_game = []
             for player, score in game.items():
                 current_game.append((player, score))
-            ((first_player, first_score), 
+            ((first_player, first_score),
              (second_player, second_score)) = current_game
             table[(first_player, second_player)] =\
                   (first_score, second_score)
