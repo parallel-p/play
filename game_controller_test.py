@@ -1,12 +1,12 @@
-import game_controller
 import unittest
 from unittest.mock import Mock
+import game_controller
 
 
-config = ""
+config = ''
 players = [Mock() for i in range(5)]
-signature = ""
-jury_state = ""
+signature = ''
+jury_state = ''
 
 
 class GameControllerTest(unittest.TestCase):
@@ -34,5 +34,5 @@ class GameControllerTest(unittest.TestCase):
         end = len(self.game.jury_states)
         self.assertEqual(begin + 1, end)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
