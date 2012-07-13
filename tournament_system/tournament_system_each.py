@@ -3,12 +3,12 @@ import tournament_system
 
 class TournamentSystemEach(tournament_system.TournamentSystem):
     '''
-    In this tournament system every player competes with each other
+    In this tournament system every player competes with each other.
     '''
     def get_rounds(self):
         '''
         Returns list of lists of players who plays in this round
-        (play_list)
+        (play_list).
         '''
         play_list = []
         for first_player in range(len(self._players_list)):
@@ -22,7 +22,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         '''
         Makes the string len equal to width.
         If len(string) is less than width then
-        method adds spaces
+        method adds spaces.
         '''
         if len(string) < width:
             string += (' ' * (width - len(string)))
@@ -31,44 +31,45 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
 
     def _convert_score(self, score):
         '''
-        Converts score from format (a, b) to string 'a:b'
+        Converts score from format (a, b) to string 'a:b'.
         '''
         return str(score[0]) + ':' + str(score[1])
 
     def _print_separator(self, width):
         '''
-        Returns the line of separators '-'
+        Returns the line of separators '-'.
         '''
         return str('-' * width)
 
     def get_table(self, width):
         '''
         Yields the scores of the tournament in a table
-        (string one by one), gets width of one column
+        (string one by one), gets width of one column.
         '''
         table = {}
-        answer = []
         for game in self._results.values():
             current_game = []
             for player, score in game.items():
                 current_game.append((player, score))
-            first_player, first_score = current_game[0]
-            second_player, second_score = current_game[1]
+            ((first_player, first_score), 
+             (second_player, second_score)) = current_game
             table[(first_player, second_player)] =\
                   (first_score, second_score)
             table[(second_player, first_player)] =\
                   (second_score, first_score)
         #Width of the table with all separators
         table_width = (len(self._players_list) + 1) * (width + 1)
+        #Print separator line
         yield self._print_separator(table_width)
-        #header
+        #Header
         current_string = ' ' * width + '|'
         for player in self._players_list:
             current_string += self._cut_string(str(player), width)
             current_string += '|'
         yield current_string
-        #main data
+        #Print separator line
         yield self._print_separator(table_width)
+        #Main data
         for first_player in self._players_list:
             current_string = self._cut_string(str(first_player), width)
             current_string += '|'
@@ -81,4 +82,5 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
                     current_string += self._cut_string(score, width)
                 current_string += '|'
             yield current_string
+            #Print separator line
             yield self._print_separator(table_width)
