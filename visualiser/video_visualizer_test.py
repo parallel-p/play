@@ -1,5 +1,6 @@
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
+from random import randint, randrange
 import visualizer
 import os
 import subprocess
@@ -9,61 +10,51 @@ import shutil
 
 class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
-        painter_obj = Mock()
 
-        def side_effect(arg1, arg2):
-            open(arg1, 'x').close()
-        # That will be done instead of drawing a game state.
-        content = Mock()
-        content.save.side_effect = side_effect
-        content.size.return_value = (600, 600)
-        painter_obj.paint.return_value = Mock()
-        painter_obj.paint.return_value.content = content
-        # We don't want to have a real video file created:
-        subprocess.Popen = Mock(side_effect=lambda x: open('result.avi', 'x')
-                                .close())
+        def less_than(self, other):
+            return [self.game_signature.tournament_id,
+                    self.game_signature.round_id,
+                    self.game_signature.series_id,
+                    self.game_signature.game_id] < [
+                    other.game_signature.tournament_id,
+                    other.game_signature.round_id,
+                    other.game_signature.series_id,
+                    other.game_signature.game_id]
+
+        GameController = MagicMock()
+        GameController.__lt__ = less_than
+        GameController.game_signature = MagicMock()
 
         if not os.path.exists('test'):
             os.mkdir('test')
         os.chdir('test')
 
-        for i in range(100):
-            with open('state{num:02d}.jstate'.format(num=i), 'wb') as file:
-                pickle.dump([False, True], file)
+        with GameController.game_signature as sign:
+            for sign.tournament_id in range(randint(3,10)):
+                for sign.round_id in range(randint(3,10)):
+                    for sign.series_id in range(randint(3,10)):
+                        for sign.game_id in range(randint(3,10)):
+                            GameController.game_signature = sign
+                            filenum = 0
+                            GameController.jury_states = [str(randrange(19) + 1).zfill(2) + '.png' for i in range(randint(3,20))]
+                            while os.path.exists('contr' + str(filenum) + '.gc'):
+                                filenum = randrange(1000)
+                            with open('contr' + str(filenum) + '.gc', 'wb') as f:
+                                pickle.dump(GameController, f)
 
         os.chdir('..')
-        self.viz = visualizer.Visualizer(painter_obj, 'test')
 
-    def test_get_jury_states(self):
-        retv = self.viz.get_jury_states()
-        self.assertEqual(len(retv), 200)
+        painter_obj = Mock()
+        painter_obj.paint = lambda x: open(os.path.join('images', x), 'rb').read()
 
-    def test_generate_images(self):
-        self.viz.generate_images()
-        for i in range(200):
-            self.assertTrue(os.path.exists(
-                            os.path.join('test', 'tempimage{num:03d}.png'
-                            .format(num=i))))
+    def test_collect_game_images_to_video(self):
+        pass
 
-    def test_collect_images2video(self):
-        for i in range(200):
-            open(os.path.join('test', 'tempimage{num:03d}.png'.format(num=i)),
-                 'x').close()
-            self.viz.file_list.append(os.path.join('test',
-                                      'tempimage{num:03d}.png'.format(num=i)))
-        self.viz.imagefile_name = 'tempimage%03d.png'
-        self.viz.collect_images2video()
-        self.assertTrue(os.path.exists('result.avi'))
-        for i in range(200):
-            self.assertFalse(os.path.exists(
-                             os.path.join('test', 'tempimage{num:03d}.png'
-                             .format(num=i))))
+    def test_compile(self):
+        pass
 
     def tearDown(self):
-        shutil.rmtree('test')
-
-        if (os.path.exists('result.avi')):
-            os.remove('result.avi')
+        pass
 
 if __name__ == '__main__':
     unittest.main()
