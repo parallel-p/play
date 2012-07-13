@@ -2,7 +2,6 @@ import subprocess
 import os
 import pickle
 import imghdr
-import config
 import re
 import getimageinfo
 from math import log10
@@ -17,15 +16,15 @@ class NoJuryStatesException(Exception):
 class VideoVisualizer:
     '''Composes video file from game data.'''
 
-    def __init__(self, _file_mask, _working_dir='.'):
+    def __init__(self, _framerate, _painter_obj, _file_mask, _working_dir='.'):
         '''Constructor. Parameters:
          - _painter_obj - painter object
 
         '''
-        self.painter = config.Config.painter()
+        self.painter = _painter_obj()
         self.file_mask = _file_mask
         self.working_dir = _working_dir
-        self.framerate = config.Config.framerate
+        self.framerate = _framerate
         self.file_list = None
         self.imagefile_name = None
         self.counter = 0
