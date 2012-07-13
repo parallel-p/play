@@ -4,13 +4,12 @@ import series
 
 class Round:
     '''Manages and starts round'''
-    def __init__(self, players_list, game_info, config):
+    def __init__(self, players_list, game_info):
         self._players_list = players_list
         self._games_count = len(self._players_list)
         self._jurystates_list = []
         self.games_results = {}
         self._game_info = game_info
-        self._config = config
 
     def generate_series(self):
         '''Generates series for one round'''
@@ -26,7 +25,6 @@ class Round:
             self.series = series.Series(
                 initial_jurystates_list=jurystates,
                 signature=self._game_info,
-                players_list=self._players_list[series_id],
-                config=self._config)
+                players_list=self._players_list[series_id])
             self.series.run()
             self.games_results.update(self.series.get_results())
