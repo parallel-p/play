@@ -1,24 +1,29 @@
 import unittest
 from unittest.mock import Mock, patch
-with patch.dict('sys.modules', {'config': Mock(), 'tournament_systems': Mock()}):
+with patch.dict('sys.modules',
+                {'config': Mock(), 'tournament_systems': Mock()}):
     import config
     import tournament_systems as all_ts
     import tournament_system_factory as ts_factory
 
 
+class TS1:
+    pass
+
+
+class TS2:
+    pass
+
+
 class TournamentSystemFactoryTests(unittest.TestCase):
     def setUp(self):
-        class TS1:
-            pass
-        class TS2:
-            pass            
-        all_ts.tournament_systems={"ts1":TS1,"ts2":TS2}
+        all_ts.tournament_systems = {"ts1": TS1, "ts2": TS2}
 
     def test_all_tournament_systems(self):
-        for tournament_system_name, tournament_system in all_ts.tournament_systems.items():
-            config.tournament_system = tournament_system_name
+        for ts_name, ts in all_ts.tournament_systems.items():
+            config.tournament_system = ts_name
             self.assertTrue(isinstance(
-                ts_factory.TournamentSystemFactory().create(), tournament_system
+                ts_factory.TournamentSystemFactory().create(), ts
             ))
 
     def test_exception_no_tournament_system(self):
