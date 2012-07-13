@@ -10,7 +10,7 @@ class TournamentTest(unittest.TestCase):
         ts.TournamentSystem = MagicMock()
         ts.TournamentSystem().get_rounds.return_value = [{1: {1: 0, 2: 1}},
                                                          {2: {2: 0, 3: 1}}]
-        tournament = tournament_file.Tournament([1, 2, 3], MagicMock())
+        tournament = tournament_file.Tournament([1, 2, 3], 1)
         tournament.run()
         result = tournament.get_results()
 
