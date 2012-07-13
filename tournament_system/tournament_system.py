@@ -34,7 +34,7 @@ class TournamentSystem:
 
     def get_current_round_results(self):
         '''
-        Yield results of current round
+        Return iterator of results of current round
         '''
         return self.get_round_results(self._current_round_id)
 
