@@ -1,5 +1,5 @@
 import bot
-from .log import logger
+from log import logger
 
 
 class GameController:

@@ -2,7 +2,7 @@ import psutil
 import threading
 import time
 from subprocess import PIPE
-from .log import logger
+from log import logger
 
 
 '''
@@ -204,7 +204,8 @@ class Bot:
             return
         self._process.kill()
         self._process.communicate()
-        logger.info('process with cmd line "%s" was killed', self._player_command)
+        logger.info('process with cmd line "%s" was killed',
+                    self._player_command)
 
     def _is_running(self):
         '''
@@ -218,4 +219,3 @@ class Bot:
         It automatically kills bot's process on delete.
         '''
         self.kill_process()
-
