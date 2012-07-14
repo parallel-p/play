@@ -13,3 +13,8 @@ class GameSignature:
         signature_tuple = (signature.tournament_id, signature.round_id,
                            signature.series_id, signature.game_id)
         return self_tuple < signature_tuple
+
+    def __repr__(self):
+        return '<GameSignature ({}, {}, {}, {})>'.format(
+            self.tournament_id, self.round_id,
+            self.series_id, self.game_id)
