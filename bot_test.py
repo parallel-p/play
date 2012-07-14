@@ -69,7 +69,8 @@ class BotTest(unittest.TestCase):
 
         def test_without_timelimit_error():
             deserialize.side_effect = side_effect_for_deserialize(NORMAL_TIME)
-            serialize.side_effect = side_effect_for_serialize(PLAYER_STATE, NORMAL_TIME)
+            serialize.side_effect = \
+                side_effect_for_serialize(PLAYER_STATE, NORMAL_TIME)
             test_bot.create_process()
             clock_time = time.clock()
             move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
