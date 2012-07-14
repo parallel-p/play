@@ -1,5 +1,6 @@
 GAME_PATH = 'games/nim'
-BOTS = ['games/nim/bots/ideal_bot', 'python3 games/nim/bots/wrong_bot.py']
+BOTS = ['python3 games/nim/bots/random_bot.py',
+        'python3 games/nim/bots/wrong_bot.py']
 
 import unittest
 import random

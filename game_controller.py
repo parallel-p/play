@@ -86,7 +86,7 @@ class GameController:
         '''
         Killes ALL running bots
         '''
-        for bot in self.bots:
+        for bot in self.bots.values():
             bot.kill_process()
         logger.info('all bots killed')
 
