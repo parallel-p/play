@@ -1,6 +1,5 @@
 import tournament_system
 import unittest
-from unittest.mock import Mock
 import sys
 import os
 from copy import copy
@@ -17,7 +16,6 @@ class TournamentSystemTest(unittest.TestCase):
     def setUp(self):
         self.ts = tournament_system.TournamentSystem(
             ['player1', 'player2'],
-            Mock()
         )
 
     def test_add_round_results(self):
