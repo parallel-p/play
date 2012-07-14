@@ -39,6 +39,16 @@ class TournamentSystem:
         '''
         return self.get_round_results(self._current_round_id)
 
+    def filter_results(tournament_id=None, round_id=None, series_id=None,
+                       game_id=None):
+        results = {}
+        for game in self._results:
+            if not (tournament_id and tournament_id != game.tournament_id or
+                    round_id and round_id != game.round_id or
+                    series_id and series_id != game.series_id or
+                    game_id and game_id != game.game_id):
+                results.update({game: self._results[game]})
+
     def get_rounds(self):
         '''
         Yield players_list for every round
