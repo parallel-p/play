@@ -2,8 +2,7 @@ from tournament_stages.round import Round
 from tournament_stages.game_signature import GameSignature
 from tournament_system.tournament_system_factory import create
 from tournament_system.tournament_system import TournamentSystem
-from game_signature import GameSignature
-from exceptions import NoResultsException
+from tournament_stages.exceptions import NoResultsException
 
 
 class Tournament:
