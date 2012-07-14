@@ -79,7 +79,6 @@ class GameController:
         for player in self._players:
             self.bots[player] = bot.Bot(player.command_line, self.config)
             self.bots[player].create_process()
-            self.bots[player].create_process()
             logger.debug('created bot "%s"', player.bot_name)
         logger.info('all bots created')
 
@@ -87,7 +86,7 @@ class GameController:
         '''
         Killes ALL running bots
         '''
-        for bot in self.bots:
+        for bot in self.bots.values():
             bot.kill_process()
         logger.info('all bots killed')
 
