@@ -21,6 +21,8 @@ class TestConfigHelpers(unittest.TestCase):
 class TestPlayersParse(unittest.TestCase):
 
     def test_write_logs(self):
+        self.maxDiff = None
+
         test_logs = open('test_for_players_parse', 'w')
         test_logs.write("""
 
@@ -53,6 +55,7 @@ Author   Bot     /usr/lol
             self.assertEqual(answer_list[i].bot_name, gotten_list[i].bot_name)
             self.assertEqual(answer_list[i].author_name, gotten_list[i].author_name)
             self.assertEqual(answer_list[i].command_line, gotten_list[i].command_line)
+        self.assertEqual(9, len(gotten_list))
         os.remove('test_for_players_parse')
         
 
