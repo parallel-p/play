@@ -1,7 +1,7 @@
 import pickle
 import os
-import engine
-# from game_supporting_classes import GameSignature
+from tournament_stages.game_supporting_classes import GameSignature
+from game_simulator import GameSimulator
 
 
 class Game:
@@ -33,7 +33,7 @@ class Game:
     def run_engine(self):
         '''launches the engine'''
         logger.info('launching engine')
-        game_engine = engine.Engine(config, players, jury_state, game_info)
+        game_engine = GameSimulator(config, players, jury_state, game_info)
         logger.info('starting game')
         self.game_controller = game_engine.play()
         logger.info('writing logs')
