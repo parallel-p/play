@@ -22,7 +22,10 @@ class TestPlayersParse(unittest.TestCase):
 
     def test_write_logs(self):
         test_logs = open('test_for_players_parse', 'w')
-        test_logs.write(""""Author Authorovich" "MegaBot" "/home/artur/bot_path"
+        test_logs.write("""
+
+
+"Author Authorovich" "MegaBot" "/home/artur/bot_path"
 Author Bot "/usr/lol"
 Author "Bot and bot" /usr/lol
 Author "Bot and bot'   '/usr/lol"
@@ -30,7 +33,10 @@ Author "Bot and bot'   '/usr/lol"
 "Author and co" Bot     "/usr/lol"
 "Author and co"      'Bot' /usr/lol
 Author   Bot     /usr/lol
-  '   '   a   '   '  """)
+  '   '   a   '   '  
+
+  
+     """)
         test_logs.close()
         gotten_list = config_helpers.players_parse('test_for_players_parse')
         answer_list = list()
