@@ -1,6 +1,7 @@
 from game_signature import GameSignature
 from exceptions import NoResultsException
 import game
+from copy import copy
 
 
 class Series:
@@ -30,7 +31,7 @@ class Series:
                               self._players_list)
             _game.run_engine()
             points = _game.get_results()
-            self._results[self._signature] = points
+            self._results[self._signature] = copy(points)
 
     def get_results(self):
         '''
