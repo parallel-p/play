@@ -80,7 +80,7 @@ class GameController:
             self.bots[player] = bot.Bot(player.command_line, self.config)
             self.bots[player].create_process()
             logger.debug('created bot "%s"', player.bot_name)
-            logger.info('all bots created')
+        logger.info('all bots created')
 
     def kill_bots(self):
         '''
