@@ -28,5 +28,11 @@ class GameModulesIntegrationTests(unittest.TestCase):
         controller = self._simulator.play()
         self.assertTrue(controller.is_finished)
 
+    def test_that_scores_exists_for_each_player(self):
+        controller = self._simulator.play()
+        scores = controller.get_scores()
+        players = controller.get_players()
+        self.assertEqual(set(scores.keys()), set(players))
+
 if __name__ == '__main__':
     unittest.main()
