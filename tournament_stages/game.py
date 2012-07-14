@@ -1,6 +1,6 @@
 import pickle
 import os
-from tournament_stages.game_supporting_classes import GameSignature
+from tournament_stages.game_signature import GameSignature
 from game_simulator import GameSimulator
 
 

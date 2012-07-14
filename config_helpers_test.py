@@ -49,7 +49,6 @@ Author   Bot     /usr/lol
         answer_list.append(player.Player('/usr/lol', 'Author and co', 'Bot'))
         answer_list.append(player.Player('/usr/lol', 'Author', 'Bot'))
         answer_list.append(player.Player('   ', '   ', 'a'))
-        #fuck yeah
         for i in range(9):
             self.assertEqual(answer_list[i].bot_name, gotten_list[i].bot_name)
             self.assertEqual(answer_list[i].author_name, gotten_list[i].author_name)
