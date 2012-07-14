@@ -13,7 +13,7 @@ class GameController:
     >> game_controller = GameController(config, players, signature, jury_state)
     Examples:
     # Getting class to Bot instance
-    >> game_controller.get_move(player, p_state, deserializer)
+    >> game_controller.get_move(player, player_state, serializer, deserializer)
     # Saving jury states to array
     >> game_controller.report_state(jury_state)
     # Creating and killing ALL bots
@@ -21,6 +21,8 @@ class GameController:
     >> game_controller.kill_bots()
     # Getting players
     >> list_of_players = game_controller.get_players()
+    # Getting scores
+    >> dict_of_scores = game_controller.get_scores()
     '''
     def __init__(self, config, players, signature, jury_state):
         '''
