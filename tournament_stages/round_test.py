@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock
 with patch.dict('sys.modules', {'config': Mock(), 'series': Mock()}):
     import config
     import series
