@@ -192,7 +192,7 @@ class Bot:
         Serialize player_state with bot's `stdin`.
         `stdin` is a stream opened to write per *byte*.
         '''
-        player_state = serialize(self._process.stdin)
+        serialize(player_state, self._process.stdin)
 
     def kill_process(self):
         '''
