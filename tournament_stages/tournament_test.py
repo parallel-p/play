@@ -4,11 +4,11 @@ from unittest.mock import MagicMock, Mock, patch
 
 if 'C:\\Users\\Admin\\smth\\play' not in sys.path:
     sys.path.insert(0, 'C:\\Users\\Admin\\smth\\play')
-with patch.dict('sys.modules', {#'tournament_system': MagicMock(),
-                                'tournament_system.tournament_system': MagicMock(),
-                                'TournamentSystem': MagicMock(),
-                                'tournament_stages.round': MagicMock(),
-                                'Round': MagicMock()}):
+with patch.dict('sys.modules',
+                {'tournament_system.tournament_system': MagicMock(),
+                 'TournamentSystem': MagicMock(),
+                 'tournament_stages.round': MagicMock(),
+                 'Round': MagicMock()}):
     from tournament_system.tournament_system import TournamentSystem
     from tournament_stages.round import Round
     import tournament as tournament_file

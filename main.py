@@ -46,7 +46,7 @@ class Main:
         Run tournament and get it's results
         '''
         self.tournament = Tournament(self.players_list,
-                                                self.tournament_id)
+                                     self.tournament_id)
         self.tournament.run()
         self.tournament_results = self.tournament.get_results()
 
