@@ -67,7 +67,7 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
             #Score cell
             row.append(str(current_sum))
             rows.append((current_sum, row))
-        rows.sort(reverse=1)
+        rows.sort(reverse=True)
         for row in rows:
             table.append(row[1])
         ascii_drawer = ascii_draw_table.ASCIIDrawTable()

@@ -2,7 +2,8 @@ class ASCIIDrawTable:
     def _count_width(self, data):
         '''
         Returns width of one column in the table (by simply finding
-        maximum width of all cells)
+        maximum width of all cells). Gets data -- list of lists of cells,
+        each cell contains string
         '''
         width = 0
         for row in data:

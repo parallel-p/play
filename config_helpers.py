@@ -59,5 +59,7 @@ def players_parse(path):
     config_file.close()
     players_list = list()
     for line in lines:
-        players_list.append(_return_player(line))
+        player = _return_player(line)
+        if (player is not None):
+            players_list.append(player)
     return players_list
