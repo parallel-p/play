@@ -1,5 +1,6 @@
 import sys
 import os
+from exceptions import MainArgumentException, PlayersException
 
 '''
 These strings add project_root to sys.path
@@ -12,9 +13,10 @@ if project_root not in sys.path:
 This horrible code import config and config_helpers,
 with function initialize_game_environment it add game_path to sys.path
 '''
-
 import config_helpers
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        raise MainArgumentException('Many or little arguments for main.py')
     game_path = sys.argv[1]
     config_helpers.initialize_game_environment(game_path)
 import config
@@ -35,7 +37,7 @@ class Main:
         '''
         self.players_list = config_helpers.players_parse(config.players_config)
         if self.players_list is None:
-            raise Exception("Players list doesn't exist")
+            raise PlayersException('Players list doesn\'t exist')
 
     def _run_tournament(self):
         '''
