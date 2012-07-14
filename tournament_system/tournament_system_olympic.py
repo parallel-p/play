@@ -1,5 +1,5 @@
-import ascii_draw_tree
-import tournament_system
+import tournament_system.ascii_draw_tree as ascii_draw_tree
+import tournament_system.tournament_system as tournament_system
 from math import log
 
 from inspect import getframeinfo, currentframe
@@ -11,9 +11,8 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
     system, generating a list of players for each round based
     on the results of the previous one.
     '''
-    def __init__(self, players_list, config_data):
+    def __init__(self, players_list):
         self._players_list = players_list
-        self._config_data = config_data
         self._results = {}
         self._all_rounds = [players_list]
         self._current_round_id = 0
@@ -26,7 +25,7 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         '''
         self._results.update(round_results)
         self._current_round_id += 1
-        results_list = [] # [[(1, 9), (4, 0)], [(6, 0), (8, 1)]]
+        results_list = []
         for game in round_results.values():
             games_results = []
             for player, score in game.items():
@@ -43,7 +42,7 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         count_of_all_rounds = round(log(count_of_players))
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
-        for game_round in range(count_of_all_rounds + 2):
+        for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
             yield self.get_round(count_of_players, list_of_players)
             list_of_players = self.update_list_of_players(count_of_players)

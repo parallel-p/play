@@ -41,6 +41,6 @@ class Game:
         logger.info('writing logs')
         self._write_logs()
 
-    def get_result(self):
+    def get_results(self):
         '''returns results of the game'''
-        return self.game_controller.players
+        return self.game_controller.get_scores()
