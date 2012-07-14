@@ -18,6 +18,7 @@ class MainTest(unittest.TestCase):
         self.main._load_players()
         Tournament().get_results.return_value = 'First player won'
         self.main._run_tournament()
+        #assertNotEqual(self.main.show_result(), 'First player won')
         if self.main.show_result() != 'First player won':
             raise Exception("main.py doesn't work")
 

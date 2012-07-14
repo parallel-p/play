@@ -22,7 +22,7 @@ class Tournament:
             _round = Round(game_series_list=round_info,
                            game_info=game_signature)
             _round.run()
-            _round_results = _round.get_results
+            _round_results = _round.games_results
             tournament_system.give_round_results(_round_results)
         self.results = tournament_system.get_all_results()
 

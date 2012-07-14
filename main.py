@@ -14,7 +14,7 @@ with function initialize_game_environment it add game_path to sys.path
 '''
 
 import config_helpers
-if (__name__ == '__main__'):
+if __name__ == '__main__':
     game_path = sys.argv[1]
     config_helpers.initialize_game_environment(game_path)
 import config
