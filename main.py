@@ -2,22 +2,24 @@ import sys
 import os
 from unittest.mock import Mock, MagicMock
 
-PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__)))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+'''
+These strings add project_root to sys.path
+'''
+project_root = os.path.normpath(os.path.join(os.path.dirname(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-
+'''
+This horrible code import config and config_helpers,
+with function initialize_game_environment it add game_path to sys.path
+'''
 import config_helpers
 if (__name__ == '__main__'):
-    if len(sys.argv) > 1:
-        game_path = sys.argv[1]
-    else:
-        game_path = "C:\\Users\\Admin\\smth\\play\\games\\nim"
+    game_path = sys.argv[1]
     config_helpers.initialize_game_environment(game_path)
 import config
-from tournament_stages.tournament import Tournament
 
-tournament_id = 1
+from tournament_stages.tournament import Tournament
 
 
 class Main:
@@ -26,13 +28,7 @@ class Main:
         self.players_list = None
         self.tournament_id = tournament_id
 
-    def load_config(self):
-        '''
-        Run something which allow import config and import config
-        '''
-        pass
-
-    def load_players(self):
+    def _load_players(self):
         '''
         Load players_list with players_parse(it parses
         file containing player's information), filename is there in config
@@ -41,7 +37,7 @@ class Main:
         if self.players_list is None:
             raise Exception("Players list doesn't exist")
 
-    def run_tournament(self):
+    def _run_tournament(self):
         '''
         Run tournament and get it's results
         '''
@@ -54,10 +50,9 @@ class Main:
         return self.tournament_results
 
     def main(self):
-        self.load_config()
-        self.load_players()
-        self.run_tournament()
+        self._load_players()
+        self._run_tournament()
 
-if (__name__ == '__main__'):
-    main = Main(game_path, tournament_id)
+if __name__ == '__main__':
+    main = Main(game_path, 1)
     main.main()
