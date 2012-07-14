@@ -3,9 +3,11 @@ import game_controller
 from player import Player
 from tournament_stages.game_supporting_classes import GameSignature  # ?
 
+
 class PlayerState:
     def __init__(self, _a):
         self.a = _a
+
 
 class Config:
     def __init__(self):
@@ -13,19 +15,19 @@ class Config:
         self.memory_limit_mb = 64
         self.cpu_time_limit_seconds = 1
 
+
 def deserialize(stream):
     return stream.readline().decode('utf-8')
+
 
 def serialize(player_state, stream):
     stream.write(bytes(player_state.a, 'utf-8'))
     stream.write(b'\n')
 
-'''
-TODO:
-    Fix constructor parameters
-'''
+
 config = Config()
-players = [Player('python IntegrationBot.py', 'IntegrationTest', 'IntegrationBot')]
+players = [Player('python IntegrationBot.py', 'IntegrationTest',
+                  'IntegrationBot')]
 signature = GameSignature(1, 2, 3, 4)
 jury_state = None
 
