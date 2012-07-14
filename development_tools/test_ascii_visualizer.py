@@ -1,5 +1,7 @@
 import unittest as ut
 from unittest.mock import Mock
+import config_helpers
+config_helpers.initialize_game_environment('games/nim')
 from development_tools.ascii_visualizer import AsciiVisualizer
 import config
 

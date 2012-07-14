@@ -33,15 +33,14 @@ class AsciiVisualizer:
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
         return 'Frame #{0:04d} of {1:04d} :\n{2:s}\n'.format(
-            self.frame_number + 1, 
+            self.frame_number + 1,
             self._jury_state_count(),
-            
             self.painter_factory().ascii_paint(
             self.game_controller.jury_states[new_frame_number]))
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
-    
+
     def _help(self):
         '''prints a help screen for the visualizer'''
         print('''Navigation:
@@ -59,8 +58,10 @@ class AsciiVisualizer:
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
         method. '''
-        print(self._frame2string(0))
         self._help()
+        sleep(1)
+        _clear()
+        print(self._frame2string(0))
         while True:
             key = getch()
             if (key == key in 'Nn.>]}+=\n '):
@@ -74,7 +75,7 @@ class AsciiVisualizer:
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
-                else: 
+                else:
                     print(self._frame2string(self.frame_number))
                     print('this is the first frame.')
             elif key in 'AaMm' :
@@ -93,12 +94,12 @@ class AsciiVisualizer:
                     else:
                         addv=-1
                         time=-1/speed
-    
+
                     if len(cmd)>1 and cmd[1].isnumeric():
                         endframe=int(cmd[1])-1
                     else:
                         endframe=jscount
-            
+
                     try:
                         while (self.frame_number+addv) < jscount and (self.frame_number+addv)>=0 and self.frame_number!=endframe:
                             _clear()
@@ -108,7 +109,7 @@ class AsciiVisualizer:
                         pass
                 else:
                     print('The speed must be a real nonzero number')
-                    
+
             elif key in 'QqEe':
                 print('Quit')
                 return None
