@@ -1,2 +1,2 @@
-"John Doe" "Bot #0" "python3 games/nim/bot/random_bot.py"
-"John Doe" "Bot #1" "python3 games/nim/bot/wrong_bot.py"
+"John Doe" "Bot #0" "python3 games/nim/bots/random_bot.py"
+"John Doe" "Bot #1" "python3 games/nim/bots/wrong_bot.py"
