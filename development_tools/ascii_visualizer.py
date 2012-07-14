@@ -2,7 +2,18 @@
 # if painter supports such feature
 
 import config
-from development_tools.keyboard_capture import getch
+from keyboard_capture import getch
+
+
+def _clear():
+    '''this function clears the console by executing the appropriate command'''
+    from os import name, system
+    if name == 'posix':
+        system('clear')
+    elif name == 'nt':
+        system('cls')
+    else:
+        raise Exception('I can\'t recognise your OS')
 
 
 class AsciiVisualizer:
@@ -38,6 +49,7 @@ Any other key will call prompt for a frame number.
         print(self._frame2string(0))
         while True:
             key = getch()
+            _clear()
             if (key == ' ' or key in 'Nn') and (
                     self.frame_number < self._jury_state_count() - 1):
                 print(self._frame2string(self.frame_number + 1))
