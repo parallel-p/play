@@ -1,4 +1,6 @@
 from PIL import Image, ImageDraw
+from io import BytesIO
+
 
 FRAME_WIDTH = 500
 FRAME_HEIGHT = 1000
@@ -38,4 +40,18 @@ class Painter:
                 del draw
                 x += self._delta_x
             y += self._delta_y
-        return str(image.tostring("gif", "RGB"))
+        bytes = BytesIO()
+        image.save(bytes, format='png')
+        return bytes.getvalue()
+        # We should return BYTES, not str!!
+
+    def ascii_paint(self, jury_state):
+        ''' This method is used to paint in ASCII-art for using with
+        ASCII visualizer (from development tools). It returns an ASCII
+        string with image of the game field. '''
+        output_string = ''
+        for heap_size in jury_state.heap_sizes:
+            for i in range(heap_size):
+                output_string += 'O'
+            output_string += '\n'
+        return output_string

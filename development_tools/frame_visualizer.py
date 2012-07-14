@@ -23,8 +23,8 @@ def _bytes2image(bytes):
         return img
     else:
         raise Exception('''Unknown image format!
-        I can only read bytestreams with file-like headers of such formats:
-        jpeg, png, gif, tiff, SGI rgb, pbm, pgm, ppm, rast, xbm and bmp.''')
+I can only read bytestreams with file-like headers of such formats:
+jpeg, png, gif, tiff, SGI rgb, pbm, pgm, ppm, rast, xbm and bmp.''')
 
 
 class FrameVisualizer(tk.Frame):

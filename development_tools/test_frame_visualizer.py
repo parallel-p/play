@@ -4,6 +4,7 @@ from unittest.mock import Mock, MagicMock, patch
 from os.path import join
 import frame_visualizer
 from os import listdir as ls
+import config
 
 imgpath = '../images'
 # See tests with or without byte streaming
@@ -67,11 +68,10 @@ class FrameVisualizerTestCase(ut.TestCase):
         and is the most close to real game. '''
         print('TESTING WITH NIM PAINTER')
         game_controller = Mock()
-        from example.nim.jury_state import JuryState
         game_controller.jury_states = []
         for i in range(10):
             game_controller.jury_states.append(
-                JuryState([], [i, i + 1, i + 2]))
+                config.JuryState([i, i + 1, i + 2]))
                 # A JuryState in this game consists of two enumerations:
                 # first of them contains players (painter doesn't need them)
                 # and the second one has numbers of stones in each heap.
