@@ -1,5 +1,5 @@
-from tournament_system.tournament_system import TournamentSystem
-import tournament_system.ascii_draw_table
+from tournament_systems.tournament_system import TournamentSystem
+import tournament_systems.ascii_draw_table
 
 
 class TournamentSystemEach(TournamentSystem):

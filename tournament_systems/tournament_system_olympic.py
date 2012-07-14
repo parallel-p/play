@@ -1,5 +1,5 @@
-import tournament_system.ascii_draw_tree as ascii_draw_tree
-import tournament_system.tournament_system as tournament_system
+import tournament_systems.ascii_draw_tree as ascii_draw_tree
+import tournament_systems.tournament_system as tournament_system
 from math import log
 
 from inspect import getframeinfo, currentframe
@@ -51,8 +51,6 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         '''
         Yields list of players for current round.
         '''
-        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
-        print(count_of_players)
         for player in range(1, count_of_players, 2):
             yield [list_of_players[player - 1], list_of_players[player]]
 

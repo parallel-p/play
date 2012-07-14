@@ -27,7 +27,6 @@ class Game:
             str(self.game_info.game_id) + '.jstate'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
-        print(dir(self.game_controller))
         pickle.dump(self.game_controller, log_file)
         log_file.close()
 
@@ -39,7 +38,7 @@ class Game:
         logger.info('starting game')
         self.game_controller = game_engine.play()
         logger.info('writing logs')
-        self._write_logs()
+        #self._write_logs()
 
     def get_results(self):
         '''returns results of the game'''

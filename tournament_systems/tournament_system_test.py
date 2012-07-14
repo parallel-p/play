@@ -16,7 +16,8 @@ from tournament_stages.game_signature import GameSignature
 class TournamentSystemTest(unittest.TestCase):
     def setUp(self):
         self.ts = tournament_system.TournamentSystem(
-            ['player1', 'player2']
+            ['player1', 'player2'],
+            Mock()
         )
 
     def test_add_round_results(self):

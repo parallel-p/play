@@ -1,7 +1,7 @@
 from tournament_stages.round import Round
 from tournament_stages.game_signature import GameSignature
-from tournament_system.tournament_system_factory import create
-from tournament_system.tournament_system import TournamentSystem
+from tournament_systems.tournament_system_factory import create
+from tournament_systems.tournament_system import TournamentSystem
 from tournament_stages.exceptions import NoResultsException
 
 from inspect import getframeinfo, currentframe
@@ -17,9 +17,6 @@ class Tournament:
         '''
         Getting results of tournament.
         '''
-
-        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
-
         game_signature = GameSignature(self.tournament_id)
 
         tournament_system = create()(self.players_list)

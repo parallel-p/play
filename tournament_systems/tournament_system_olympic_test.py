@@ -10,7 +10,6 @@ THIRD = {7: {2: 4, 5: 7}}
 FIRST_ROUND = [[1, 2], [3, 4], [5, 6], [7, 8]]
 SECOND_ROUND = [[2, 3], [5, 7]]
 THIRD_ROUND = [[2, 5]]
-CONFIG_DATA = ''
 DATA = [[[(1, 3), (2, 0)], [(3, 0), (4, 2)], [(5, 1), (6, 3)], [(7, 0), (8, 1)]],
                 [[(1, 9), (4, 0)], [(6, 0), (8, 1)]], [[(1, 4), (8, 1)]]]
 
@@ -18,8 +17,7 @@ DATA = [[[(1, 3), (2, 0)], [(3, 0), (4, 2)], [(5, 1), (6, 3)], [(7, 0), (8, 1)]]
 class TournamentSystemOlympicTest(unittest.TestCase):
     def test_get_rounds(self):
         test_rounds = \
-            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST,
-                                                              CONFIG_DATA)
+            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST)
         test_rounds.get_current_round_results = Mock()
         test_rounds.get_current_round_results.side_effect = \
                 [FIRST, SECOND, THIRD]
@@ -33,8 +31,7 @@ class TournamentSystemOlympicTest(unittest.TestCase):
 
     def test_get_table(self):
         test_rounds = \
-            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST,
-                                                              CONFIG_DATA)
+            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST)
         test_rounds.get_current_round_results = Mock()
         test_rounds._data = DATA
         table = test_rounds.get_table()

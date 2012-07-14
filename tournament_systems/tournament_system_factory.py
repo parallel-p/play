@@ -1,5 +1,5 @@
 import config
-import tournament_system.tournament_systems as all_ts
+import tournament_systems.tournament_systems_config as all_ts
 
 
 class TournamentSystemNotFoundException(Exception):
