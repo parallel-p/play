@@ -18,7 +18,6 @@ class Painter:
         Returns the string --- bits of the jpeg image.
         '''
         image = Image.new('RGB', (FRAME_SIDE, FRAME_SIDE), (255, 255, 255))
-        draw = ImageDraw.Draw(image)
         if not self._is_initialized:
             self._initialize(jury_state)
 
@@ -32,23 +31,15 @@ class Painter:
                 rectangle = (y, x, y + self._cell_side, x + self._cell_side)
                 if cell == -2:
                     continue
+                draw = ImageDraw.Draw(image)
                 if cell == -1:
                     draw.rectangle(rectangle, fill='orange', outline='black')
                 elif cell == 0:
                     draw.rectangle(rectangle, outline='black')
                 else:
                     draw.rectangle(rectangle, fill='black', outline='black')
+                del draw
         '''
         Finish drawing field
         '''
-        del draw
-        image.save("test.png", "PNG")
-
-painter = Painter()
-field = [[0 for i in range(5)] for j in range(5)]
-field[0][0] = -2
-field[0][2] = -2
-field[1][3] = -1
-field[2][1] = 1
-field[4][3] = 2
-painter.paint(JuryState(5, field, None, None))
+        return str(image.tostring("jpeg", "RGB"))
