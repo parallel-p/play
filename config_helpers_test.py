@@ -22,7 +22,7 @@ class GameTest(unittest.TestCase):
     def test_write_logs(self):
         list = config_helpers.players_parse('test_for_players_parse')
         for l in list:
-            print(l)
+            print('\'' + l.author_name + '\' \'' + l.bot_name + '\'  \'' + l.command_line + '\'')
 
 
 if __name__ == '__main__':
