@@ -54,8 +54,8 @@ class VideoVisualizer:
                 return pickle.load(file)
         except:
             raise NoJuryStatesException('GameController in file ' + filename +
-                                        ' contains no jury states.')
-                                                                
+                                        ' contains no jury states.')                     
+
     def _generate_game_images(self, jstates):                   
         '''Generates frames for video.'''
         repeat = max(int(48.0 / self.framerate), 1)
@@ -89,8 +89,8 @@ class VideoVisualizer:
 
         # Removing generated images:
         for filename in self.file_list:
-            os.remove(filename)
-                               
+            os.remove(filename)        
+                                   
     def generate_tournament_status(self, game_controller):                    
         '''Generates a frame with a tournament status (currently disabled).'''
         pass

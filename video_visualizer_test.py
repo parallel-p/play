@@ -5,24 +5,24 @@ import visualizer
 import os
 import subprocess
 import pickle
-import shutil                                  
-from tournament_stages.game_signature import GameSignature   
+import shutil
+from tournament_stages.game_signature import GameSignature
 
 
 # Unfortunately, Mock objects cannot be pickled, so we have to do like this:
-class GameController:
+class GameControllerMock:
     def __init__(self):
-        self.jury_states = []                                   
-        self.signature = GameSignature()                        
+        self.jury_states = []
+        self.signature = GameSignature()
 
     def __lt__(self, other):
         return self.signature < other.signature
 
-                                                                                               
+
 class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
         if not os.path.exists('test'):
-            os.mkdir('test')   
+            os.mkdir('test')                              
         os.chdir('test')
 
         # There should be an image folder containing GIF images with specified
@@ -45,10 +45,10 @@ class VideoVisualizerTest(unittest.TestCase):
         self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME))
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
-                               
-    def test_compile(self):    
+
+    def test_compile(self):                       
         # Generate many random GameControllers.
-        gc = GameController()
+        gc = GameControllerMock()
         for gc.signature.tournament_id in range(randint(1, 3)):
             for gc.signature.round_id in range(randint(1, 3)):
                 for gc.signature.series_id in range(randint(1, 3)):
@@ -70,11 +70,11 @@ class VideoVisualizerTest(unittest.TestCase):
 
         self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME))
         self.assertFalse(os.path.exists('result.avi'))
-        # Check whether all images have been removed:           
+        # Check whether all images have been removed:
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
 
-    def tearDown(self):        
+    def tearDown(self):                           
         # To be able to watch the resulting video file manually, let's copy it.
         if os.path.exists(os.path.join('test', 'result.avi')):
             shutil.copyfile(os.path.join('test', 'result.avi'), 'result.avi')
