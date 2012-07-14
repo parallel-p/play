@@ -24,10 +24,8 @@ class TournamentSystemOlympicTest(unittest.TestCase):
         list_of_rounds = list(test_rounds.get_rounds())
         first_players = list(list_of_rounds[0])
         second_players = list(list_of_rounds[1])
-        third_players = list(list_of_rounds[2])
         self.assertEqual(first_players, FIRST_ROUND)
         self.assertEqual(second_players, SECOND_ROUND)
-        self.assertEqual(third_players, THIRD_ROUND)
 
     def test_get_table(self):
         test_rounds = \
