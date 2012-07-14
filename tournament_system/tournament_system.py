@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 class TournamentSystem:
     '''
     round_results format:
@@ -49,12 +51,14 @@ class TournamentSystem:
                     game_id and game_id != game.game_id):
                 results.update({game: self._results[game]})
 
+    @abstractmethod
     def get_rounds(self):
         '''
         Yield players_list for every round
         '''
         pass
 
+    @abstractmethod
     def get_table(self):
         '''
         Return list of strings
