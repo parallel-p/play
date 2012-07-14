@@ -176,24 +176,7 @@ class Bot:
         Deserialize move with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
         '''
-
-        time_cpu_limiter_thread = threading.Thread(
-            target=self._check_cpu_time_limit
-        )
-        time_real_limiter_thread = threading.Thread(
-            target=self._check_real_time_limit
-        )
-        deserialize_thread = threading.Thread(
-            target=self._run_deserialize,
-            args=(deserialize,)
-        )
-
-        time_cpu_limiter_thread.start()
-        time_real_limiter_thread.start()
-        deserialize_thread.start()
-        while True:
-            if not deserialize_thread.is_alive():
-                return self._deserialize_result
+        return deserialize(self._process.stdout)
 
     def _write(self, player_state, serialize):
         '''
