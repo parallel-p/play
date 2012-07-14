@@ -27,6 +27,7 @@ from tournament_stages.tournament import Tournament
 class Main:
 
     def __init__(self, game_path, tournament_id):
+        self._game_path = game_path
         self.players_list = None
         self.tournament_id = tournament_id
 
@@ -35,7 +36,9 @@ class Main:
         Load players_list with players_parse(it parses
         file containing player's information), filename is there in config
         '''
-        self.players_list = config_helpers.players_parse(config.players_config)
+        players_config_path = os.path.join(self._game_path,
+                                           config.players_config)
+        self.players_list = config_helpers.players_parse(players_config_path)
         if self.players_list is None:
             raise PlayersException('Players list doesn\'t exist')
 

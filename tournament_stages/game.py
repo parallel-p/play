@@ -8,11 +8,10 @@ from log import logger
 class Game:
     '''Starts the game, writes logs and returns results of the game'''
 
-    def __init__(self, init_jury_state, game_info, config, players):
+    def __init__(self, init_jury_state, game_info, players):
         self.jury_state = init_jury_state
         self.game_info = game_info
         self.result = dict()
-        self.config = config
         self.players = players
         self.game_controller = None
 
@@ -35,7 +34,8 @@ class Game:
     def run_engine(self):
         '''launches the engine'''
         logger.info('launching engine')
-        game_engine = GameSimulator(self.players, self.jury_state, self.game_info)
+        game_engine = GameSimulator(self.players, self.jury_state,
+                                    self.game_info)
         logger.info('starting game')
         self.game_controller = game_engine.play()
         logger.info('writing logs')

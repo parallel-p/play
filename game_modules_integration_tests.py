@@ -2,15 +2,15 @@ GAME_PATH = 'games/nim'
 BOTS = ['python3 games/nim/bots/random_bot.py',
         'python3 games/nim/bots/wrong_bot.py']
 
+import config_helpers
+config_helpers.initialize_game_environment(GAME_PATH)
+import config
+
 import unittest
 import random
 from tournament_stages.game_signature import GameSignature
 from player import Player
 from game_simulator import GameSimulator
-
-import config_helpers
-config_helpers.initialize_game_environment(GAME_PATH)
-import config
 
 
 class GameModulesIntegrationTests(unittest.TestCase):
@@ -21,8 +21,7 @@ class GameModulesIntegrationTests(unittest.TestCase):
         start_states = list(generator.generate_start_positions(signature,
                                                                len(players)))
         start_state = random.choice(start_states)
-        self._simulator = GameSimulator(config, players, start_state,
-                                        signature)
+        self._simulator = GameSimulator(players, start_state, signature)
 
     def test_that_game_is_finished(self):
         controller = self._simulator.play()
