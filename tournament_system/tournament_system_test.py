@@ -49,6 +49,18 @@ class TournamentSystemTest(unittest.TestCase):
         self.assertEqual(self.ts.get_round_results(2), round_results2)
         self.assertEqual(self.ts.get_round_results(1), round_results1)
 
+    def test_get_current_round_results(self):
+        signature = GameSignature(1, 1, 1, 1)
+        game_results = {'player1': 1, 'player2': 2}
+        round_results1 = {signature: game_results}
+        self.ts.add_round_results(round_results1)
+        signature = copy(signature)
+        signature.round_id = 2
+        game_results = {'player1': 3, 'player2': 4}
+        round_results2 = {signature: game_results}
+        self.ts.add_round_results(round_results2)
+        self.assertEqual(self.ts.get_round_results(2), round_results2)
+
 
 if __name__ == "__main__":
     unittest.main()

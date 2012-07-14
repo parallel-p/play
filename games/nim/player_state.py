@@ -1,3 +1,4 @@
-def serialize(self, heap_sizes, stream):
-    stream.write(' '.join([str(n) for n in heap_sizes]) + '\n')
+def serialize(heap_sizes, stream):
+    representation = ' '.join([str(n) for n in heap_sizes]) + '\n'
+    stream.write(representation.encode())
     stream.flush()
