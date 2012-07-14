@@ -2,6 +2,8 @@ from tournament_stages.round import Round
 from tournament_stages.game_signature import GameSignature
 from tournament_system.tournament_system_factory import create
 from tournament_system.tournament_system import TournamentSystem
+from game_signature import GameSignature
+from exceptions import NoResultsException
 
 
 class Tournament:
@@ -28,5 +30,5 @@ class Tournament:
 
     def get_results(self):
         if self.results is None:
-            raise Exception("Results of the tournament haven't exist yet.")
+            raise NoResultsException('Results of the tournament haven\'t exist yet.')
         return self.results
