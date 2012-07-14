@@ -11,5 +11,5 @@ class JuryState:
         explosion_time is time before the explosion of the field
         '''
         self.field_side = field_side
-        self.table = table
-        self.time_before_explosion = explosion_time
+        self.field = field
+        self.explosion_time = explosion_time
