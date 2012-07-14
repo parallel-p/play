@@ -5,8 +5,7 @@ from unittest.mock import Mock
 PLAYERS_LIST = [1, 2]
 ANSWER = [[1, 2]]
 CONFIG = []
-RESULTS = {1: {1: 1, 2: 0}}
-WIDTH = 3
+RESULTS = {1: {1: 10, 2: 179}}
 
 
 class TournamentSystemEachTest(unittest.TestCase):
@@ -21,7 +20,8 @@ class TournamentSystemEachTest(unittest.TestCase):
         ts = tournament_system_each.TournamentSystemEach(PLAYERS_LIST,
                                                          CONFIG)
         ts.add_round_results(RESULTS)
-        for string in ts.get_table(WIDTH):
+        table = ts.get_table()
+        for string in table:
             print(string)
 
 
