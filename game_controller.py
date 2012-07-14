@@ -4,7 +4,6 @@ from log import logger
 
 class GameController:
     '''
-
     GameController is a class, which controls game manager.
     Usage:
     >> game_controller = GameController(config, players, signature, jury_state)
@@ -65,6 +64,7 @@ class GameController:
         '''
         for player in self._players:
             self.bots[player] = bot.Bot(player.command_line, self.config)
+            self.bots[player].create_process()
             logger.debug('created bot "%s"', player.bot_name)
             logger.info('all bots created')
 
