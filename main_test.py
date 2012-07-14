@@ -17,23 +17,20 @@ class MainTest(unittest.TestCase):
         pass
 
     def test_functions(self):
-        print("I'm starting work!")
-        #unittest.TestCase.assertNotEqual(Tournament, MagicMock())
         self.main = main.Main('Ata dir', 1)
         self.main.load_config()
         self.main.load_players()
         Tournament().get_results.return_value='First player won'
         self.main.run_tournament()
-        print(self.main.show_result())
-        print("I'm finishing work!")
+        if self.main.show_result() != 'First player won':
+            raise Exception("main.py doesn't work")
 
     def test_main(self):
-        print("I'm starting work!")
         self.main = main.Main('Ata dir', 1)
         Tournament().get_results.return_value='First player won'
         self.main.main()
-        print(self.main.show_result())
-        print("I'm finishing work!")
+        if self.main.show_result() != 'First player won':
+            raise Exception("main.py doesn't work")
 
     def tearDown(self):
         pass

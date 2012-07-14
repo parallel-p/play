@@ -1,11 +1,9 @@
 import sys
 import os
-
-print(sys.path)
 from unittest.mock import Mock, patch
 from tournament_stages.round import Round
-from tournament_system import tournament_system as ts
-from game_supporting_classes import GameSignature
+from tournament_system.tournament_system import TournamentSystem
+from game_signature import GameSignature
 
 
 class Tournament:
@@ -20,7 +18,7 @@ class Tournament:
         Getting results of tournament.
         '''
         game_signature = GameSignature(self.tournament_id)
-        tournament_system = ts.TournamentSystem(self.players_list)
+        tournament_system = TournamentSystem(self.players_list)
         for round_id, round_info in enumerate(tournament_system.get_rounds()):
             game_signature.round_id = round_id
             _round = Round(game_series_list=round_info,
