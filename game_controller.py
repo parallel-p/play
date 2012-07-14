@@ -1,5 +1,6 @@
 import bot
 from log import logger
+import config
 
 
 class GameNotFinishedException(Exception):
@@ -24,12 +25,11 @@ class GameController:
     # Getting scores
     >> dict_of_scores = game_controller.get_scores()
     '''
-    def __init__(self, config, players, signature, jury_state):
+    def __init__(self, players, signature, jury_state):
         '''
         Constructor of class. Creating jury states array,
         initializing base variables
         '''
-        self.config = config
         self._players = players
         self.signature = signature
         self.jury_states = [jury_state]
@@ -78,7 +78,7 @@ class GameController:
         Creates bots for each player
         '''
         for player in self._players:
-            self.bots[player] = bot.Bot(player.command_line, self.config)
+            self.bots[player] = bot.Bot(player.command_line)
             self.bots[player].create_process()
             logger.debug('created bot "%s"', player.bot_name)
         logger.info('all bots created')

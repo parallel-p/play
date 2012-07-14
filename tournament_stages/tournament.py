@@ -23,9 +23,9 @@ class Tournament:
         game_signature = GameSignature(self.tournament_id)
 
         tournament_system = create()(self.players_list)
-        for round_id, round_info in enumerate(tournament_system.get_rounds()):
+        for round_id, players in enumerate(tournament_system.get_rounds()):
             game_signature.round_id = round_id
-            _round = Round(round_info, game_signature)
+            _round = Round(list(players), game_signature)
             _round.run()
             _round_results = _round.games_results
             tournament_system.add_round_results(_round_results)
@@ -33,5 +33,6 @@ class Tournament:
 
     def get_results(self):
         if self.results is None:
-            raise NoResultsException('Results of the tournament haven\'t exist yet.')
+            raise NoResultsException(
+              'Results of the tournament haven\'t exist yet.')
         return self.results

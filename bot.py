@@ -3,6 +3,7 @@ import threading
 import time
 from subprocess import PIPE
 from log import logger
+import config
 
 
 '''
@@ -50,14 +51,13 @@ class Bot:
         <move.Move object at ...>
         >>> p.kill_process()
     '''
-    def __init__(self, player_command, config):
+    def __init__(self, player_command):
         '''
         Constructor for class Bot.
         player_command is a string which is used to invoke bot program.
         '''
         self._player_command = player_command
         self._process = None
-        self._config = config
 
     def create_process(self):
         '''
@@ -75,13 +75,12 @@ class Bot:
 
     def _check_memory_limits(self):
         '''
-
         This function is running in a separate thread
         and check process exceed memory limit every `CHECK_TIME_SECONDS`
         seconds.
         '''
         CHECK_TIME_SECONDS = 0.15
-        memory_limit_mb = self._config.memory_limit_mb
+        memory_limit_mb = config.memory_limit_mb
 
         exit_code = None
         while exit_code is None:
@@ -107,7 +106,7 @@ class Bot:
         seconds.
         '''
         CHECK_TIME_SECONDS = 0.15
-        cpu_limit = self._config.cpu_time_limit_seconds
+        cpu_limit = config.cpu_time_limit_seconds
         cpu_time_start = self._get_cpu_time()
 
         exit_code = None
@@ -123,7 +122,6 @@ class Bot:
             if process_cpu_time is None:
                 return
             elif process_cpu_time - cpu_time_start > cpu_limit:
-                self.kill_process()
                 raise TimeLimitException
 
     def _check_real_time_limit(self):
@@ -132,23 +130,22 @@ class Bot:
         and check process exceed real time limit every `CHECK_TIME_SECONDS`
         seconds.
         '''
-        CHECK_TIME_SECONDS = 0.15
-        real_limit = self._config.real_time_limit_seconds
+        CHECK_TIME_SECONDS = 0.05
+        real_limit = config.real_time_limit_seconds
         real_time_start = time.time()
 
         exit_code = None
-        while (exit_code is None) and (self._is_running()):
+        while exit_code is None:
             try:
                 exit_code = self._process.wait(CHECK_TIME_SECONDS)
             except psutil.TimeoutExpired:
-                exit_code = self._process.wait()
+                pass
             try:
                 process_real_time = time.time()
             except psutil.NoSuchProcess:
                 return
 
             if process_real_time - real_time_start > real_limit:
-                self.kill_process()
                 raise TimeLimitException
 
     def _get_cpu_time(self):
@@ -171,6 +168,9 @@ class Bot:
         move = self._read(deserialize)
         return move
 
+    def _run_deserialize(self, deserialize):
+        self._deserialize_result = deserialize(self._process.stdout)
+
     def _read(self, deserialize):
         '''
         Deserialize move with bot's `stdout`.
@@ -183,9 +183,17 @@ class Bot:
         time_real_limiter_thread = threading.Thread(
             target=self._check_real_time_limit
         )
+        deserialize_thread = threading.Thread(
+            target=self._run_deserialize,
+            args=(deserialize,)
+        )
+
         time_cpu_limiter_thread.start()
         time_real_limiter_thread.start()
-        return deserialize(self._process.stdout)
+        deserialize_thread.start()
+        while True:
+            if not deserialize_thread.is_alive():
+                return self._deserialize_result
 
     def _write(self, player_state, serialize):
         '''

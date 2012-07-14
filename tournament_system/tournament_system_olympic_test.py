@@ -11,6 +11,8 @@ FIRST_ROUND = [[1, 2], [3, 4], [5, 6], [7, 8]]
 SECOND_ROUND = [[2, 3], [5, 7]]
 THIRD_ROUND = [[2, 5]]
 CONFIG_DATA = ''
+DATA = [[[(1, 3), (2, 0)], [(3, 0), (4, 2)], [(5, 1), (6, 3)], [(7, 0), (8, 1)]],
+                [[(1, 9), (4, 0)], [(6, 0), (8, 1)]], [[(1, 4), (8, 1)]]]
 
 
 class TournamentSystemOlympicTest(unittest.TestCase):
@@ -28,6 +30,16 @@ class TournamentSystemOlympicTest(unittest.TestCase):
         self.assertEqual(first_players, FIRST_ROUND)
         self.assertEqual(second_players, SECOND_ROUND)
         self.assertEqual(third_players, THIRD_ROUND)
+
+    def test_get_table(self):
+        test_rounds = \
+            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST,
+                                                              CONFIG_DATA)
+        test_rounds.get_current_round_results = Mock()
+        test_rounds._data = DATA
+        table = test_rounds.get_table()
+        for line in table:
+            print(line)
 
 if __name__ == '__main__':
     unittest.main()

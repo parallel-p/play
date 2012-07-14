@@ -1,5 +1,6 @@
 import game_controller
 from log import logger
+import config
 
 
 class GameSimulator:
@@ -9,14 +10,14 @@ class GameSimulator:
         >> eng = GameSimulator(config, players, jury_state, game_signature)
         >> eng.play()
     '''
-    def __init__(self, config, players, jury_state, game_signature):
+    def __init__(self, players, jury_state, game_signature):
         '''
         Constructor of class GameSimulator.
         Creates an object of the class, gets config, players list,
         jury_state and game_signature
         '''
-        self._game_controller = game_controller.GameController(config,
-                                players, game_signature, jury_state)
+        self._game_controller = game_controller.GameController(players,
+                                    game_signature, jury_state)
         self._game_master = config.GameMaster(self._game_controller,
                                               jury_state)
 
