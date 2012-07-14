@@ -1,4 +1,5 @@
 from tournament_system import tournament_system
+import ascii_draw_table
 
 
 class TournamentSystemEach(tournament_system.TournamentSystem):
@@ -18,35 +19,21 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
                        self._players_list[second_player]])
         return play_list
 
-    def _cut_string(self, string, width):
-        '''
-        Makes the string len equal to width.
-        If len(string) is less than width then
-        method adds spaces.
-        '''
-        if len(string) < width:
-            string += (' ' * (width - len(string)))
-        string = string[:width]
-        return string
-
     def _convert_score(self, score):
         '''
         Converts score from format (a, b) to string 'a:b'.
         '''
         return str(score[0]) + ':' + str(score[1])
 
-    def _print_separator(self, width, columns):
+    def get_table(self):
         '''
-        Returns the line of separators '-'.
+        Retuns the scores of the tournament in a table
+        (list of strings).
         '''
-        return str('*' + '-' * width) * columns + '*'
-
-    def get_table(self, width):
-        '''
-        Yields the scores of the tournament in a table
-        (string one by one), gets width of one column.
-        '''
-        table = {}
+        scores = {}
+        table = []
+        row = []
+        #Used to sort rows and then add to table
         rows = []
         for game in self._results.values():
             current_game = []
@@ -54,41 +41,34 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
                 current_game.append((player, score))
             ((first_player, first_score),
              (second_player, second_score)) = current_game
-            table[(first_player, second_player)] =\
+            scores[(first_player, second_player)] =\
                   (first_score, second_score)
-            table[(second_player, first_player)] =\
+            scores[(second_player, first_player)] =\
                   (second_score, first_score)
-        #Quantity of columns
-        columns = len(self._players_list) + 2
-        #Print separator line
-        yield self._print_separator(width, columns)
         #Header
-        current_string = '|' + ' ' * width + '|'
+        row.append('')
         for player in self._players_list:
-            current_string += self._cut_string(str(player), width)
-            current_string += '|'
-        current_string += self._cut_string('Sum', width) + '|'
-        yield current_string
+            row.append(str(player))
+        row.append('Sum')
+        table.append(row)
+
         #Main data
         for first_player in self._players_list:
-            current_string = '|' + self._cut_string(str(first_player), width)
-            current_string += '|'
+            row = [(str(first_player))]
             current_sum = 0
             for second_player in self._players_list:
                 if first_player == second_player:
-                    current_string += (' ' * width)
+                    row.append('')
                 else:
-                    score = table[(first_player, second_player)]
+                    score = scores[(first_player, second_player)]
                     current_sum += score[0]
                     score = self._convert_score(score)
-                    current_string += self._cut_string(score, width)
-                current_string += '|'
+                    row.append(score)
             #Score cell
-            current_string += self._cut_string(str(current_sum), width)
-            current_string += '|'
-            rows.append((current_sum, current_string))
+            row.append(str(current_sum))
+            rows.append((current_sum, row))
         rows.sort(reverse=1)
         for row in rows:
-            yield self._print_separator(width, columns)
-            yield row[1]
-        yield self._print_separator(width, columns)
+            table.append(row[1])
+        ascii_drawer = ascii_draw_table.ASCIIDrawTable()
+        return ascii_drawer.draw_table(table)

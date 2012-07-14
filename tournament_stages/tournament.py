@@ -1,7 +1,7 @@
 from tournament_stages.round import Round
-# from tournament_system import tournament_system as ts
-from tournament_stages.game_supporting_classes import GameSignature
+from tournament_stages.game_signature import GameSignature
 from tournament_system import tournament_system_factory
+from tournament_system.tournament_system import TournamentSystem
 
 
 class Tournament:
@@ -15,6 +15,7 @@ class Tournament:
         Getting results of tournament.
         '''
         game_signature = GameSignature(self.tournament_id)
+
         tournament_system = tournament_system_factory.create()(self.players_list)
         for round_id, round_info in enumerate(tournament_system.get_rounds()):
             game_signature.round_id = round_id
