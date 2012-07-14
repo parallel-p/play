@@ -54,12 +54,12 @@ class VideoVisualizer:
                 return pickle.load(file)
         except:
             raise NoJuryStatesException('GameController in file ' + filename +
-                                        ' contains no jury states.')
+                                        ' contains no jury states.')                     
 
-    def _generate_game_images(self, jstates):
+    def _generate_game_images(self, jstates):                   
         '''Generates frames for video.'''
         repeat = max(int(48.0 / self.framerate), 1)
-        # We need filenames with leading zeroes for ffmpeg
+        # We need filenames with leading zeroes for ffmpeg      
         zero_count = int(log10(len(jstates) * repeat) + 1)
         self.file_list = []
         ext = None
@@ -80,7 +80,8 @@ class VideoVisualizer:
     def collect_game_images_to_video(self, jstates):
         '''Composes a video file from jury states list.'''
         self._generate_game_images(jstates)
-        # The command below compiles images into a video file:
+
+        # The command below compiles images into a video file:  
         subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
                         format(os.path.join(self.working_dir,
                         self.imagefile_name), self.size[0], self.size[1],
@@ -88,9 +89,9 @@ class VideoVisualizer:
 
         # Removing generated images:
         for filename in self.file_list:
-            os.remove(filename)
-
-    def generate_tournament_status(self, game_controller):
+            os.remove(filename)        
+                                   
+    def generate_tournament_status(self, game_controller):                    
         '''Generates a frame with a tournament status (currently disabled).'''
         pass
 
@@ -103,13 +104,11 @@ class VideoVisualizer:
             if re.search(self.file_mask, filename):
                 controllers.append(self._get_game_controller(os.path.join(
                                    self.working_dir, filename)))
-        # The games should be given in the right order:
+        # The games should be given in the right order:         
         controllers = list(sorted(controllers))
 
         output_name = os.path.join(self.working_dir, output_name)
-        name, extension = output_name.split(sep='.')
-        # Not to make the result file become converted into itself
-        # (see line 118):
+        name, extension = output_name.split(sep='.')            
         name += '1'
 
         with open(name + ".mpg", "wb") as result:
@@ -121,3 +120,4 @@ class VideoVisualizer:
                 os.remove(TEMPFILE_NAME)
         subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' + output_name)
                         .split())
+        os.remove(name + '.mpg')
