@@ -1,5 +1,5 @@
 from tournament_stages.exceptions import NoResultsException
-import tournament_stages.game as game
+import tournament_stages.game
 from copy import copy
 
 from inspect import getframeinfo, currentframe

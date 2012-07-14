@@ -1,10 +1,6 @@
 import config
 import tournament_stages.series as series
-<<<<<<< Updated upstream
-=======
-
 from inspect import getframeinfo, currentframe
->>>>>>> Stashed changes
 
 
 class Round:
