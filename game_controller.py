@@ -57,7 +57,6 @@ class GameController:
         '''
         self.is_finished = True
         self._scores = scores
-        self.kill_bots()
         logger.info('game finished')
 
     def get_players(self):
