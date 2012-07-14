@@ -20,7 +20,7 @@ class Tournament:
         tournament_system = create()(self.players_list)
         for round_id, round_info in enumerate(tournament_system.get_rounds()):
             game_signature.round_id = round_id
-            _round = Round(self.players_list, game_signature)
+            _round = Round(round_info, game_signature)
             _round.run()
             _round_results = _round.games_results
             tournament_system.add_round_results(_round_results)
