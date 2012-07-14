@@ -1,5 +1,5 @@
 import tournament_system
-import ts_draw_table
+import ascii_draw_table
 
 
 class TournamentSystemEach(tournament_system.TournamentSystem):
@@ -70,5 +70,5 @@ class TournamentSystemEach(tournament_system.TournamentSystem):
         rows.sort(reverse=1)
         for row in rows:
             table.append(row[1])
-        ts_drawer = ts_draw_table.TSDrawTable()
-        return ts_drawer.draw_table(table)
+        ascii_drawer = ascii_draw_table.ASCIIDrawTable()
+        return ascii_drawer.draw_table(table)

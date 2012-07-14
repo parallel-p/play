@@ -1,4 +1,4 @@
-class TSDrawTable:
+class ASCIIDrawTable:
     def _count_width(self, data):
         '''
         Returns width of one column in the table (by simply finding
