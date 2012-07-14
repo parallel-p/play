@@ -1,7 +1,8 @@
-from tournament_stages.game_signature import GameSignature
 from tournament_stages.exceptions import NoResultsException
 import tournament_stages.game as game
 from copy import copy
+
+from inspect import getframeinfo, currentframe
 
 
 class Series:
@@ -22,6 +23,8 @@ class Series:
         '''
         Starts all games in series.
         '''
+        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
+
         self._results = {}
         for game_id, initial_jurystate in enumerate(self._initial_jurystates):
             self._signature.game_id = game_id

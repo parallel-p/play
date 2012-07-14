@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+
 class TournamentSystem:
     '''
     round_results format:

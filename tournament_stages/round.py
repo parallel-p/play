@@ -1,12 +1,16 @@
 import config
 import tournament_stages.series as series
+<<<<<<< Updated upstream
+=======
+
+from inspect import getframeinfo, currentframe
+>>>>>>> Stashed changes
 
 
 class Round:
     '''Manages and starts round'''
     def __init__(self, players_list, game_info):
         self._players_list = players_list
-        self._games_count = len(self._players_list)
         self._jurystates_list = []
         self.games_results = {}
         self._game_info = game_info
@@ -15,9 +19,12 @@ class Round:
     def _generate_series(self):
         '''Generates series for one round'''
         # Unknown function of generator
-        self._jurystates_list = config.Generator().generate_start_positions(
-            self._game_info,
-            len(self._players_list[0]))
+        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
+        print(self._players_list)
+        print(list(self._players_list))
+        self._jurystates_list = list(config.Generator().generate_start_positions(
+                                     self._game_info,
+                                     len(self._players_list)))
 
     def run(self):
         '''Starts series of round'''
