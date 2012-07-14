@@ -17,17 +17,23 @@ class Config:
 
 
 def deserialize(stream):
-    return stream.readline().decode('utf-8')
+    return int(stream.readline().decode('utf-8'))
 
 
 def serialize(player_state, stream):
-    stream.write(bytes(player_state.a, 'utf-8'))
+    stream.write(bytes(str(player_state.a), 'utf-8'))
     stream.write(b'\n')
 
 
 config = Config()
-players = [Player('python IntegrationBot.py', 'IntegrationTest',
-                  'IntegrationBot')]
+players = [Player('python test_bots/IntegrationBot.py',
+                  'IntegrationTest', 'IntegrationBot'),
+           Player('python test_bots/TimeLimitBot.py',
+                  'IntegrationTest', 'TimeLimitBot'),
+           Player('python test_bots/MemoryLimitBot.py',
+                  'IntegrationTest', 'MemoryLimitBot'),
+           Player('python test_bots/WrongOutputBot.py',
+                  'IntegrationTest', 'WrongOutputBot')]
 signature = GameSignature(1, 2, 3, 4)
 jury_state = None
 
@@ -37,10 +43,13 @@ class IntegrationTest(unittest.TestCase):
         game = game_controller.GameController(config, players,
                                               signature, jury_state)
         game.create_bots()
-        ps = PlayerState('42')
+        ps = PlayerState(42)
         move = game.get_move(players[0], ps, serialize, deserialize)
+        self.assertEqual(move, 42)
+        move = game.get_move(players[1], ps, serialize, deserialize)
+        move = game.get_move(players[2], ps, serialize, deserialize)
+        move = game.get_move(players[3], ps, serialize, deserialize)
         game.kill_bots()
-        self.assertEqual(move, '42\n')
 
 
 if __name__ == '__main__':

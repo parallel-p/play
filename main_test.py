@@ -13,15 +13,11 @@ with patch.dict('sys.modules', {'config_helpers': MagicMock(),
 
 class MainTest(unittest.TestCase):
 
-    def setUp(self):
-        pass
-
     def test_functions(self):
         self.main = main.Main('Ata dir', 1)
-        self.main.load_config()
-        self.main.load_players()
+        self.main._load_players()
         Tournament().get_results.return_value = 'First player won'
-        self.main.run_tournament()
+        self.main._run_tournament()
         if self.main.show_result() != 'First player won':
             raise Exception("main.py doesn't work")
 
@@ -31,9 +27,6 @@ class MainTest(unittest.TestCase):
         self.main.main()
         if self.main.show_result() != 'First player won':
             raise Exception("main.py doesn't work")
-
-    def tearDown(self):
-        pass
 
 
 if __name__ == '__main__':

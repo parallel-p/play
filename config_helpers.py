@@ -53,7 +53,9 @@ def _return_player(string):
 
 def players_parse(path):
     """This function parses config file and returns list of Players"""
-    print(path)
+
+    if (os.path.exists(path) == 0):
+        return list()
     config_file = open(path, 'r')
     lines = config_file.readlines()
     config_file.close()
