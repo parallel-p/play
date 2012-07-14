@@ -2,7 +2,9 @@ import subprocess
 import os
 import pickle
 import re
-from PIL import Image
+import shutil
+from textwrap import wrap
+from PIL import Image, ImageDraw, ImageFont
 from math import log10
 
 
@@ -23,6 +25,7 @@ class NoJuryStatesException(Exception):
 
 
 TEMPFILE_NAME = 'tempvideo.mpg'
+TEMPFILE_NAME_TITLE = 'temptitle.mpg'
 
 
 class VideoVisualizer:
@@ -87,13 +90,58 @@ class VideoVisualizer:
                         self.imagefile_name), self.size[0], self.size[1],
                         TEMPFILE_NAME).split()))
 
-        # Removing generated images:
+        # Removing generated images:                            
         for filename in self.file_list:
             os.remove(filename)
 
-    def generate_tournament_status(self, game_controller):
+    def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status (currently disabled).'''
-        pass
+        TEMPIMAGEFILE_TITLE = 'tempimage_title{:03d}.png'
+        TEMP_FOR_FFMPEG = 'tempimage_title%03d.png'
+        info = (wrap('Tournament: ' + str(contr.signature.tournament_id),
+                     width=40) +
+                wrap('Round:      ' + str(contr.signature.round_id),
+                     width=40) +
+                wrap('Series:     ' + str(contr.signature.series_id),
+                     width=40) +
+                wrap('Game:       ' + str(contr.signature.game_id), width=40) +
+                [''] +
+                wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
+                     contr.players)), width=40))
+
+        im = Image.new('RGB', self.size, (0, 0, 255))
+        draw = ImageDraw.Draw(im)
+        cfsize = 100
+        done_once = False
+        while True:
+            font = ImageFont.truetype('Lucida Console.ttf', cfsize,
+                                      encoding='unic')
+            textlen = max(map(lambda x: font.getsize(x)[0], info))
+            textheight = (font.getsize('T')[1] + 1) * len(info)
+            if (textlen < self.size[0] - 10 and textheight < self.size[1] - 10
+                    and done_once):
+                break
+            done_once = True
+            cfsize = min(cfsize - 1, int(cfsize * min((self.size[0] - 10)
+                         / textlen, (self.size[1] - 10) / textheight)))
+        dy = font.getsize('T')[1] + 1
+        y = (self.size[1] - dy * len(info)) / 2
+        for line in info:
+            width = font.getsize(line)[0]
+            draw.text(((self.size[0] - width) / 2, y), line, font=font,
+                      fill=(255, 255, 255))
+            y += dy
+        im.save(TEMPIMAGEFILE_TITLE.format(0))
+
+        TIME_IN_SEC = 5
+        for i in range(24 * TIME_IN_SEC - 1):
+            shutil.copyfile(TEMPIMAGEFILE_TITLE.format(0),
+                            TEMPIMAGEFILE_TITLE.format(i + 1))
+        subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG + ' -r 48 -s'
+                        ' {}x{} {}').format(self.size[0], self.size[1],
+                        TEMPFILE_NAME_TITLE).split())
+        for i in range(24 * TIME_IN_SEC):
+            os.remove(TEMPIMAGEFILE_TITLE.format(i))
 
     def compile(self, output_name):
         '''
@@ -113,11 +161,15 @@ class VideoVisualizer:
 
         with open(name + ".mpg", "wb") as result:
             for controller in controllers:
-                self.generate_tournament_status(controller)
                 self.collect_game_images_to_video(controller.jury_states)
+                self.generate_tournament_status(controller)
+                with open(TEMPFILE_NAME_TITLE, 'rb') as file:
+                    result.write(file.read())
+                os.remove(TEMPFILE_NAME_TITLE)
                 with open(TEMPFILE_NAME, 'rb') as file:
                     result.write(file.read())
                 os.remove(TEMPFILE_NAME)
+
         subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' + output_name)
                         .split())
         os.remove(name + '.mpg')

@@ -7,12 +7,16 @@ import subprocess
 import pickle
 import shutil
 from tournament_stages.game_signature import GameSignature
+from player import Player
 
 
 # Unfortunately, Mock objects cannot be pickled, so we have to do like this:
 class GameControllerMock:
     def __init__(self):
         self.jury_states = []
+        self.players = [Player(None, 'Dmitry Tomp'),
+                        Player(None, 'Daniil Ryazanovsky'),
+                        Player(None, 'Alex Dmitriev')]
         self.signature = GameSignature()
 
     def __lt__(self, other):
@@ -44,7 +48,19 @@ class VideoVisualizerTest(unittest.TestCase):
 
         self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME))
         for fname in os.listdir('test'):
-            self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
+            self.assertTrue(fname.endswith('.gc'))
+
+    def test_generate_tournament_status(self):
+        os.chdir('..')
+        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
+            os.remove(visualizer.TEMPFILE_NAME_TITLE)
+
+        self.viz.size = (640, 480)
+        self.viz.generate_tournament_status(GameControllerMock())
+
+        self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME_TITLE))
+        for fname in os.listdir('test'):
+            self.assertTrue(fname.endswith('.gc'))
 
     def test_compile(self):
         # Generate many random GameControllers.
@@ -63,12 +79,15 @@ class VideoVisualizerTest(unittest.TestCase):
         os.chdir('..')
         if os.path.exists(visualizer.TEMPFILE_NAME):
             os.remove(visualizer.TEMPFILE_NAME)
+        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
+            os.remove(visualizer.TEMPFILE_NAME_TITLE)
         if os.path.exists('result.avi'):
             os.remove('result.avi')
 
         self.viz.compile('result.avi')
 
         self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME))
+        self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME_TITLE))
         self.assertFalse(os.path.exists('result.avi'))
         # Check whether all images have been removed:
         for fname in os.listdir('test'):
