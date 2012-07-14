@@ -1,6 +1,5 @@
 import sys
 import os
-from unittest.mock import Mock, MagicMock
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__)))
 if PROJECT_ROOT not in sys.path:

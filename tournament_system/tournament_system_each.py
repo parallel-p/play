@@ -1,8 +1,8 @@
-from tournament_system import tournament_system
-import ascii_draw_table
+from tournament_system.tournament_system import TournamentSystem
+import tournament_system.ascii_draw_table
 
 
-class TournamentSystemEach(tournament_system.TournamentSystem):
+class TournamentSystemEach(TournamentSystem):
     '''
     In this tournament system every player competes with each other.
     '''
