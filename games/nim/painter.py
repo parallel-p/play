@@ -1,4 +1,3 @@
-from PIL import Image, ImageDraw
 from io import BytesIO
 
 
@@ -23,7 +22,9 @@ class Painter:
     def paint(self, jury_state):
         '''Paints the state of the game;
         returns the string --- bits of the jpeg image.'''
-
+        from PIL import Image, ImageDraw
+        # We put import here, because if it was in module header,
+        # ASCII-art-only users would try to load it and possibly fail.
         if not self._is_initialized:
             self._initialize(jury_state)
 
