@@ -14,6 +14,7 @@ CONFIG_DATA = ''
 DATA = [[[(1, 3), (2, 0)], [(3, 0), (4, 2)], [(5, 1), (6, 3)], [(7, 0), (8, 1)]],
                 [[(1, 9), (4, 0)], [(6, 0), (8, 1)]], [[(1, 4), (8, 1)]]]
 
+
 class TournamentSystemOlympicTest(unittest.TestCase):
     def test_get_rounds(self):
         test_rounds = \
@@ -29,7 +30,7 @@ class TournamentSystemOlympicTest(unittest.TestCase):
         self.assertEqual(first_players, FIRST_ROUND)
         self.assertEqual(second_players, SECOND_ROUND)
         self.assertEqual(third_players, THIRD_ROUND)
-    
+
     def test_get_table(self):
         test_rounds = \
             tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST,
