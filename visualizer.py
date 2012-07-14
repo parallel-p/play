@@ -90,7 +90,7 @@ class VideoVisualizer:
                         self.imagefile_name), self.size[0], self.size[1],
                         TEMPFILE_NAME).split()))
 
-        # Removing generated images:                            
+        # Removing generated images:
         for filename in self.file_list:
             os.remove(filename)
 
