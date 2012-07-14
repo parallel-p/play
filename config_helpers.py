@@ -51,8 +51,10 @@ def _return_player(string):
 
 
 def players_parse(path):
+    """This function parses config file and returns list of Players"""
     config_file = open(path, 'r')
     lines = config_file.readlines()
+    config_file.close()
     players_list = list()
     for line in lines:
         players_list.append(_return_player(line))

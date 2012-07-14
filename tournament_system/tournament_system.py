@@ -26,15 +26,17 @@ class TournamentSystem:
 
     def get_round_results(self, round_id):
         '''
-        Yield results of round
+        Return results of round
         '''
-        for game in self.get_all_results():
+        results = {}
+        for game in self._results:
             if game.round_id == round_id:
-                yield game
+                results.update({game: self._results[game]})
+        return results
 
     def get_current_round_results(self):
         '''
-        Return iterator of results of current round
+        Return results of current round
         '''
         return self.get_round_results(self._current_round_id)
 

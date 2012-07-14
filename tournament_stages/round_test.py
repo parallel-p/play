@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, Mock, MagicMock
-with patch.dict('sys.modules', {'generator': Mock(), 'series': Mock()}):
-    import generator
+with patch.dict('sys.modules', {'config': Mock(), 'series': Mock()}):
+    import config
     import series
     import round
 
@@ -14,8 +14,8 @@ class RoundTest(unittest.TestCase):
         self.assertEqual(test_round._game_info, None)
 
     def test_generate_series(self):
-        generator.Generator = Mock()
-        generator.Generator().generate_start_positions.return_value = [42]
+        config.Generator = Mock()
+        config.Generator().generate_start_positions.return_value = [42]
         test_round = round.Round(players_list=[[1, 2]],
                                  game_info=Mock())
         test_round.generate_series()

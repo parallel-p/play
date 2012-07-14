@@ -28,7 +28,6 @@ class GameSimulator:
         '''
         self._game_controller.create_bots()
         while not self._game_controller.is_finished:
-            logger.debug("performing a game tick")
             self._game_master.tick(self._game_controller.jury_states[-1])
         self._game_controller.kill_bots()
         return self._game_controller

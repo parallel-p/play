@@ -1,4 +1,4 @@
-import generator
+import config
 import series
 
 
@@ -14,7 +14,7 @@ class Round:
     def generate_series(self):
         '''Generates series for one round'''
         # Unknown function of generator
-        self._jurystates_list = generator.Generator().generate_start_positions(
+        self._jurystates_list = config.Generator().generate_start_positions(
             self._game_info,
             len(self._players_list[0]))
 
