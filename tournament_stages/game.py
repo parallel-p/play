@@ -2,6 +2,7 @@ import pickle
 import os
 from tournament_stages.game_signature import GameSignature
 from game_simulator import GameSimulator
+from log import logger
 
 
 class Game:
@@ -27,13 +28,14 @@ class Game:
             str(self.game_info.game_id) + '.jstate'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
+        print(dir(self.game_controller))
         pickle.dump(self.game_controller, log_file)
         log_file.close()
 
     def run_engine(self):
         '''launches the engine'''
         logger.info('launching engine')
-        game_engine = GameSimulator(config, players, jury_state, game_info)
+        game_engine = GameSimulator(self.players, self.jury_state, self.game_info)
         logger.info('starting game')
         self.game_controller = game_engine.play()
         logger.info('writing logs')
