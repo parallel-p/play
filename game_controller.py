@@ -1,4 +1,3 @@
-import bot
 from log import logger
 import config
 
@@ -34,7 +33,6 @@ class GameController:
         self.signature = signature
         self.jury_states = [jury_state]
         self.is_finished = False
-        self.bots = {}
 
     def get_move(self, player, player_state, serialaizer, deserializer):
         '''
@@ -72,24 +70,6 @@ class GameController:
         if not self.is_finished:
             raise GameNotFinishedException()
         return self._scores
-
-    def create_bots(self):
-        '''
-        Creates bots for each player
-        '''
-        for player in self._players:
-            self.bots[player] = bot.Bot(player.command_line)
-            self.bots[player].create_process()
-            logger.debug('created bot "%s"', player.bot_name)
-        logger.info('all bots created')
-
-    def kill_bots(self):
-        '''
-        Killes ALL running bots
-        '''
-        for bot in self.bots.values():
-            bot.kill_process()
-        logger.info('all bots killed')
 
     def __lt__(self, other):
         return self.signature < other.signature
