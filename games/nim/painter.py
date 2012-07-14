@@ -9,7 +9,7 @@ MARGIN = 10
 class Painter:
     _is_initialized = False
 
-    def _initialize(jury_state):
+    def _initialize(self, jury_state):
         self._is_initialized = True
         self._delta_x = ((FRAME_WIDTH - 2 * BORDER) /
                          max(jury_state.heap_sizes))
@@ -23,7 +23,7 @@ class Painter:
         returns the string --- bits of the jpeg image.'''
 
         if not self._is_initialized:
-            _initialize(jury_state)
+            self._initialize(jury_state)
 
         image = Image.new('RGB', (FRAME_WIDTH, FRAME_HEIGHT), (255, 255, 255))
         y = BORDER
@@ -38,4 +38,4 @@ class Painter:
                 del draw
                 x += self._delta_x
             y += self._delta_y
-        return str(image.tostring("jpeg", "RGB"))
+        return str(image.tostring("gif", "RGB"))
