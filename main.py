@@ -1,15 +1,15 @@
 import sys
 import os
-from unittest.mock import Mock, MagicMock
-import config_helpers
-import config
-from tournament_stages.tournament import Tournament
-
-tournament_id = 1
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
+
+from unittest.mock import Mock, MagicMock
+import config_helpers
+from tournament_stages.tournament import Tournament
+
+tournament_id = 1
 
 
 class Main:
@@ -23,6 +23,7 @@ class Main:
         Run something which allow import config and import config
         '''
         config_helpers.initialize_game_environment()
+        import config
 
     def load_players(self):
         '''
@@ -56,5 +57,5 @@ if (__name__ == '__main__'):
         game_path = sys.argv[1]
     else:
         game_path = "C:\\Users\\Admin\\smth\\play"
-    main = Main()
+    main = Main(game_path, tournament_id)
     main.main()
