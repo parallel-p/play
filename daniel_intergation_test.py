@@ -15,6 +15,7 @@ with patch.dict('sys.modules', {'tournament_stages.game': MAIN_MOCK}):
     from tournament_stages.tournament import Tournament
 
 import os
+from inspect import getframeinfo, currentframe
 # import sys
 
 
@@ -36,6 +37,7 @@ class TournamentIntegrationTest(unittest.TestCase):
         self.tournament = Tournament(config_helpers.players_parse(os.path.join(GAME_PATH,
                                      config.players_config)), ID)
 
+        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
         self.tournament.run()
         print(MAIN_MOCK.call_args_list)
         # print (sys.modules, file=open('log.txt', 'w'))

@@ -4,6 +4,8 @@ from tournament_system.tournament_system_factory import create
 from tournament_system.tournament_system import TournamentSystem
 from tournament_stages.exceptions import NoResultsException
 
+from inspect import getframeinfo, currentframe
+
 
 class Tournament:
     def __init__(self, players_list, tournament_id):
@@ -15,6 +17,9 @@ class Tournament:
         '''
         Getting results of tournament.
         '''
+
+        print(__file__ + ":" + str(getframeinfo(currentframe())[1]))
+
         game_signature = GameSignature(self.tournament_id)
 
         tournament_system = create()(self.players_list)
