@@ -95,9 +95,10 @@ class VideoVisualizer:
             os.remove(filename)
 
     def generate_tournament_status(self, contr):
-        '''Generates a frame with a tournament status (currently disabled).'''
+        '''Generates a frame with a tournament status.'''
         TEMPIMAGEFILE_TITLE = 'tempimage_title{:03d}.png'
         TEMP_FOR_FFMPEG = 'tempimage_title%03d.png'
+        # Text displayed on the frame:
         info = (wrap('Tournament: ' + str(contr.signature.tournament_id),
                      width=40) +
                 wrap('Round:      ' + str(contr.signature.round_id),
@@ -113,6 +114,7 @@ class VideoVisualizer:
         draw = ImageDraw.Draw(im)
         cfsize = 100
         done_once = False
+        # Here we should find the best fitting font size.
         while True:
             font = ImageFont.truetype('Lucida Console.ttf', cfsize,
                                       encoding='unic')
@@ -124,8 +126,11 @@ class VideoVisualizer:
             done_once = True
             cfsize = min(cfsize - 1, int(cfsize * min((self.size[0] - 10)
                          / textlen, (self.size[1] - 10) / textheight)))
+        # Distance between corners of texts:
         dy = font.getsize('T')[1] + 1
+        # Starting position:
         y = (self.size[1] - dy * len(info)) / 2
+        # Finally, we draw it:
         for line in info:
             width = font.getsize(line)[0]
             draw.text(((self.size[0] - width) / 2, y), line, font=font,
@@ -134,12 +139,15 @@ class VideoVisualizer:
         im.save(TEMPIMAGEFILE_TITLE.format(0))
 
         TIME_IN_SEC = 5
+        # We have to clone the frame (see the explanation above):
         for i in range(24 * TIME_IN_SEC - 1):
             shutil.copyfile(TEMPIMAGEFILE_TITLE.format(0),
                             TEMPIMAGEFILE_TITLE.format(i + 1))
+        # Compilind into a video file:
         subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG + ' -r 48 -s'
                         ' {}x{} {}').format(self.size[0], self.size[1],
                         TEMPFILE_NAME_TITLE).split())
+        # Cleaning up:
         for i in range(24 * TIME_IN_SEC):
             os.remove(TEMPIMAGEFILE_TITLE.format(i))
 

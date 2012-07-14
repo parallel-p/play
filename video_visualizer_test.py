@@ -55,6 +55,8 @@ class VideoVisualizerTest(unittest.TestCase):
         if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
             os.remove(visualizer.TEMPFILE_NAME_TITLE)
 
+        # The visualizer doesn't know the frame size as it wasn't given any
+        # game frames.
         self.viz.size = (640, 480)
         self.viz.generate_tournament_status(GameControllerMock())
 
