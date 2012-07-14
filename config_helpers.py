@@ -10,6 +10,7 @@ def initialize_game_environment(path):
     Argument `path` may be a configuration file name or directory
     where this file is located.
     '''
+
     path = os.path.abspath(path)
     if os.path.isdir(path):
         dirname = path
@@ -52,6 +53,7 @@ def _return_player(string):
 
 def players_parse(path):
     """This function parses config file and returns list of Players"""
+    print(path)
     config_file = open(path, 'r')
     lines = config_file.readlines()
     config_file.close()

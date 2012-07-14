@@ -1,9 +1,8 @@
 import unittest
-import pickle
 import os
 import shutil
 from game_supporting_classes import GameSignature
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 with patch.dict('sys.modules', {'engine': MagicMock(), 'jury_state': MagicMock(), 'config': MagicMock(), 'players': MagicMock()}):
     import engine
     import jury_state

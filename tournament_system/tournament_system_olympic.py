@@ -1,4 +1,4 @@
-import tournament_system
+from tournament_system import tournament_system
 from math import log
 
 
@@ -14,6 +14,10 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         '''
         list_of_players = self._players_list
         count_of_players = len(list_of_players)
+
+        if count_of_players == 0:
+            raise Exception("No players found. Can not create Olympic system.")
+
         count_of_all_rounds = round(log(count_of_players))
         for game_round in range(count_of_all_rounds + 2):
             count_of_players = len(list_of_players)

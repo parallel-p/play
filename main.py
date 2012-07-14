@@ -5,7 +5,6 @@ PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from unittest.mock import Mock, MagicMock
 import config_helpers
 from tournament_stages.tournament import Tournament
 
@@ -51,7 +50,7 @@ class Main:
         self.load_players()
         self.run_tournament()
 
-if (__name__ == '__main__'):
+if __name__ == '__main__':
     main = Main(game_path, 1)
     if len(sys.argv) > 1:
         game_path = sys.argv[1]

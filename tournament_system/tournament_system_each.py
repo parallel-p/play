@@ -1,4 +1,4 @@
-import tournament_system
+from tournament_system import tournament_system
 
 
 class TournamentSystemEach(tournament_system.TournamentSystem):

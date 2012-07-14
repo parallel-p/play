@@ -1,6 +1,6 @@
-from game_signature import GameSignature
-from exceptions import NoResultsException
-import game
+from tournament_stages.game_signature import GameSignature
+from tournament_stages.exceptions import NoResultsException
+import tournament_stages.game
 from copy import copy
 
 

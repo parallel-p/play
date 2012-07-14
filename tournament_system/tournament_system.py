@@ -4,9 +4,8 @@ class TournamentSystem:
     {game_signature: {player: points, ...}, ...}
     '''
 
-    def __init__(self, players_list, config_data):
+    def __init__(self, players_list):
         self._players_list = players_list
-        self._config_data = config_data
         self._results = {}
         self._all_rounds = [players_list]
         self._current_round_id = 0

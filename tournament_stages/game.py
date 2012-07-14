@@ -1,7 +1,7 @@
 import pickle
 import os
 import engine
-from game_supporting_classes import GameSignature
+# from game_supporting_classes import GameSignature
 
 
 class Game:

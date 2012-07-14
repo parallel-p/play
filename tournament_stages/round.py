@@ -1,5 +1,5 @@
 import config
-import series
+import tournament_stages.series
 
 
 class Round:
