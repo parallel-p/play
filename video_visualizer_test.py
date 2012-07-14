@@ -22,7 +22,7 @@ class GameControllerMock:
 class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
         if not os.path.exists('test'):
-            os.mkdir('test')                              
+            os.mkdir('test')
         os.chdir('test')
 
         # There should be an image folder containing GIF images with specified
@@ -46,7 +46,7 @@ class VideoVisualizerTest(unittest.TestCase):
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
 
-    def test_compile(self):                       
+    def test_compile(self):
         # Generate many random GameControllers.
         gc = GameControllerMock()
         for gc.signature.tournament_id in range(randint(1, 3)):
@@ -74,7 +74,7 @@ class VideoVisualizerTest(unittest.TestCase):
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
 
-    def tearDown(self):                           
+    def tearDown(self):
         # To be able to watch the resulting video file manually, let's copy it.
         if os.path.exists(os.path.join('test', 'result.avi')):
             shutil.copyfile(os.path.join('test', 'result.avi'), 'result.avi')
