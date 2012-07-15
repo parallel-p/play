@@ -11,10 +11,9 @@ while True:
         if x > 1:
             x -= 1
             print('LEFT')
-            sys.stdout.flush()
         elif y > 1:
             y -= 1
             print('UP')
-            sys.stdout.flush()
-    print('STAY')
+        sys.stdout.flush()
+    print('STAND')
     sys.stdout.flush()
