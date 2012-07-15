@@ -18,7 +18,7 @@ class Round:
         '''Generates series for one round'''
         self._jurystates_list = list(
           config.Generator().generate_start_positions(self._game_info,
-            len(self._players_list)))
+            self._players_list))
 
     def run(self):
         '''Starts series of round'''

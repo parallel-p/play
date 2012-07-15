@@ -19,7 +19,7 @@ class GameModulesIntegrationTests(unittest.TestCase):
         players = [Player(command_line) for command_line in BOTS]
         generator = config.Generator()
         start_states = list(generator.generate_start_positions(signature,
-                                                               len(players)))
+                                                               players))
         start_state = random.choice(start_states)
         self._simulator = GameSimulator(players, start_state, signature)
 

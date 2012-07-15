@@ -7,7 +7,7 @@ class Generator:
     _games_count = 1
     _heaps_count = 15
 
-    def generate_start_positions(self, game_signature, players_count):
+    def generate_start_positions(self, game_signature, players):
         '''Generates a list of start positions (Jury states)'''
         for game in range(self._games_count):
             heap_sizes = []
