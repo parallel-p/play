@@ -1,4 +1,4 @@
-from tournament_systems.tournament_system import TournamentSystem
+from tournament_system import TournamentSystem
 import unittest
 import sys
 import os
@@ -22,7 +22,7 @@ class TournamentSystemTest(unittest.TestCase):
         round_results = {'1': 'OLOLO'}
         self.ts.add_round_results(round_results)
         self.assertEqual(self.ts._results, round_results)
-        self.assertEqual(self.ts._current_round_id, 1)
+        self.assertEqual(self.ts._current_round_id, 0)
 
     def test_get_all_results(self):
         signature = GameSignature(1, 1, 1, 1)
@@ -57,7 +57,7 @@ class TournamentSystemTest(unittest.TestCase):
         game_results = {'player1': 3, 'player2': 4}
         round_results2 = {signature: game_results}
         self.ts.add_round_results(round_results2)
-        self.assertEqual(self.ts.get_current_round_results(), round_results2)
+        self.assertEqual(self.ts.get_current_round_results(), round_results1)
 
 
 if __name__ == "__main__":
