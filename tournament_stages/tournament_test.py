@@ -10,10 +10,13 @@ with patch.dict('sys.modules',
                 {'tournament_systems.tournament_system': MagicMock(),
                  'TournamentSystem': MagicMock(),
                  'tournament_stages.round': MagicMock(),
-                 'Round': MagicMock()}):
+                 'Round': MagicMock(),
+                 'tournament_systems.tournament_system_factory': MagicMock(),
+                 'create': MagicMock()}):
     from tournament_systems.tournament_system import TournamentSystem
+    from tournament_systems.tournament_system_factory import create
     from tournament_stages.round import Round
-    import tournament as tournament_file
+    import tournament_stages.tournament as tournament_file
 
 
 class TournamentTest(unittest.TestCase):
