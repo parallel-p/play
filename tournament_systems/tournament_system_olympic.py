@@ -39,7 +39,7 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         '''
         list_of_players = self._players_list
         count_of_players = len(list_of_players)
-        count_of_all_rounds = round(log(count_of_players))
+        count_of_all_rounds = round(log(count_of_players, 2))
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
         for game_round in range(count_of_all_rounds):
@@ -51,18 +51,20 @@ class TournamentSystemOlympic(tournament_system.TournamentSystem):
         '''
         Yields list of players for current round.
         '''
-        for player in range(1, count_of_players, 2):
-            yield [list_of_players[player - 1], list_of_players[player]]
+        for player in range(0, count_of_players - 1, 2):
+            yield [list_of_players[player], list_of_players[player + 1]]
 
     def update_list_of_players(self, count_of_players):
         '''
         Return list of players based on current scores of players.
         '''
         results = self.get_current_round_results()
+        print(results)
         new_list_of_players = []
         for game in results.values():
             new_list_of_players.append(max(game.items(),
                                       key=lambda x: x[1])[0])
+        print(new_list_of_players)
         return new_list_of_players
 
     def get_table(self):
