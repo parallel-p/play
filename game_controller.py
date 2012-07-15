@@ -1,5 +1,4 @@
 from log import logger
-import config
 
 
 class GameNotFinishedException(Exception):
