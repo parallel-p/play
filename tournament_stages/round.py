@@ -22,7 +22,8 @@ class Round:
 
     def run(self):
         '''Starts series of round'''
-        logger.info('running round #%d', self._game_info.round_id)
+        logger.info('running round #{}'.format(self._game_info.round_id))
+
         for series_id in range(len(self._players_list)):
             self._game_info.series_id = series_id
             self.series = series.Series(
@@ -31,4 +32,4 @@ class Round:
                 players_list=self._players_list[series_id])
             self.series.run()
             self.games_results.update(self.series.get_results())
-        logger.info('round #%d finished', self._game_info.round_id)
+        logger.info('running round #{}'.format(self._game_info.round_id))

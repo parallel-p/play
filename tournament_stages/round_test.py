@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, Mock
+from log import logger
 with patch.dict('sys.modules', {'config': Mock(), 'series': Mock()}):
     import config
     import series
@@ -27,6 +28,8 @@ class RoundTest(unittest.TestCase):
         test_round = Round(players_list=[[1, 2]],
                            game_info=Mock())
         test_round._jurystates_list = [Mock()]
+        logger.setLevel(10050000)
+        # logger = Mock()
         test_round.run()
         self.assertEqual(test_round.games_results, {'aba': 'caba'})
 

@@ -1,21 +1,26 @@
 import unittest
 import config_helpers
-import imp
 import os
 import player
+import sys
 
 
 class TestConfigHelpers(unittest.TestCase):
     def setUp(self):
-        os.chdir('..')
-        conf_file = open('config.py', 'w')
+        self.__old_syspath = sys.path
+        sys.path = []
+        conf_file = open('config_testing.py', 'w')
         conf_file.write('some_value = 0\n')
         conf_file.close()
 
     def test_initialize_game_environment(self):
-        config_helpers.initialize_game_environment('config.py')
-        import config
-        self.assertEqual(config.some_value, 0)
+        config_helpers.initialize_game_environment('.')
+        import config_testing
+        self.assertEqual(config_testing.some_value, 0)
+
+    def tearDown(self):
+        sys.path = self.__old_syspath
+        os.remove('config_testing.py')
 
 
 class TestPlayersParse(unittest.TestCase):
@@ -35,9 +40,9 @@ Author "Bot and bot'   '/usr/lol"
 "Author and co" Bot     "/usr/lol"
 "Author and co"      'Bot' /usr/lol
 Author   Bot     /usr/lol
-  '   '   a   '   '  
+  '   '   a   '   '
 
-  
+
      """)
         test_logs.close()
         gotten_list = config_helpers.players_parse('test_for_players_parse')
@@ -57,7 +62,7 @@ Author   Bot     /usr/lol
             self.assertEqual(answer_list[i].command_line, gotten_list[i].command_line)
         self.assertEqual(9, len(gotten_list))
         os.remove('test_for_players_parse')
-        
+
 
 if __name__ == '__main__':
     unittest.main()
