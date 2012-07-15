@@ -4,5 +4,11 @@ class Player:
         self.bot_name = bot
         self.command_line = cmd_line
 
-    def __repr__(self):
+    def __str__(self):
         return '{0}, {1}'.format(self.author_name, self.bot_name)
+
+    def __repr__(self):
+        return '<{0}>'.format(self.__str__())
+
+    def __lt__(self, other):
+        return (self.author_name, self.bot_name) < (other.author_name, other.bot_name)
