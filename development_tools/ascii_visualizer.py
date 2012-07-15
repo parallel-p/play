@@ -37,10 +37,13 @@ class AsciiVisualizer:
 
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
-        return 'Frame #{0:04d} of {1:d} :\n{2:s}\n'.format(
+        return '{color}Frame #{0:04d} of {1:d}{nocolor} :\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
             self.painter_factory().ascii_paint(
-                self.game_controller.jury_states[new_frame_number]))
+                self.game_controller.jury_states[new_frame_number]),
+            color=Fore.YELLOW+Style.BRIGHT,
+            nocolor=Fore.RESET+Style.NORMAL
+            )
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
@@ -62,6 +65,12 @@ class AsciiVisualizer:
         display this message : {gr}any other key
         '''.format(gr=Fore.GREEN, bl=Fore.BLUE) + Fore.RESET)
 
+    def _error(msg):
+        print(Fore.RED + msg + Fore.RESET)
+
+    def _prompt(msg):
+        print(Fore.YELLOW + msg, end=' : '+Fore.RESET)
+
     def activate(self):
         colorama.init()
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
@@ -80,18 +89,18 @@ class AsciiVisualizer:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
-                    print('this is the last frame')
+                    self._error('this is the last frame.')
             elif key in 'BbPp|,<[{-_':
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
-                    print('this is the first frame.')
+                    self._error('this is the first frame.')
             elif key in 'AaMm':
                 while True:
-                    print(
-                        'Enter FPS and the last frame (optional):', end=' ')
+                    self._prompt(
+                        'Enter FPS and the last frame (optional)')
                     reply = input()
                     if reply:
                         cmd = reply.split()
@@ -123,13 +132,13 @@ class AsciiVisualizer:
                             except KeyboardInterrupt:
                                 pass
                             break
-                    print('The speed must be a real nonzero number')
+                    self._error('The speed must be a real nonzero number')
             elif key in 'QqEe':
                 print('Quit')
                 return None
             elif key in '0123456789JjFfRrGg':
                 while True:
-                    print('Enter frame number:', end=' ')
+                    self._prompt('Enter frame number')
                     frame = input()
                     # Add some fool-protection...
                     if frame.isnumeric():
@@ -139,9 +148,9 @@ class AsciiVisualizer:
                             print(self._frame2string(number))
                             break
                         else:
-                            print('No such frame.')
+                            self._error('No such frame.')
                     else:
-                        print('enter a NUMBER.')
+                        self._error('enter a NUMBER.')
             else:
                 _clear()
                 print(self._frame2string(self.frame_number))
