@@ -2,7 +2,7 @@ from tournament_systems.tournament_system_each import TournamentSystemEach
 import unittest
 
 PLAYERS_LIST = [1, 2]
-ANSWER = [[1, 2]]
+ANSWER = [[[1, 2]]]
 CONFIG = []
 RESULTS = {1: {1: 10, 2: 179}}
 

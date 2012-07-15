@@ -1,4 +1,4 @@
-from tournament_system import TournamentSystem
+from tournament_systems.tournament_system import TournamentSystem
 import unittest
 import sys
 import os

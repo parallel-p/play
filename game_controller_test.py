@@ -14,8 +14,8 @@ class GameControllerTest(unittest.TestCase):
         self.players = [copy.deepcopy(player) for i in range(self.num_players)]
         self.signature = ''
         self.jury_state = ''
-        self.game = game_controller.GameController(self.config, self.players,
-            self.signature, self.jury_state)
+        self.game = game_controller.GameController(self.players, self.signature,
+                                                   self.jury_state)
 
     def test_create_bots(self):
         bot.Bot = Mock()

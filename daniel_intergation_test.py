@@ -21,11 +21,7 @@ from inspect import getframeinfo, currentframe
 
 class TournamentIntegrationTest(unittest.TestCase):
     def setUp(self):
-        with open(os.path.join(GAME_PATH, 'players_config'), 'w') as file:
-            file.write('''"John Doe" "Bot #0 (random)" "python3 games/nim/bots/random_bot.py"'''
-                       '''"John Doe" "Bot #1 (wrong)" "python3 games/nim/bots/wrong_bot.py"'''
-                       '''"John Doe" "Bot #2 (random)" "python3 games/nim/bots/random_bot.py"'''
-                       '''"John Doe" "Bot #3 (random)" "python3 games/nim/bots/random_bot.py"''')
+        pass
 
     def test_tournament(self):
         ID = 1

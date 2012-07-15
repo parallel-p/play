@@ -1,7 +1,7 @@
 import unittest
 import game_controller
 from player import Player
-from tournament_stages.game_supporting_classes import GameSignature  # ?
+from tournament_stages.game_signature import GameSignature
 
 
 class PlayerState:
@@ -40,8 +40,7 @@ jury_state = None
 
 class IntegrationTest(unittest.TestCase):
     def test_controller(self):
-        game = game_controller.GameController(config, players,
-                                              signature, jury_state)
+        game = game_controller.GameController(players, signature, jury_state)
         game.create_bots()
         ps = PlayerState(42)
         move = game.get_move(players[0], ps, serialize, deserialize)
