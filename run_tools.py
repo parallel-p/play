@@ -41,12 +41,15 @@ def visualize(game_controller):
     ascii_viz = vizualizer.AsciiVisualizer(game_controller)
     ascii_viz.activate()
 
-def dump_game_controller(gc):
-    answer = input('Would you like to save game log? (y/n): ')
-    if answer == 'y':
-        filename = input('Enter name of file: ')
-        file_ = open(filename, 'wb')
-        pickle.dump(gc, file_)
+def dump_game_controller(gc, filename=None):
+    if not filename:        
+        answer = input('Would you like to save game log? (y/n): ')
+        if answer == 'y':
+            filename = input('Enter name of file: ')
+        else:
+            return
+    file_ = open(filename, 'wb')
+    pickle.dump(gc, file_)
 
 def load_game_controller(filename):
     file_ = open(filename, 'rb')
@@ -60,15 +63,18 @@ def new_game(args):
             visualize(game_controller)
         if not args.save_to:
             dump_game_controller(game_controller)
+        else:
+            dump_game_controller(game_controller, args.save_to)
 
 def main():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('-c', '--bot-commands-file', required=True)
-    arg_parser.add_argument('-d', '--directory', required=True)
-    arg_parser.add_argument('-v', '--visualize', action='store_true')
-    arg_parser.add_argument('-s', '--save-to')
-    arg_parser.add_argument('-f', '--from-file')
-    arg_parser.add_argument('-r', '--only-run', action='store_true')
+    arg_parser.add_argument('-c', '--bot-commands-file', required=True, help='file where each line'
+    ' represents command to launch bot')
+    arg_parser.add_argument('-d', '--directory', required=True, help='directory with game')
+    arg_parser.add_argument('-v', '--visualize', action='store_true', help='visualize game after run')
+    arg_parser.add_argument('-s', '--save-to', help='save game log to file')
+    arg_parser.add_argument('-f', '--from-file', help='visualize log')
+    arg_parser.add_argument('-r', '--only-run', action='store_true', help='don\'t visualize and save logs, only run game')
     
     args = arg_parser.parse_args()
 
