@@ -2,6 +2,7 @@ import game_controller
 from log import logger
 import config
 import bot
+import copy
 
 
 class GameSimulator:
@@ -59,7 +60,8 @@ class GameSimulator:
         '''
         Saves jury states to array
         '''
-        self._game_controller.jury_states.append(jury_state)
+        copied_js = copy.deepcopy(jury_state)
+        self._game_controller.jury_states.append(copied_js)
 
     def play(self):
         '''
@@ -69,7 +71,8 @@ class GameSimulator:
         '''
         self.create_bots()
         while not self._game_controller.is_finished:
-            self._game_master.tick(self._game_controller.jury_states[-1])
+            copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
+            self._game_master.tick(copied_js)
         self.kill_bots()
         return self._game_controller
 
