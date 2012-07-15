@@ -44,12 +44,12 @@ class AsciiVisualizer:
     def _help(self):
         '''prints a help screen for the visualizer'''
         print('''Navigation:
-        forward       : N,ENTER,SPACE  (Alt: >,],+)
+        forward       : N,SPACE  (Alt: >,],+)
         back          : B,P,\          (Alt: <,[,-)
         jump to frame : J,G,any number (Alt: F,R  )
 
         autoplay      : A,M
-        stop autoplay : ^C 
+        stop autoplay : ^C
 
         quit          : Q,E
         ''')
@@ -58,20 +58,21 @@ class AsciiVisualizer:
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
         method. '''
+        _clear()
         self._help()
-        sleep(1)
+        getch()
         _clear()
         print(self._frame2string(0))
         while True:
             key = getch()
-            if (key == key in 'Nn.>]}+=\n '):
+            if (key == key in 'Nn.>]}+= '):
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     print('this is the last frame')
-            elif key in 'BbPp\|,<[{-_' :
+            elif key in 'BbPp|,<[{-_' :
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
@@ -79,37 +80,38 @@ class AsciiVisualizer:
                     print(self._frame2string(self.frame_number))
                     print('this is the first frame.')
             elif key in 'AaMm' :
-                print('Enter speed(frames/sec), and, optionally, the ending frame:', end=' ')
-                cmd=input().split()
-                try:
-                    speed=float(cmd[0])
-                except ValueError:
-                    speed=0
-                if speed is not 0:
-                    jscount=self._jury_state_count()
-
-                    if speed>=0:
-                        addv=1
-                        time=1/speed
-                    else:
-                        addv=-1
-                        time=-1/speed
-
-                    if len(cmd)>1 and cmd[1].isnumeric():
-                        endframe=int(cmd[1])-1
-                    else:
-                        endframe=jscount
-
-                    try:
-                        while (self.frame_number+addv) < jscount and (self.frame_number+addv)>=0 and self.frame_number!=endframe:
-                            _clear()
-                            print(self._frame2string(self.frame_number + addv))
-                            sleep(time)
-                    except KeyboardInterrupt:
-                        pass
-                else:
+                while True:
+                    print('Enter speed(frames/sec), and, optionally, the ending frame:', end=' ')
+                    reply = input()
+                    if reply:
+                        cmd = reply.split()
+                        try:
+                            speed = float(cmd[0])
+                        except ValueError:
+                            speed = 0
+                        if speed is not 0:
+                            jscount = self._jury_state_count()
+                            if speed >= 0:
+                                addv = 1
+                                time = 1 / speed
+                            else:
+                                addv = -1
+                                time = -1 / speed
+                            if len(cmd) > 1 and cmd[1].isnumeric():
+                                endframe = int(cmd[1]) - 1
+                            else:
+                                endframe = jscount
+                            try:
+                                while (self.frame_number+addv) < jscount and (
+                                        self.frame_number+addv) >= 0 and (
+                                            self.frame_number != endframe):
+                                    _clear()
+                                    print(self._frame2string(self.frame_number + addv))
+                                    sleep(time)
+                            except KeyboardInterrupt:
+                                pass
+                            break
                     print('The speed must be a real nonzero number')
-
             elif key in 'QqEe':
                 print('Quit')
                 return None
@@ -129,4 +131,6 @@ class AsciiVisualizer:
                     else:
                         print('enter a NUMBER.')
             else:
+                _clear()
+                print(self._frame2string(self.frame_number))
                 self._help()

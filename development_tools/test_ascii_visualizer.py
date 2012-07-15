@@ -12,8 +12,9 @@ class AsciiVisualizerTestCase(ut.TestCase):
         game_controller = Mock()
         game_controller.jury_states = []
         for i in range(10):
-            game_controller.jury_states.append(
-                config.JuryState([i, i + 1, i + 2]))
+            sample_jury_state = Mock()
+            sample_jury_state.heap_sizes = [i, i + 1, i + 2]
+            game_controller.jury_states.append(sample_jury_state)
         vis = AsciiVisualizer(game_controller)
         vis.activate()
 
