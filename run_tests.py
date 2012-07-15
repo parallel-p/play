@@ -7,7 +7,7 @@ def main():
     logger.setLevel(1000000000000)
 
     loader = unittest.TestLoader()
-    suite = loader.discover(".", "*_tests.py")
+    suite = loader.discover(".", "*_test.py")
     test_runner = unittest.TextTestRunner(verbosity=2)
     test_runner.run(suite)
 
