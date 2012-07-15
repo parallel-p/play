@@ -85,14 +85,19 @@ class VideoVisualizer:
         self._generate_game_images(jstates)
 
         # The command below compiles images into a video file:
-        subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
-                        format(os.path.join(self.working_dir,
-                        self.imagefile_name), self.size[0], self.size[1],
-                        TEMPFILE_NAME).split()))
+        try:
+            subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
+                            format(os.path.join(self.working_dir,
+                            self.imagefile_name), self.size[0], self.size[1],
+                            TEMPFILE_NAME).split()))
+        except FileNotFoundError:
+            raise FileNotFoundError('You need to install ffmpeg to make video'
+                                    ' files.')
+        finally:
+            # Removing generated images:
+            for filename in self.file_list:
+                os.remove(filename)
 
-        # Removing generated images:
-        for filename in self.file_list:
-            os.remove(filename)
 
     def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status.'''
@@ -144,12 +149,17 @@ class VideoVisualizer:
             shutil.copyfile(TEMPIMAGEFILE_TITLE.format(0),
                             TEMPIMAGEFILE_TITLE.format(i + 1))
         # Compilind into a video file:
-        subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG + ' -r 48 -s'
-                        ' {}x{} {}').format(self.size[0], self.size[1],
-                        TEMPFILE_NAME_TITLE).split())
-        # Cleaning up:
-        for i in range(24 * TIME_IN_SEC):
-            os.remove(TEMPIMAGEFILE_TITLE.format(i))
+        try:
+            subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG + ' -r 48 -s'
+                            ' {}x{} {}').format(self.size[0], self.size[1],
+                            TEMPFILE_NAME_TITLE).split())
+        except FileNotFoundError:
+            raise FileNotFoundError('You need to install ffmpeg to make video'
+                                    ' files.')
+        finally:
+            # Cleaning up:
+            for i in range(24 * TIME_IN_SEC):
+                os.remove(TEMPIMAGEFILE_TITLE.format(i))
 
     def compile(self, output_name):
         '''
@@ -164,8 +174,7 @@ class VideoVisualizer:
         controllers = list(sorted(controllers))
 
         output_name = os.path.join(self.working_dir, output_name)
-        name, extension = output_name.split(sep='.')
-        name += '1'
+        name = output_name[:output_name.rfind('.')] + '1'
 
         with open(name + ".mpg", "wb") as result:
             for controller in controllers:
@@ -178,6 +187,11 @@ class VideoVisualizer:
                     result.write(file.read())
                 os.remove(TEMPFILE_NAME)
 
-        subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' + output_name)
-                        .split())
-        os.remove(name + '.mpg')
+        try:
+            subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' + output_name)
+                            .split())
+        except FileNotFoundError:
+            raise FileNotFoundError('You need to install ffmpeg to make video'
+                                    ' files.')
+        finally:
+            os.remove(name + '.mpg')
