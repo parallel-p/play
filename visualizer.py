@@ -77,7 +77,10 @@ class VideoVisualizer:
                                       .zfill(zero_count) + ext)))
                 with open(self.file_list[-1], "wb") as f:
                     f.write(image)
-            self.size = self.size or Image.open(self.file_list[-1]).size
+            if self.size is None:
+                im = Image.open(self.file_list[-1])
+                self.size = im.size
+
         self.imagefile_name = ('tempimage%0{}d' + ext).format(zero_count)
 
     def collect_game_images_to_video(self, jstates):
@@ -86,10 +89,12 @@ class VideoVisualizer:
 
         # The command below compiles images into a video file:
         try:
-            subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
-                            format(os.path.join(self.working_dir,
-                            self.imagefile_name), self.size[0], self.size[1],
-                            TEMPFILE_NAME).split()))
+            with open(os.devnull, 'w') as fnull:
+                subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
+                                format(os.path.join(self.working_dir,
+                                self.imagefile_name), self.size[0],
+                                self.size[1], TEMPFILE_NAME).split()),
+                                stdout=fnull, stderr=fnull)
         except FileNotFoundError:
             raise FileNotFoundError('You need to install ffmpeg to make video'
                                     ' files.')
@@ -98,11 +103,12 @@ class VideoVisualizer:
             for filename in self.file_list:
                 os.remove(filename)
 
-
     def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status.'''
-        TEMPIMAGEFILE_TITLE = 'tempimage_title{:03d}.png'
-        TEMP_FOR_FFMPEG = 'tempimage_title%03d.png'
+        TEMPIMAGEFILE_TITLE = os.path.join(self.working_dir,
+                                           'tempimage_title{:03d}.png')
+        TEMP_FOR_FFMPEG = os.path.join(self.working_dir,
+                                       'tempimage_title%03d.png')
         # Text displayed on the frame:
         info = (wrap('Tournament: ' + str(contr.signature.tournament_id),
                      width=40) +
@@ -113,7 +119,7 @@ class VideoVisualizer:
                 wrap('Game:       ' + str(contr.signature.game_id), width=40) +
                 [''] +
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
-                     contr.players)), width=40))
+                     contr._players)), width=40))
 
         im = Image.new('RGB', self.size, (0, 0, 255))
         draw = ImageDraw.Draw(im)
@@ -121,7 +127,8 @@ class VideoVisualizer:
         done_once = False
         # Here we should find the best fitting font size.
         while True:
-            font = ImageFont.truetype('Lucida Console.ttf', cfsize,
+            font = ImageFont.truetype(os.path.join('fonts',
+                                      'Lucida Console.ttf'), cfsize,
                                       encoding='unic')
             textlen = max(map(lambda x: font.getsize(x)[0], info))
             textheight = (font.getsize('T')[1] + 1) * len(info)
@@ -150,9 +157,11 @@ class VideoVisualizer:
                             TEMPIMAGEFILE_TITLE.format(i + 1))
         # Compilind into a video file:
         try:
-            subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG + ' -r 48 -s'
-                            ' {}x{} {}').format(self.size[0], self.size[1],
-                            TEMPFILE_NAME_TITLE).split())
+            with open(os.devnull, 'w') as fnull:
+                subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG +
+                                ' -r 48 -s {}x{} {}').format(self.size[0],
+                                self.size[1], TEMPFILE_NAME_TITLE).split(),
+                                stdout=fnull, stderr=fnull)
         except FileNotFoundError:
             raise FileNotFoundError('You need to install ffmpeg to make video'
                                     ' files.')
@@ -188,8 +197,10 @@ class VideoVisualizer:
                 os.remove(TEMPFILE_NAME)
 
         try:
-            subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' + output_name)
-                            .split())
+            with open(os.devnull, 'w') as fnull:
+                subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' +
+                                output_name).split(), stdout=fnull,
+                                stderr=fnull)
         except FileNotFoundError:
             raise FileNotFoundError('You need to install ffmpeg to make video'
                                     ' files.')

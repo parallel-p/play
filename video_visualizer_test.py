@@ -14,9 +14,9 @@ from player import Player
 class GameControllerMock:
     def __init__(self):
         self.jury_states = []
-        self.players = [Player(None, 'Dmitry Tomp'),
-                        Player(None, 'Daniil Ryazanovsky'),
-                        Player(None, 'Alex Dmitriev')]
+        self._players = [Player(None, 'Dmitry Tomp'),
+                         Player(None, 'Daniil Ryazanovsky'),
+                         Player(None, 'Alex Dmitriev')]
         self.signature = GameSignature()
 
     def __lt__(self, other):
@@ -25,15 +25,22 @@ class GameControllerMock:
 
 class VideoVisualizerTest(unittest.TestCase):
     def setUp(self):
-        if not os.path.exists('test'):
-            os.mkdir('test')
+        if os.path.exists('test'):
+            shutil.rmtree('test')
+        os.mkdir('test')
         os.chdir('test')
+
+        # For mocking a paint funtion:
+        def side_effect(fname):
+            f = open(os.path.join('images', fname), 'rb')
+            retv = f.read()
+            f.close()
+            return retv
 
         # There should be an image folder containing GIF images with specified
         # names (see below).
         painter_obj = Mock()
-        painter_obj.paint = lambda x: open(os.path.join('images', x),
-                                           'rb').read()
+        painter_obj.paint = side_effect
 
         self.viz = visualizer.VideoVisualizer(3, painter_obj, '.*\.gc', 'test')
 
@@ -47,8 +54,7 @@ class VideoVisualizerTest(unittest.TestCase):
                                               for i in range(randint(3, 20))])
 
         self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME))
-        for fname in os.listdir('test'):
-            self.assertTrue(fname.endswith('.gc'))
+        self.assertEqual(len(os.listdir('test')), 0)
 
     def test_generate_tournament_status(self):
         os.chdir('..')
@@ -83,14 +89,13 @@ class VideoVisualizerTest(unittest.TestCase):
             os.remove(visualizer.TEMPFILE_NAME)
         if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
             os.remove(visualizer.TEMPFILE_NAME_TITLE)
-        if os.path.exists('result.avi'):
-            os.remove('result.avi')
+        if os.path.exists(os.path.join('test', 'result.avi')):
+            os.remove(os.path.join('test', 'result.avi'))
 
         self.viz.compile('result.avi')
 
         self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME))
         self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME_TITLE))
-        self.assertFalse(os.path.exists('result.avi'))
         # Check whether all images have been removed:
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
@@ -99,6 +104,10 @@ class VideoVisualizerTest(unittest.TestCase):
         # To be able to watch the resulting video file manually, let's copy it.
         if os.path.exists(os.path.join('test', 'result.avi')):
             shutil.copyfile(os.path.join('test', 'result.avi'), 'result.avi')
+        if os.path.exists(visualizer.TEMPFILE_NAME):
+            os.remove(visualizer.TEMPFILE_NAME)
+        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
+            os.remove(visualizer.TEMPFILE_NAME_TITLE)
         shutil.rmtree('test')
 
 
