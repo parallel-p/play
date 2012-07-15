@@ -14,7 +14,7 @@ class MoveTests(unittest.TestCase):
         self.assertEqual(move[1], 0)
         with self.assertRaises(DeserializeMoveException):
             move = deserialize(stream)
-            
+
 
 if __name__ == '__main__':
     unittest.main()

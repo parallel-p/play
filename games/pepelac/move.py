@@ -1,6 +1,7 @@
 class DeserializeMoveException(Exception):
     pass
 
+
 def deserialize(stream):
     representation = stream.readline().decode().rstrip()
     dx = [0, 0, 0, 1, -1]
