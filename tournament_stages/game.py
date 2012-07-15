@@ -40,7 +40,7 @@ class Game:
         self.game_controller = game_engine.play()
         logger.info('writing logs')
         logger.info('game #%d finished', self.game_info.game_id)
-        #self._write_logs()
+        self._write_logs()
 
     def get_results(self):
         '''returns results of the game'''
