@@ -14,6 +14,7 @@ class GeneratorTest(unittest.TestCase):
     def setUp(self):
         self.field = [[0 for i in range(_field_size)]
                 for j in range(_field_size)]
+        self.players = ["bla-bla" for i in range(4)]
         self.players_count = 4
         self.bullets_count = self.players_count * 2
         self.gen = generator.Generator()
