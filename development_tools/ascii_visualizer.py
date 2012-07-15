@@ -50,32 +50,41 @@ class AsciiVisualizer:
     def _help(self):
         '''prints a help screen for the visualizer'''
         print('''{brt}{bl}Navigation help:
-        forward       : {gr}N,SPACE{bl}          (Alt: {gr}>,],+{bl})
-        back          : {gr}B,P,\{bl}            (Alt: {gr}<,[,-{bl})
-        jump to frame : {gr}J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
+                ____
+               |{gr} Up {bl}|
+               |{mg}auto{bl}|
+          ____  ____  ____ 
+         |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
+         |{mg}prev{bl}||{mg}jump{bl}||{mg}Next{bl}|
+         
+        forward       : {gr}LEFT,N,SPACE{bl}          (Alt: {gr}>,],+{bl})
+        back          : {gr}RIGHT,B,P{bl}            (Alt: {gr}<,[,-{bl})
+        jump to frame : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
-        autoplay      : {gr}A,M{bl}
+        autoplay      : {gr}UP,A,M,P{bl}
         stop autoplay : {gr}^C{bl} (or {gr}Ctrl-Z{bl} on Windows)
 
         quit          : {gr}Q,E{bl}
 
         display this message : {gr}any other key{norm}
         '''.format(
-            gr=Fore.GREEN, bl=Fore.BLUE,
+            gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
 
     def _error(self, msg):
+        '''prints an error message in bright red color'''
         print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
 
     def _prompt(self, msg):
+        '''prints a prompt in bright yellow color'''
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
         + Style.NORMAL + Fore.RESET)
 
     def activate(self):
-        colorama.init()
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
         method. '''
+        colorama.init()
         _clear()
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
@@ -84,21 +93,21 @@ class AsciiVisualizer:
         print(self._frame2string(0))
         while True:
             key = getch()
-            if (key == key in 'Nn.>]}+= '):
+            if key in 'CcNn.>]}+= ':#next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif key in 'BbPp|,<[{-_':
+            elif key in 'Ddb|,<[{-_':#prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the first frame.')
-            elif key in 'AaMm':
+            elif key in 'AaMmPp':
                 while True:
                     self._prompt(
                         'Enter FPS and the last frame (optional)')
@@ -137,7 +146,7 @@ class AsciiVisualizer:
             elif key in 'QqEe':
                 print('Quit')
                 return None
-            elif key in '0123456789JjFfRrGg':
+            elif key in '0123456789BJjFfRrGg':
                 while True:
                     self._prompt('Enter frame number')
                     frame = input()
