@@ -1,5 +1,5 @@
 from tournament_stages.exceptions import NoResultsException
-import tournament_stages.game as game
+from tournament_stages.game import Game
 from copy import copy
 
 from inspect import getframeinfo, currentframe
@@ -26,8 +26,8 @@ class Series:
         self._results = {}
         for game_id, initial_jurystate in enumerate(self._initial_jurystates):
             self._signature.game_id = game_id
-            _game = game.Game(initial_jurystate, self._signature,
-                              self._players_list)
+            _game = Game(initial_jurystate, self._signature,
+                         self._players_list)
             _game.run_engine()
             points = _game.get_results()
             self._results[self._signature] = copy(points)
