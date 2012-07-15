@@ -78,3 +78,11 @@ class GameSimulator:
         Gets players list as an list of instances
         '''
         return self._game_controller._players
+
+    def finish_game(self, scores):
+        '''
+        Finishes game with `scores`
+        '''
+        self._game_controller.is_finished = True
+        self._game_controller._scores = scores
+        logger.info('game finished')
