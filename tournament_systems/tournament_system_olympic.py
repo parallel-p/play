@@ -24,7 +24,7 @@ class TournamentSystemOlympic(TournamentSystem):
         self._results.update(round_results)
         self._current_round_id += 1
         results_list = []
-        for game in round_results.values():
+        for _, game in sorted(round_results.items()):
             games_results = []
             for player, score in game.items():
                 games_results.append((player, score))
@@ -49,6 +49,7 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         Yields list of players for current round.
         '''
+        print(list_of_players)
         list_of_round = []
         for player in range(0, count_of_players - 1, 2):
             list_of_round.append([list_of_players[player],
