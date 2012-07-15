@@ -176,6 +176,8 @@ class Bot:
         Deserialize move with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
         '''
+        if not self._is_running():
+            raise ProcessNotRunningException
         return deserialize(self._process.stdout)
 
     def _write(self, player_state, serialize):
