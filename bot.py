@@ -122,6 +122,14 @@ class Bot:
         '''
         Serialize player_state and transfer it to bot,
         then deserialize output received from bot to `move`.
+            ``player_state`` - object, which will be passed to
+        the bot after serialization.
+            ``serialize(player_state, writable)`` is a function,
+        which is responsible for serializing ``player_state`` and
+        writing it to ``writable``.
+            ``deserialize(readable)`` is a function, which is
+        responsible for reading data from ``readable`` and turning it
+        to a valid ``move`` object.
         '''
         if not self._is_running:
             raise ProcessNotRunningException
@@ -130,6 +138,8 @@ class Bot:
         return move
 
     def _run_deserialize(self, deserialize):
+        ''' Invokes author's deserialization function and
+        stores received ``move`` into self._deserialize_result '''
         try:
             self._deserialize_result = deserialize(self._process.stdout)
         except (BaseException, Exception) as exc:
@@ -200,7 +210,7 @@ class Bot:
 
     def _is_running(self):
         '''
-        Returns true if the process is running and false otherwise.
+        Returns true if the process exists and is running and false otherwise.
         '''
         return self._process and self._process.is_running()
 

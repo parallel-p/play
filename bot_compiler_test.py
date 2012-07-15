@@ -4,28 +4,23 @@ import unittest
 import os
 
 HelloWorld = [
-['cpp',
-'''
+    ['cpp', '''
 #include <iostream>
- 
+
 int main()
 {
     std::cout << "Hello, world!" << std::endl;
     return 0;
 }
-'''],
-['pas',
-'''
+'''], ['pas', '''
 program MyProgram;
+
 begin
  WriteLn ('Hello, world!');
 end.
-'''],
-['py',
-'''
+'''], ['py', '''
 print("Hello, world!")
-''']
-]
+''']]
 
 
 config = [
@@ -43,6 +38,7 @@ players = [
 
 class BotCompilerTest(unittest.TestCase):
     def setUp(self):
+        ''' Creates source code files to compile '''
         j = 1
         for extension, program in HelloWorld:
             f = open("hello{}.{}".format(str(j), extension), 'w')
@@ -52,6 +48,7 @@ class BotCompilerTest(unittest.TestCase):
             j = j + 1
 
     def tearDown(self):
+        ''' Removes source code files from disk '''
         os.remove("hello1.cpp")
         os.remove("hello1")
         os.remove("hello2.pas")

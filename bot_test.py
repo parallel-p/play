@@ -23,23 +23,28 @@ NORMAL_TIME = TIME / 5
 
 class BotTest(unittest.TestCase):
     def test_create_process(self):
+        ''' This test checks if bot process are created correctly. '''
         test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
         test_bot.create_process()
         self.assertTrue(test_bot._is_running())
         test_bot.kill_process()
 
     def test_wrong_command(self):
+        ''' This test checks whether error is raised when wrong
+        command is executed '''
         test_bot = bot.Bot(WRONG_PLAYER_COMMAND, CONFIG)
         with self.assertRaises(OSError):
             test_bot.create_process()
 
     def test_kill_process(self):
+        ''' This test checks if the bot process was killed correctly '''
         test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
         test_bot.create_process()
         test_bot.kill_process()
         self.assertFalse(test_bot._is_running())
 
     def test_get_move(self):
+        ''' This test checks whether bot's IO is working properly '''
         def side_effect_for_deserialize(pipe):
             self.assertEqual(b'abc\n', pipe.readline())
 
@@ -61,6 +66,8 @@ class BotTest(unittest.TestCase):
         test_bot.kill_process()
 
     def test_time_error(self):
+        ''' This test checks if a ``TimeLimitError`` is raised when
+        a bot exceeds time limit and whether it isn't raised if not. '''
         def side_effect_for_deserialize(timeout):
             time.sleep(timeout)
 
@@ -92,11 +99,13 @@ class BotTest(unittest.TestCase):
         test_with_timelimit_error()
 
     def test_memory_error(self):
+        ''' Tests if ``MemoryLimitError`` is raised when a bot exceeds
+        memory limit and whether not if it didn't. '''
         def test_without_memorylimit_error():
             test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
             test_bot.create_process()
             move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
-            # megabyte = 2 ** 20
+            # mebibyte = 2 ** 20
             cpu_memory = test_bot._process.get_memory_info().rss / (2 ** 20)
             test_bot.kill_process()
             self.assertLessEqual(cpu_memory, MEMORY)
