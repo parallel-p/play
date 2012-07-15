@@ -68,7 +68,8 @@ class GameMaster:
                 raise IncorrectMoveException()
         except(DeserializeMoveException, IncorrectMoveException):
             self._state.dead_players.append(player)
-            self._simulator.report_state(state)
+            self._state.field[old_row][old_col] = EMPTY
+            self._simulator.report_state(self._state)
             return
 
         if cell == BULLET:
@@ -132,8 +133,10 @@ class GameMaster:
         if(self._state.bullets[p1] == 0 and
            self._state.bullets[p2] > 0):
             self._state.dead_players.append(self._players[p1])
+            self._state.field[row1][col1] = EMPTY
             return True
         elif(self._state.bullets[p1] > 0 and
              self._state.bullets[p2] == 0):
             self._state.dead_players.append(self._players[p2])
+            self._state.field[row2][col2] = EMPTY            
         return False
