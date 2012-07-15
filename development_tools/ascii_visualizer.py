@@ -41,9 +41,8 @@ class AsciiVisualizer:
             self.frame_number + 1, self._jury_state_count(),
             self.painter_factory().ascii_paint(
                 self.game_controller.jury_states[new_frame_number]),
-            color=Fore.YELLOW+Style.BRIGHT,
-            nocolor=Fore.RESET+Style.NORMAL
-            )
+            color=Fore.YELLOW + Style.BRIGHT,
+            nocolor=Fore.RESET + Style.NORMAL)
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
@@ -56,23 +55,21 @@ class AsciiVisualizer:
         jump to frame : {gr}J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
         autoplay      : {gr}A,M{bl}
-        stop autoplay : {gr}^C{bl}
+        stop autoplay : {gr}^C{bl} (or {gr}Ctrl-Z{bl} on Windows)
 
         quit          : {gr}Q,E{bl}
 
-        display this message : {gr}any other key
-
-
-        {mg}Press Any Key to begin...{norm}
+        display this message : {gr}any other key{norm}
         '''.format(
-            gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
+            gr=Fore.GREEN, bl=Fore.BLUE,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
 
-    def _error(self,msg):
+    def _error(self, msg):
         print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
 
-    def _prompt(self,msg):
-        print(Fore.YELLOW + Style.BRIGHT + msg, end=' : ' + Style.NORMAL + Fore.RESET)
+    def _prompt(self, msg):
+        print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
+        + Style.NORMAL + Fore.RESET)
 
     def activate(self):
         colorama.init()
@@ -81,6 +78,7 @@ class AsciiVisualizer:
         method. '''
         _clear()
         self._help()
+        print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         getch()
         _clear()
         print(self._frame2string(0))
