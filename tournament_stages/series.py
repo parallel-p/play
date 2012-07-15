@@ -32,7 +32,7 @@ class Series:
                          self._players_list)
             _game.run_engine()
             points = _game.get_results()
-            self._results[self._signature] = copy(points)
+            self._results[copy(self._signature)] = copy(points)
 
     def get_results(self):
         '''

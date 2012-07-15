@@ -17,7 +17,7 @@ class ASCIIDrawTree:
                 idx += 1
             shift *= 2
         for idx in tree:
-            separ = ' ' * 18 * idx[1] + 'Player '
+            separ = ' ' * 18 * idx[1]
             player1 = separ + str(idx[0][0][0]) + ': ' + \
                     str(idx[0][0][1]) + ' points'
             player2 = separ + str(idx[0][1][0]) + ': ' + \

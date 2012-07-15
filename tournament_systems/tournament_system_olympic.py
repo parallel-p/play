@@ -13,7 +13,7 @@ class TournamentSystemOlympic(TournamentSystem):
         self._players_list = players_list
         self._results = {}
         self._all_rounds = [players_list]
-        self._current_round_id = 0
+        self._current_round_id = -1
         self._list_of_rounds = []
         self._data = []
 
@@ -49,20 +49,21 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         Yields list of players for current round.
         '''
+        list_of_round = []
         for player in range(0, count_of_players - 1, 2):
-            yield [list_of_players[player], list_of_players[player + 1]]
+            list_of_round.append([list_of_players[player],
+                                  list_of_players[player + 1]])
+        return list_of_round
 
     def update_list_of_players(self, count_of_players):
         '''
         Return list of players based on current scores of players.
         '''
         results = self.get_current_round_results()
-        print(results)
         new_list_of_players = []
         for game in results.values():
             new_list_of_players.append(max(game.items(),
                                       key=lambda x: x[1])[0])
-        print(new_list_of_players)
         return new_list_of_players
 
     def get_table(self):

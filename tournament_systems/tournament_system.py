@@ -11,7 +11,7 @@ class TournamentSystem:
         self._players_list = players_list
         self._results = {}
         self._all_rounds = [players_list]
-        self._current_round_id = 0
+        self._current_round_id = -1
 
     def add_round_results(self, round_results):
         '''
