@@ -11,7 +11,7 @@ class JuryState:
 
         if field[i][j] = -1 then there is a bullet in cell (i, j)
         if field[i][j] = 0 then cell (i, j) is empty
-        if field[i][j] > 1 then there is player in cell (i, j)
+        if field[i][j] >= 1 then there is player in cell (i, j)
 
         bullets is list of quantities of bullets, which players have
 
