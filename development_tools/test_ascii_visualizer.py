@@ -11,7 +11,7 @@ class AsciiVisualizerTestCase(ut.TestCase):
         ''' Test with nim painter (we added it to nim). '''
         game_controller = Mock()
         game_controller.jury_states = []
-        for i in range(10):
+        for i in range(1000):
             sample_jury_state = Mock()
             sample_jury_state.heap_sizes = [i, i + 1, i + 2]
             game_controller.jury_states.append(sample_jury_state)

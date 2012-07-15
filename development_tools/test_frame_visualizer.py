@@ -4,6 +4,9 @@ from unittest.mock import Mock, MagicMock, patch
 from os.path import join
 import config_helpers as ch
 from os import listdir as ls
+ch.initialize_game_environment('./development_tools/testing')
+import frame_visualizer
+import config
 
 imgpath = '../images'
 # See tests with or without byte streaming
@@ -34,9 +37,6 @@ class FrameVisualizerTestCase(ut.TestCase):
         ''' This test checks user interface. It opens some images in
         ../images directory and passes them directly to the visualizer. '''
         print("TEST WITHOUT BYTE STREAMING")
-        ch.initialize_game_environment('./testing')
-        import frame_visualizer
-        import config
         game_controller = Mock()
         game_controller.jury_states = sorted(ls(path=imgpath))
         frame_visualizer._bytes2image = Mock(side_effect=do_nothing)
@@ -53,9 +53,6 @@ class FrameVisualizerTestCase(ut.TestCase):
         corrupted during conversion, you will see numbers
         from 1 to 20 in the GUI. '''
         print("TEST WITH BYTE STREAM")
-        ch.initialize_game_environment('./testing')
-        import frame_visualizer
-        import config
         game_controller = Mock()
         game_controller.jury_states = sorted(ls(path=imgpath))
         vis = frame_visualizer.FrameVisualizer(game_controller)
