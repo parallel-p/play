@@ -22,7 +22,7 @@ if __name__ == '__main__':
 import config
 
 from tournament_stages.tournament import Tournament
-
+from utils import print_tournament_system_results
 
 class Main:
 
@@ -54,9 +54,13 @@ class Main:
     def show_result(self):
         return self.tournament_results
 
+    def _print_tournament_results(self, ts):
+            print_tournament_system_results(ts)
+
     def main(self):
         self._load_players()
         self._run_tournament()
+        self._print_tournament_results(self.tournament.tournament_system)
 
 if __name__ == '__main__':
     main = Main(game_path, 1)
