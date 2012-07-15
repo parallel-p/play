@@ -47,18 +47,20 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        print( Fore.BLUE + '''Navigation help:
-        forward       : N,SPACE          (Alt: >,],+)
-        back          : B,P,\            (Alt: <,[,-)
-        jump to frame : J,G,all numerals (Alt: F,R  )
+        G=Fore.GREEN
+        B=Fore.BLUE
+        print('''{bl}Navigation help:
+        forward       : {gr}N,SPACE{bl}          (Alt: {gr}>,],+{bl})
+        back          : {gr}B,P,\{bl}            (Alt: {gr}<,[,-{bl})
+        jump to frame : {gr}J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
-        autoplay      : A,M
-        stop autoplay : ^C
+        autoplay      : {gr}A,M{bl}
+        stop autoplay : {gr}^C{bl}
 
-        quit          : Q,E
+        quit          : {gr}Q,E{bl}
 
-        display this message : any other key
-        ''' + Fore.RESET)
+        display this message : {gr}any other key
+        '''.format(gr=Fore.GREEN, bl=Fore.BLUE) + Fore.RESET)
 
     def activate(self):
         colorama.init()
@@ -144,3 +146,4 @@ class AsciiVisualizer:
                 _clear()
                 print(self._frame2string(self.frame_number))
                 self._help()
+        colorama.deinit()
