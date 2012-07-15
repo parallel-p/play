@@ -10,6 +10,13 @@ SMALL_SIDE = 50
 MARGIN = 20
 
 
+def image_resize(path, output_weight):
+    image = Image.open(path)
+    if image.mode not in ('L', 'RGB', 'RGBA'):
+        image = image.convert('RGB')
+    return image.resize((output_weight, output_weight), Image.ANTIALIAS)
+
+
 class Painter:
     _is_initialized = False
 
@@ -38,9 +45,9 @@ class Painter:
         Paints the state of the game;
         Returns the string --- bits of the jpeg image.
         '''
-        image = Image.new('RGB',
+        image = Image.new('RGBA',
                           (FRAME_SIDE + FREE_SIDE + RIGHT_MARGIN, FRAME_SIDE),
-                          (255, 255, 255)
+                          'white'
                           )
         if not self._is_initialized:
             self._initialize(jury_state)
@@ -49,8 +56,11 @@ class Painter:
         Start drawing field
         '''
         colors = ['', 'black', 'yellow', 'green', 'pink', 'red', 'blue']
-        self.draw_on_the_left(0, 'Bullet', 'purple', image)
-        players_count = 1
+        players_count = 0
+
+        fire_ico = image_resize('fire.jpg', self._cell_side - 10)
+        patron_ico = image_resize('patron.jpg', self._cell_side - 10)
+        player_ico = image_resize('player.png', self._cell_side - 10)
 
         for i, row in enumerate(jury_state.field):
             for j, cell in enumerate(row):
@@ -58,17 +68,18 @@ class Painter:
                 y = j * self._cell_side + FREE_SIDE
                 rectangle = (y, x, y + self._cell_side, x + self._cell_side)
 
-                if cell == -2:
-                    continue
-
                 draw = ImageDraw.Draw(image)
 
-                if cell == -1:
+                if cell == -2:
+                    draw.rectangle(rectangle, outline='black')
+                    image.paste(fire_ico, (y + 5, x + 5))
+                elif cell == -1:
                     draw.rectangle(rectangle, fill='purple', outline='black')
+                    image.paste(patron_ico, (y + 5, x + 5))
                 elif cell == 0:
                     draw.rectangle(rectangle, outline='black')
                 else:
-                    name = jury_state.players[players_count - 1].author_name
+                    name = jury_state.players[players_count].author_name
                     self.draw_on_the_left(players_count,
                                           name,
                                           colors[cell], image
@@ -78,6 +89,7 @@ class Painter:
                                    outline='black'
                                    )
                     players_count += 1
+                    image.paste(player_ico, (y + 5, x + 5), player_ico)
 
                 del draw
 
@@ -86,11 +98,13 @@ class Painter:
         '''
 
         #image.save("test-1.png", "PNG") #if you want to see picture
+        #image.show()
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-'''painter = Painter()
+'''
+painter = Painter()
 side = 7
 field = [[0 for i in range(side)] for j in range(side)]
 field[0][2] = -2
