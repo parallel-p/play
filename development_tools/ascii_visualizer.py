@@ -32,8 +32,8 @@ class AsciiVisualizer:
 
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
-        return 'Frame #{0:04d} of {1:04d} :\n{2:s}\n'.format(
-            self.frame_number + 1,
+        return 'Frame #{0:04d} of {1:d} :\n{2:s}\n'.format(
+            self.frame_number + 1, 
             self._jury_state_count(),
             self.painter_factory().ascii_paint(
             self.game_controller.jury_states[new_frame_number]))
