@@ -45,7 +45,7 @@ class BotCompilerTest(unittest.TestCase):
     def setUp(self):
         j = 1
         for extension, program in HelloWorld:
-            f = open("hello" + str(j) + "." + extension, 'w')
+            f = open("hello{}.{}".format(str(j), extension), 'w')
             for line in program:
                 f.writelines([line])
             f.close()
@@ -65,7 +65,6 @@ class BotCompilerTest(unittest.TestCase):
         bots = f.readlines()
         for bot in bots:
             command_line = bot.split('\"')[5]
-            print(os.path.abspath(os.curdir))
             process = subprocess.Popen(command_line, shell=True,
                 cwd = os.path.abspath(os.curdir),
                 stdout = subprocess.PIPE)
