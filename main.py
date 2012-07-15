@@ -16,7 +16,7 @@ with function initialize_game_environment it add game_path to sys.path
 import config_helpers
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        raise MainArgumentException('Many or little arguments for main.py')
+        raise MainArgumentException('Arguments count mismatch')
     game_path = sys.argv[1]
     config_helpers.initialize_game_environment(game_path)
 import config
