@@ -1,51 +1,84 @@
 import argparse
 import config_helpers
 import sys
+import pickle
+import copy
 
 
-def get_js():
+def get_js(players_cnt):
     import generator
     from tournament_stages.game_signature import GameSignature
-    import pickle
 
     gen = generator.Generator()
     signature = GameSignature(1, 1, 1, 1)
     return gen.generate_start_positions(signature, 2)
 
-def create_players(cmd1, cmd2):
-    import player
+def parse_bots_file(filename):
+    file_ = open(filename)
+    for line in file_:
+        yield line.strip()
 
-    player1 = player.Player(cmd1)
-    player2 = player.Player(cmd2)
-    return player1, player2
+def create_players(filename):
+    import player
+    for cmd in parse_bots_file(filename):
+        yield player.Player(cmd)
 
 def play(args):
     import config
     from game_simulator import GameSimulator
     from tournament_stages.game_signature import GameSignature
 
-    players = create_players(args.bot1, args.bot2)
+    players = list(create_players(args.bot_commands_file))
     signature = GameSignature(1, 1, 1, 1)
-    jury_state = next(get_js())
-    game = GameSimulator(players, jury_state, signature)
+    jury_state = next(get_js(len(players)))
+    copied_js = copy.deepcopy(jury_state)
+    game = GameSimulator(players, copied_js, signature)
     game_controller = game.play()
     return game_controller
 
-def visuzlize(game_controller):
+def visualize(game_controller):
     import development_tools.ascii_visualizer as vizualizer
     ascii_viz = vizualizer.AsciiVisualizer(game_controller)
     ascii_viz.activate()
 
+def dump_game_controller(gc):
+    answer = input('Would you like to save game log? (y/n): ')
+    if answer == 'y':
+        filename = input('Enter name of file: ')
+        file_ = open(filename, 'wb')
+        pickle.dump(gc, file_)
+
+def load_game_controller(filename):
+    file_ = open(filename, 'rb')
+    obj = pickle.load(file_)
+    return obj
+
+def new_game(args):
+    game_controller = play(args)
+    if not args.only_run:
+        if args.visualize:
+            visualize(game_controller)
+        if not args.save_to:
+            dump_game_controller(game_controller)
+
 def main():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('bot1')
-    arg_parser.add_argument('bot2')
-    arg_parser.add_argument('-d', '--directory', default='.')
+    arg_parser.add_argument('-c', '--bot-commands-file', required=True)
+    arg_parser.add_argument('-d', '--directory', required=True)
+    arg_parser.add_argument('-v', '--visualize', action='store_true')
+    arg_parser.add_argument('-s', '--save-to')
+    arg_parser.add_argument('-f', '--from-file')
+    arg_parser.add_argument('-r', '--only-run', action='store_true')
+    
     args = arg_parser.parse_args()
+
     config_helpers.initialize_game_environment(args.directory)
 
-    game_controller = play(args)
-    visuzlize(game_controller)
+    if args.from_file:
+        game_controller = load_game_controller(args.from_file)
+        visualize(game_controller)
+    else:
+        new_game(args)
 
 if __name__ == '__main__':
     main()
