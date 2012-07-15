@@ -3,7 +3,7 @@
 # if painter supports such feature
 
 import colorama
-from colorama import Fore,Back,Style
+from colorama import Fore, Back, Style
 import colorama.ansitowin32 as ansi2w32
 import config
 from lib.keyboard_capture import getch
@@ -50,7 +50,7 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        print('''{bl}Navigation help:
+        print('''{br}{bl}Navigation help:
         forward       : {gr}N,SPACE{bl}          (Alt: {gr}>,],+{bl})
         back          : {gr}B,P,\{bl}            (Alt: {gr}<,[,-{bl})
         jump to frame : {gr}J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
@@ -60,8 +60,10 @@ class AsciiVisualizer:
 
         quit          : {gr}Q,E{bl}
 
-        display this message : {gr}any other key
-        '''.format(gr=Fore.GREEN, bl=Fore.BLUE) + Fore.RESET)
+        display this message : {gr}any other key{nr}
+        '''.format(
+            gr=Fore.GREEN, bl=Fore.BLUE,
+            br=Style.BRIGHT, nr=Style.NORMAL) + Fore.RESET)
 
     def _error(self,msg):
         print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
