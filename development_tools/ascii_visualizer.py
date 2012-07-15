@@ -37,7 +37,7 @@ class AsciiVisualizer:
 
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
-        return '{color}Frame #{0:04d} of {1:d}{nocolor} :\n{2:s}\n'.format(
+        return '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
             self.painter_factory().ascii_paint(
                 self.game_controller.jury_states[new_frame_number]),
@@ -50,7 +50,7 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        print('''{br}{bl}Navigation help:
+        print('''{brt}{bl}Navigation help:
         forward       : {gr}N,SPACE{bl}          (Alt: {gr}>,],+{bl})
         back          : {gr}B,P,\{bl}            (Alt: {gr}<,[,-{bl})
         jump to frame : {gr}J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
@@ -60,10 +60,14 @@ class AsciiVisualizer:
 
         quit          : {gr}Q,E{bl}
 
-        display this message : {gr}any other key{nr}
+        display this message : {gr}any other key
+
+
+        {mg}Press Any Key to begin...{norm}
         '''.format(
-            gr=Fore.GREEN, bl=Fore.BLUE,
-            br=Style.BRIGHT, nr=Style.NORMAL) + Fore.RESET)
+            gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA
+            brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
+        display this message : {gr}any other key.
 
     def _error(self,msg):
         print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
