@@ -1,5 +1,6 @@
 import pickle
 import os
+import shutil
 from tournament_stages.game_signature import GameSignature
 from game_simulator import GameSimulator
 from log import logger
@@ -18,10 +19,12 @@ class Game:
     def _write_logs(self):
         '''writes the logs of the game'''
         path = os.path.dirname(__file__)
-        path = os.path.join(path, 'logs')
-        path = os.path.join(path, 'tour' + str(self.game_info.tournament_id))
-        if (os.path.exists(path) == 0):
-            os.makedirs(path)
+        path = os.path.join(path,  '..', 'logs')
+        path = os.path.normpath(path)
+        path = os.path.join(path, 'tournament' + str(self.game_info.tournament_id))
+        if (os.path.exists(path) == 1):
+            shutil.rmtree(path)
+        os.makedirs(path)
         filename = str(self.game_info.round_id) + '-' +\
             str(self.game_info.series_id) + '-' +\
             str(self.game_info.game_id) + '.jstate'
