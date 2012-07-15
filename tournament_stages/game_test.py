@@ -1,21 +1,21 @@
 import unittest
 import os
 import shutil
-from game_supporting_classes import GameSignature
+from tournament_stages.game_signature import GameSignature
 from unittest.mock import MagicMock, patch
 with patch.dict('sys.modules', {'engine': MagicMock(), 'jury_state': MagicMock(), 'config': MagicMock(), 'players': MagicMock()}):
-    import engine
     import jury_state
     import config
     import players
-from game import Game
+from tournament_stages.game import Game
 
 
 class GameTest(unittest.TestCase):
-
     def test_write_logs(self):
-        game = Game(jury_state.JS(), GameSignature(1, 1, 1, 1), config, players)
+        game = Game(jury_state.JS(), GameSignature(1, 1, 1, 1),
+                    players)
         game._write_logs()
+
     def tearDown(self):
         path = os.path.dirname(__file__)
         path = os.path.join(path, 'logs')
@@ -25,4 +25,3 @@ class GameTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

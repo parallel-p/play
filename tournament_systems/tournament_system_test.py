@@ -1,4 +1,4 @@
-import tournament_system
+from tournament_systems.tournament_system import TournamentSystem
 import unittest
 import sys
 import os
@@ -14,7 +14,7 @@ from tournament_stages.game_signature import GameSignature
 
 class TournamentSystemTest(unittest.TestCase):
     def setUp(self):
-        self.ts = tournament_system.TournamentSystem(
+        self.ts = TournamentSystem(
             ['player1', 'player2'],
         )
 

@@ -70,5 +70,5 @@ class TournamentSystemEach(TournamentSystem):
         rows.sort(reverse=True)
         for row in rows:
             table.append(row[1])
-        ascii_drawer = ascii_draw_table.ASCIIDrawTable()
+        ascii_drawer = tournament_systems.ascii_draw_table.ASCIIDrawTable()
         return ascii_drawer.draw_table(table)

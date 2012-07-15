@@ -1,4 +1,4 @@
-import tournament_system_olympic
+from tournament_systems.tournament_system_olympic import TournamentSystemOlympic
 import unittest
 from unittest.mock import Mock
 
@@ -16,8 +16,7 @@ DATA = [[[(1, 3), (2, 0)], [(3, 0), (4, 2)], [(5, 1), (6, 3)], [(7, 0), (8, 1)]]
 
 class TournamentSystemOlympicTest(unittest.TestCase):
     def test_get_rounds(self):
-        test_rounds = \
-            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST)
+        test_rounds = TournamentSystemOlympic(PLAYERS_LIST)
         test_rounds.get_current_round_results = Mock()
         test_rounds.get_current_round_results.side_effect = \
                 [FIRST, SECOND, THIRD]
@@ -30,8 +29,7 @@ class TournamentSystemOlympicTest(unittest.TestCase):
         self.assertEqual(third_players, THIRD_ROUND)
 
     def test_get_table(self):
-        test_rounds = \
-            tournament_system_olympic.TournamentSystemOlympic(PLAYERS_LIST)
+        test_rounds = TournamentSystemOlympic(PLAYERS_LIST)
         test_rounds.get_current_round_results = Mock()
         test_rounds._data = DATA
         table = test_rounds.get_table()

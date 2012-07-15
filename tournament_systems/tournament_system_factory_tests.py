@@ -3,8 +3,8 @@ from unittest.mock import Mock, patch
 with patch.dict('sys.modules',
                 {'config': Mock(), 'tournament_systems': Mock()}):
     import config
-    import tournament_systems_config as all_ts
-    import tournament_system_factory as ts_factory
+    import tournament_systems.tournament_systems_config as all_ts
+    import tournament_systems.tournament_system_factory as ts_factory
 
 
 class TS1:

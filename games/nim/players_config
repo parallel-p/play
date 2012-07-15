@@ -1,4 +1,1 @@
-"John Doe" "Bot #0 (random)" "python3 games/nim/bots/random_bot.py"
-"John Doe" "Bot #1 (wrong)" "python3 games/nim/bots/wrong_bot.py"
-"John Doe" "Bot #2 (random)" "python3 games/nim/bots/random_bot.py"
-"John Doe" "Bot #3 (random)" "python3 games/nim/bots/random_bot.py"
+"John Doe" "Bot #0 (random)" "python3 games/nim/bots/random_bot.py""John Doe" "Bot #1 (wrong)" "python3 games/nim/bots/wrong_bot.py""John Doe" "Bot #2 (random)" "python3 games/nim/bots/random_bot.py""John Doe" "Bot #3 (random)" "python3 games/nim/bots/random_bot.py"

@@ -1,11 +1,9 @@
 import tournament_systems.ascii_draw_tree as ascii_draw_tree
-import tournament_systems.tournament_system as tournament_system
+from tournament_systems.tournament_system import TournamentSystem
 from math import log
 
-from inspect import getframeinfo, currentframe
 
-
-class TournamentSystemOlympic(tournament_system.TournamentSystem):
+class TournamentSystemOlympic(TournamentSystem):
     '''
     This class spends a game based on the Olympic tournament
     system, generating a list of players for each round based
