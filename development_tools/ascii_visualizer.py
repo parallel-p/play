@@ -57,8 +57,8 @@ class AsciiVisualizer:
          |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
          |{mg}prev{bl}||{mg}jump{bl}||{mg}Next{bl}|
          
-        forward       : {gr}RIGHT,N,SPACE{bl}          (Alt: {gr}>,],+{bl})
-        back          : {gr}LEFT,B,P{bl}            (Alt: {gr}<,[,-{bl})
+        forward       : {gr}RIGHT,N,SPACE{bl}         (Alt: {gr}>,],+{bl})
+        back          : {gr}LEFT,B,P{bl}              (Alt: {gr}<,[,-{bl})
         jump to frame : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
         autoplay      : {gr}UP,A,M,P{bl}
