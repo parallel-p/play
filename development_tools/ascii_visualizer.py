@@ -5,6 +5,7 @@ import config
 from lib.keyboard_capture import getch
 from time import sleep
 
+
 def _clear():
     '''this function clears the console by executing the appropriate command'''
     from os import name, system
@@ -33,10 +34,9 @@ class AsciiVisualizer:
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
         return 'Frame #{0:04d} of {1:d} :\n{2:s}\n'.format(
-            self.frame_number + 1, 
-            self._jury_state_count(),
+            self.frame_number + 1, self._jury_state_count(),
             self.painter_factory().ascii_paint(
-            self.game_controller.jury_states[new_frame_number]))
+                self.game_controller.jury_states[new_frame_number]))
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
@@ -72,16 +72,17 @@ class AsciiVisualizer:
                 else:
                     print(self._frame2string(self.frame_number))
                     print('this is the last frame')
-            elif key in 'BbPp|,<[{-_' :
+            elif key in 'BbPp|,<[{-_':
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     print('this is the first frame.')
-            elif key in 'AaMm' :
+            elif key in 'AaMm':
                 while True:
-                    print('Enter speed(frames/sec), and, optionally, the ending frame:', end=' ')
+                    print(
+                        'Enter FPS and the last frame (optional):', end=' ')
                     reply = input()
                     if reply:
                         cmd = reply.split()
@@ -102,11 +103,13 @@ class AsciiVisualizer:
                             else:
                                 endframe = jscount
                             try:
-                                while (self.frame_number+addv) < jscount and (
-                                        self.frame_number+addv) >= 0 and (
+                                while (
+                                    (self.frame_number + addv) < jscount) and (
+                                        self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
                                     _clear()
-                                    print(self._frame2string(self.frame_number + addv))
+                                    print(self._frame2string(
+                                        self.frame_number + addv))
                                     sleep(time)
                             except KeyboardInterrupt:
                                 pass

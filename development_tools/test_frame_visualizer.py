@@ -32,7 +32,6 @@ def do_nothing(image):
 
 class FrameVisualizerTestCase(ut.TestCase):
 
-
     def test_without_byte_streaming(self):
         ''' This test checks user interface. It opens some images in
         ../images directory and passes them directly to the visualizer. '''
