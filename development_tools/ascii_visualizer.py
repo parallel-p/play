@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
 # This class is responsible for visualizing a game in ascii art,
 # if painter supports such feature
 
+import colorama
+from colorama import Fore,Back,Style
+import colorama.ansitowin32 as ansi2w32
 import config
 from lib.keyboard_capture import getch
 from time import sleep
@@ -43,18 +47,21 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        print('''Navigation:
-        forward       : N,SPACE  (Alt: >,],+)
-        back          : B,P,\          (Alt: <,[,-)
-        jump to frame : J,G,any number (Alt: F,R  )
+        print( Fore.BLUE + '''Navigation help:
+        forward       : N,SPACE          (Alt: >,],+)
+        back          : B,P,\            (Alt: <,[,-)
+        jump to frame : J,G,all numerals (Alt: F,R  )
 
         autoplay      : A,M
         stop autoplay : ^C
 
         quit          : Q,E
-        ''')
+
+        display this message : any other key
+        ''' + Fore.RESET)
 
     def activate(self):
+        colorama.init()
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
         method. '''
