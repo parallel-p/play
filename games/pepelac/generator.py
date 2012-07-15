@@ -43,4 +43,4 @@ class Generator:
                 self.bullets.append(0)
             field = self.generate_bullets(field, self.bullets_count)
             yield JuryState(_field_size, field, self.bullets, self.time,
-                players)
+                players, [])
