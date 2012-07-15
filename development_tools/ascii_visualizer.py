@@ -50,8 +50,6 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        G=Fore.GREEN
-        B=Fore.BLUE
         print('''{bl}Navigation help:
         forward       : {gr}N,SPACE{bl}          (Alt: {gr}>,],+{bl})
         back          : {gr}B,P,\{bl}            (Alt: {gr}<,[,-{bl})
@@ -65,11 +63,11 @@ class AsciiVisualizer:
         display this message : {gr}any other key
         '''.format(gr=Fore.GREEN, bl=Fore.BLUE) + Fore.RESET)
 
-    def _error(msg):
-        print(Fore.RED + msg + Fore.RESET)
+    def _error(self,msg):
+        print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
 
-    def _prompt(msg):
-        print(Fore.YELLOW + msg, end=' : '+Fore.RESET)
+    def _prompt(self,msg):
+        print(Fore.YELLOW + Style.BRIGHT + msg, end=' : ' + Style.NORMAL + Fore.RESET)
 
     def activate(self):
         colorama.init()
