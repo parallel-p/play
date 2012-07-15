@@ -9,14 +9,11 @@ class GameSimulator:
     '''
     Class manages one game match.
     Usage:
-        >> eng = GameSimulator(config, players, jury_state, game_signature)
+        >> eng = GameSimulator(config, players, start_state, game_signature)
         >> eng.play()
     Examples:
     # Getting class to Bot instance
-    >> game_controller.get_move(player, player_state, serializer, deserializer)
-    # Creating and killing ALL bots
-    >> game_controller.create_bots()
-    >> game_controller.kill_bots()
+    >> game_simulator.get_move(player, player_state, serializer, deserializer)
     '''
     def __init__(self, players, start_state, game_signature):
         '''
