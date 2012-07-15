@@ -1,6 +1,7 @@
 from tournament_stages.exceptions import NoResultsException
 from tournament_stages.game import Game
 from copy import copy
+from log import logger
 
 from inspect import getframeinfo, currentframe
 
@@ -23,6 +24,7 @@ class Series:
         '''
         Starts all games in series.
         '''
+        logger.info('running series #%d', self._signature.series_id)
         self._results = {}
         for game_id, initial_jurystate in enumerate(self._initial_jurystates):
             self._signature.game_id = game_id

@@ -32,12 +32,14 @@ class Game:
 
     def run_engine(self):
         '''launches the engine'''
+        logger.info('running game #%d', self.game_info.game_id)
         logger.info('launching engine')
         game_engine = GameSimulator(self.players, self.jury_state,
                                     self.game_info)
         logger.info('starting game')
         self.game_controller = game_engine.play()
         logger.info('writing logs')
+        logger.info('game #%d finished', self.game_info.game_id)
         #self._write_logs()
 
     def get_results(self):

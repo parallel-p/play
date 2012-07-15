@@ -3,6 +3,7 @@ from tournament_stages.game_signature import GameSignature
 from tournament_systems.tournament_system_factory import create
 from tournament_systems.tournament_system import TournamentSystem
 from tournament_stages.exceptions import NoResultsException
+from log import logger
 
 from inspect import getframeinfo, currentframe
 
@@ -17,6 +18,8 @@ class Tournament:
         '''
         Getting results of tournament.
         '''
+        logger.info('running tournament #%d', self.tournament_id)
+
         game_signature = GameSignature(self.tournament_id)
 
         tournament_system = create()(self.players_list)
@@ -27,6 +30,7 @@ class Tournament:
             _round_results = _round.games_results
             tournament_system.add_round_results(_round_results)
         self.results = tournament_system.get_all_results()
+        logger.info('tournament #%d finished', self.tournament_id)
 
     def get_results(self):
         if self.results is None:
