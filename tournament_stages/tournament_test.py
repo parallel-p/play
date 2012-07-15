@@ -21,11 +21,10 @@ with patch.dict('sys.modules',
 
 class TournamentTest(unittest.TestCase):
     def test_tournament(self):
-        TournamentSystem = MagicMock()
-        TournamentSystem().get_results = 5
-        TournamentSystem().get_rounds.return_value = [{1: {1: 0, 2: 1}},
+        create()().get_results = 5
+        create()().get_rounds.return_value = [{1: {1: 0, 2: 1}},
                                                       {2: {2: 0, 3: 1}}]
-        TournamentSystem().get_all_results.return_value = 'First player won'
+        create()().get_all_results.return_value = 'First player won'
         tournament = tournament_file.Tournament([1, 2, 3], 1)
         tournament.run()
         result = tournament.get_results()
