@@ -38,7 +38,7 @@ class GameController:
         '''
         Gets move to Bot instance
         '''
-        new_move = self.bots[player].get_move(player_state,
+        new_move = self.player.get_move(player_state,
                                               serialaizer, deserializer)
         logger.info('bot "%s" made a move', player.bot_name)
         return new_move
