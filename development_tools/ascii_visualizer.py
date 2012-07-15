@@ -112,7 +112,7 @@ class AsciiVisualizer:
                             speed = float(cmd[0])
                         except ValueError:
                             speed = 0
-                        if speed != 0:
+                        if speed:
                             jscount = self._jury_state_count()
                             if speed >= 0:
                                 addv = 1
