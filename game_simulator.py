@@ -26,10 +26,11 @@ class GameSimulator:
         '''
         self._game_controller = game_controller.GameController(players,
                                     game_signature, jury_state)
-        self._game_master = config.GameMaster(self, jury_state)
         self.bots = {}
+        self._create_bots()
+        self._game_master = config.GameMaster(self, jury_state)
 
-    def create_bots(self):
+    def _create_bots(self):
         '''
         Creates bots for each player
         '''
