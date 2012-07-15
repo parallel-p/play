@@ -10,6 +10,12 @@ class GameSimulator:
     Usage:
         >> eng = GameSimulator(config, players, jury_state, game_signature)
         >> eng.play()
+    Examples:
+    # Getting class to Bot instance
+    >> game_controller.get_move(player, player_state, serializer, deserializer)
+    # Creating and killing ALL bots
+    >> game_controller.create_bots()
+    >> game_controller.kill_bots()
     '''
     def __init__(self, players, jury_state, game_signature):
         '''
@@ -19,8 +25,7 @@ class GameSimulator:
         '''
         self._game_controller = game_controller.GameController(players,
                                     game_signature, jury_state)
-        self._game_master = config.GameMaster(self._game_controller,
-                                              jury_state)
+        self._game_master = config.GameMaster(self, jury_state)
         self.bots = {}
 
     def create_bots(self):
@@ -33,6 +38,15 @@ class GameSimulator:
             logger.debug('created bot "%s"', player.bot_name)
         logger.info('all bots created')
 
+    def get_move(self, player, player_state, serialaizer, deserializer):
+        '''
+        Gets move to Bot instance
+        '''
+        new_move = self.bots[player].get_move(player_state,
+                                              serialaizer, deserializer)
+        logger.info('bot "%s" made a move', player.bot_name)
+        return new_move
+
     def kill_bots(self):
         '''
         Killes ALL running bots
@@ -40,6 +54,12 @@ class GameSimulator:
         for bot in self.bots.values():
             bot.kill_process()
         logger.info('all bots killed')
+
+    def report_state(self, jury_state):
+        '''
+        Saves jury states to array
+        '''
+        self._game_controller.jury_states.append(jury_state)
 
     def play(self):
         '''
@@ -52,3 +72,9 @@ class GameSimulator:
             self._game_master.tick(self._game_controller.jury_states[-1])
         self.kill_bots()
         return self._game_controller
+
+    def get_players(self):
+        '''
+        Gets players list as an list of instances
+        '''
+        return self._game_controller._players
