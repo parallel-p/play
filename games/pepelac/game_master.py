@@ -80,7 +80,7 @@ class GameMaster:
         for move in MOVES:
             if self_is_correct_cell(new_pos, move):
                 col, row = pos = self._make_move(new_pos,move)
-                if field[col][row] > 0 and self._fight(new_pos, pos):
+                if self._state.field[col][row] > 0 and self._fight(new_pos, pos):
                     self._simulator.report_state(state)
                     return
 
