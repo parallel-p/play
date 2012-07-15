@@ -22,9 +22,8 @@ class Game:
         path = os.path.join(path,  '..', 'logs')
         path = os.path.normpath(path)
         path = os.path.join(path, 'tournament' + str(self.game_info.tournament_id))
-        if (os.path.exists(path) == 1):
-            shutil.rmtree(path)
-        os.makedirs(path)
+        if (os.path.exists(path) == 0):
+            os.makedirs(path)
         filename = str(self.game_info.round_id) + '-' +\
             str(self.game_info.series_id) + '-' +\
             str(self.game_info.game_id) + '.jstate'
