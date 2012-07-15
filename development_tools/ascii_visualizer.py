@@ -65,9 +65,8 @@ class AsciiVisualizer:
 
         {mg}Press Any Key to begin...{norm}
         '''.format(
-            gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA
+            gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
-        display this message : {gr}any other key.
 
     def _error(self,msg):
         print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
