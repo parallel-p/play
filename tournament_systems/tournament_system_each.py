@@ -17,7 +17,7 @@ class TournamentSystemEach(TournamentSystem):
                                        len(self._players_list)):
                 play_list.append([self._players_list[first_player],
                        self._players_list[second_player]])
-        return play_list
+        yield play_list
 
     def _convert_score(self, score):
         '''
