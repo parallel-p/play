@@ -12,7 +12,7 @@ int px[MaxN], py[MaxN];
 int bx[MaxN], by[MaxN];
 int dx[] = {0, 0, 0, 1, -1};
 int dy[] = {0, 1, -1, 0, 0};
-string turn[] = {"Stand", "Right", "Left", "Down", "Up"};
+string turn[] = {"STAND", "RIGHT", "LEFT", "DOWN", "UP"};
 
 inline bool check(int x, int y)
 {

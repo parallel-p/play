@@ -4,7 +4,7 @@ int main()
 {
   while (1)
   {
-    printf("Stand\n");
+    printf("STAND\n");
     fflush(stdout);
   }
   return 0;
