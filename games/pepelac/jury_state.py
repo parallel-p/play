@@ -2,7 +2,9 @@ from player import Player
 
 
 class JuryState:
-    def __init__(self, field_side, field, bullets, explosion_time, players):
+    def __init__(self, field_side, field, bullets,
+                 explosion_time, players, dead_players
+                 ):
         '''
         field_side is side of field
         field is the current field:
@@ -20,3 +22,4 @@ class JuryState:
         self.bullets = bullets
         self.explosion_time = explosion_time
         self.players = players
+        self.dead_players = dead_players
