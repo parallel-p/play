@@ -24,7 +24,7 @@ class Painter:
         x = 100
         y = players * (SMALL_SIDE + MARGIN)
         draw.text((0, y + SMALL_SIDE / 4),
-                  text + ' - ',
+                  text,
                   fill='black',
                   font=font
                   )
@@ -50,7 +50,7 @@ class Painter:
         '''
         colors = ['', 'black', 'yellow', 'green', 'pink', 'red', 'blue']
         self.draw_on_the_left(0, 'Bullet', 'purple', image)
-        players = 1
+        number_of_players = 1
 
         for i, row in enumerate(jury_state.field):
             for j, cell in enumerate(row):
@@ -68,16 +68,16 @@ class Painter:
                 elif cell == 0:
                     draw.rectangle(rectangle, outline='black')
                 else:
-                    name = players[players - 1].author_name
-                    self.draw_on_the_left(players,
-                                          jury_state.name + ' - ',
+                    name = jury_state.players[number_of_players - 1].author_name
+                    self.draw_on_the_left(number_of_players,
+                                          name,
                                           colors[cell], image
                                           )
                     draw.rectangle(rectangle,
                                    fill=colors[cell],
                                    outline='black'
                                    )
-                    players += 1
+                    number_of_players += 1
 
                 del draw
 
@@ -85,13 +85,13 @@ class Painter:
         Finish drawing field
         '''
 
-        #image.save("test.png", "PNG") #if you want to see picture
-        bytes = BytesIO()
-        image.save(bytes, format='png')
-        return bytes.getvalue()
+        image.save("test-1.png", "PNG") #if you want to see picture
+        #bytes = BytesIO()
+        #image.save(bytes, format='png')
+        #return bytes.getvalue()
 
-'''painter = Painter()
-side = 20
+painter = Painter()
+side = 7
 field = [[0 for i in range(side)] for j in range(side)]
 field[0][2] = -2
 field[0][3] = -2
@@ -99,13 +99,13 @@ field[0][4] = -2
 field[1][3] = -1
 field[2][1] = 1
 field[4][3] = 2
-field[5][7] = 3
-field[7][2] = 4
-field[6][8] = 5
-field[8][11] = 6
+field[3][2] = 3
+field[0][0] = 4
+field[4][1] = 5
+field[2][3] = 6
 jury_state = JuryState(side, field, None, None,
                        [Player(None, 'Dima'), Player(None, 'Vasya'),
-                        Player(None, 'Vasya'), Player(None, 'Vasya'),
-                        Player(None, 'Vasya'), Player(None, 'Vasya')]
+                        Player(None, 'Alice'), Player(None, 'Nick'),
+                        Player(None, 'Petr'), Player(None, 'Artur')]
                        )
-painter.paint(jury_state)'''
+painter.paint(jury_state)
