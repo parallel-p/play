@@ -28,7 +28,7 @@ class Generator:
             new_field[bullet_x][bullet_y] = -1
         return new_field
 
-    def generate_start_position(self, game_signature, players_count):
+    def generate_start_positions(self, game_signature, players_count):
         self.players_count = players_count
         '''Generates a list of start positions'''
         random.seed()
@@ -38,5 +38,8 @@ class Generator:
             field = [[0 for i in range(_field_size)]
                 for j in range(_field_size)]
             field = self.generate_players(field, self.players_count)
+            self.bullets = []
+            for player in range(players_count):
+                self.bullets.append([player+1, self.bullets_count/self.players_count])
             field = self.generate_bullets(field, self.bullets_count)
-            yield JuryState(_field_size, field, self.bullets_count, self.time)
+            yield JuryState(_field_size, field, self.bullets, self.time)
