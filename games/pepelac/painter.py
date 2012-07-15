@@ -50,7 +50,7 @@ class Painter:
         '''
         colors = ['', 'black', 'yellow', 'green', 'pink', 'red', 'blue']
         self.draw_on_the_left(0, 'Bullet', 'purple', image)
-        number_of_players = 1
+        players_count = 1
 
         for i, row in enumerate(jury_state.field):
             for j, cell in enumerate(row):
@@ -68,8 +68,8 @@ class Painter:
                 elif cell == 0:
                     draw.rectangle(rectangle, outline='black')
                 else:
-                    name = jury_state.players[number_of_players - 1].author_name
-                    self.draw_on_the_left(number_of_players,
+                    name = jury_state.players[players_count - 1].author_name
+                    self.draw_on_the_left(players_count,
                                           name,
                                           colors[cell], image
                                           )
@@ -77,7 +77,7 @@ class Painter:
                                    fill=colors[cell],
                                    outline='black'
                                    )
-                    number_of_players += 1
+                    players_count += 1
 
                 del draw
 
@@ -85,12 +85,12 @@ class Painter:
         Finish drawing field
         '''
 
-        image.save("test-1.png", "PNG") #if you want to see picture
-        #bytes = BytesIO()
-        #image.save(bytes, format='png')
-        #return bytes.getvalue()
+        #image.save("test-1.png", "PNG") #if you want to see picture
+        bytes = BytesIO()
+        image.save(bytes, format='png')
+        return bytes.getvalue()
 
-painter = Painter()
+'''painter = Painter()
 side = 7
 field = [[0 for i in range(side)] for j in range(side)]
 field[0][2] = -2
@@ -108,4 +108,4 @@ jury_state = JuryState(side, field, None, None,
                         Player(None, 'Alice'), Player(None, 'Nick'),
                         Player(None, 'Petr'), Player(None, 'Artur')]
                        )
-painter.paint(jury_state)
+painter.paint(jury_state)'''
