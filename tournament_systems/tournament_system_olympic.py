@@ -37,9 +37,9 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         list_of_players = self._players_list
         count_of_players = len(list_of_players)
-        count_of_all_rounds = round(log(count_of_players, 2))
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
+        count_of_all_rounds = round(log(count_of_players, 2))
         for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
             yield self.get_round(count_of_players, list_of_players)
