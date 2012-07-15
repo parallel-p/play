@@ -57,7 +57,7 @@ class TournamentSystemTest(unittest.TestCase):
         game_results = {'player1': 3, 'player2': 4}
         round_results2 = {signature: game_results}
         self.ts.add_round_results(round_results2)
-        self.assertEqual(self.ts.get_round_results(2), round_results2)
+        self.assertEqual(self.ts.get_current_round_results(), round_results2)
 
 
 if __name__ == "__main__":
