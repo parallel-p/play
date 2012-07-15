@@ -18,22 +18,21 @@ class GameSimulator:
     >> game_controller.create_bots()
     >> game_controller.kill_bots()
     '''
-    def __init__(self, players, jury_state, game_signature):
+    def __init__(self, players, start_state, game_signature):
         '''
         Constructor of class GameSimulator.
         Creates an object of the class, gets config, players list,
         jury_state and game_signature
         '''
+        self._start_state = start_state
         self._game_controller = game_controller.GameController(players,
-                                    game_signature, jury_state)
-        self.bots = {}
-        self._create_bots()
-        self._game_master = config.GameMaster(self, jury_state)
+          game_signature, start_state)
 
     def _create_bots(self):
         '''
         Creates bots for each player
         '''
+        self.bots = {}
         for player in self._game_controller._players:
             self.bots[player] = bot.Bot(player.command_line)
             self.bots[player].create_process()
@@ -49,7 +48,7 @@ class GameSimulator:
         logger.info('bot "%s" made a move', player.bot_name)
         return new_move
 
-    def kill_bots(self):
+    def _kill_bots(self):
         '''
         Killes ALL running bots
         '''
@@ -70,11 +69,12 @@ class GameSimulator:
         game_controller, then finishes the game and kills
         all the bots.
         '''
-        self.create_bots()
+        self._create_bots()
+        game_master = config.GameMaster(self, self._start_state)
         while not self._game_controller.is_finished:
             copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
-            self._game_master.tick(copied_js)
-        self.kill_bots()
+            game_master.tick(copied_js)
+        self._kill_bots()
         return self._game_controller
 
     def get_players(self):
