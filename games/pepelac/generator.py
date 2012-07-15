@@ -32,8 +32,9 @@ class Generator:
         self.players_count = len(players)
         '''Generates a list of start positions'''
         random.seed()
+        self.time = random.randint(3, 10)
+        _field_size = random.randint(40, 50)
         self.bullets_count = self.players_count * 5
-        self.time = self.players_count * random.randint(40, 60)
         for game in range(self.players_count):
             field = [[0 for i in range(_field_size)]
                 for j in range(_field_size)]
