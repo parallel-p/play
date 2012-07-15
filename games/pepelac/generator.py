@@ -34,7 +34,7 @@ class Generator:
         random.seed()
         self.bullets_count = self.players_count * 5
         self.time = self.players_count * random.randint(40, 60)
-        for game in range(players_count):
+        for game in range(self.players_count):
             field = [[0 for i in range(_field_size)]
                 for j in range(_field_size)]
             field = self.generate_players(field, self.players_count)
