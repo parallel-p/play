@@ -112,7 +112,7 @@ class AsciiVisualizer:
                             speed = float(cmd[0])
                         except ValueError:
                             speed = 0
-                        if speed is not 0:
+                        if speed != 0:
                             jscount = self._jury_state_count()
                             if speed >= 0:
                                 addv = 1
@@ -160,3 +160,9 @@ class AsciiVisualizer:
                 print(self._frame2string(self.frame_number))
                 self._help()
         colorama.deinit()
+
+    def dump(self, writable):
+        ''' Dumps full game into something writable. '''
+        for index, jury_state in enumerate(self.game_controller.jury_states):
+            writable.write('Frame #{0:d}:\n{1:s}\n'.format(
+                index, self.painter_factory().ascii_paint(jury_state)))
