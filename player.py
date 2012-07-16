@@ -18,3 +18,6 @@ class Player:
 
     def __eq__(self, other):
         return self._as_tuple() == other._as_tuple()
+
+    def __hash__(self):
+        return self._as_tuple().__hash__()
