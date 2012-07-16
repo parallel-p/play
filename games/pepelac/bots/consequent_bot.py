@@ -64,7 +64,7 @@ def main():
         (players, bullets, k) = map(int, input().split())
         (curx, cury, curb) = map(int, input().split())
         for player in range(players - 1):
-            (tmpx, tmpy) = map(int, input().split())
+            (tmpx, tmpy, tmpb) = map(int, input().split())
     while True:
         print('STAND')
         sys.stdout.flush()
