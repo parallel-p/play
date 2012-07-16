@@ -60,11 +60,11 @@ class GameMaster:
                     player_id = cell - 1  # players numering from the 1
                     if player_id == turn:
                         ps.current_player = (
-                            i, j, self._state.bullets[cell - 1]
+                            i, j, self._state.bullets[player_id]
                         )
                     else:
                         ps.players.append(
-                            (i, j, self._state.bullets[cell - 1])
+                            (i, j, self._state.bullets[player_id])
                         )
 
         old_row, old_col = old_pos = ps.current_player[:2]
