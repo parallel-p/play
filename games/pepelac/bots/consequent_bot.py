@@ -35,7 +35,7 @@ def main():
         (curx, cury, curb) = map(int, input().split())
         #Here we just forget about others
         for player in range(players - 1):
-            (tmpx, tmpy) = map(int, input().split())
+            (tmpx, tmpy, tmpb) = map(int, input().split())
         for bullet in range(bullets):
             (bx, by) = map(int, input().split())
         if current_target == (curx, cury):
