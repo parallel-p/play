@@ -171,7 +171,7 @@ class Bot:
 
             if not cpu_time:
                 # psutil was raised NoSuchProcess
-                break
+                raise ProcessNotRunningException
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
