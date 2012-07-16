@@ -1,2 +1,0 @@
-python3.3 ../games/nim/bots/ideal_bot.py
-python3.3 ../games/nim/bots/ideal_bot.py

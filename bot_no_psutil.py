@@ -111,10 +111,9 @@ class Bot:
             if not deserialize_thread.is_alive():
                 break
 
-        if hasattr(self, '_deserialize_result'):
-            res = copy.deepcopy(self._deserialize_result)
-            del self._deserialize_result
-            return res
+        res = copy.deepcopy(self._deserialize_result)
+        del self._deserialize_result
+        return res
 
     def _write(self, player_state, serialize):
         '''
