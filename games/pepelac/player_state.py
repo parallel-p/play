@@ -5,10 +5,11 @@ def serialize_field_side(field_side, stream):
 
 
 class PlayerState:
-    explosion_time = None
-    current_player = None
-    players = []
-    bullets = []
+    def __init__(self):
+        self.explosion_time = None
+        self.current_player = None
+        self.players = []
+        self.bullets = []
 
 
 def list_to_str(lst):

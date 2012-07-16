@@ -2,7 +2,7 @@ import random
 import copy
 from jury_state import JuryState
 
-_field_size = 50
+_field_size = 15
 
 
 class Generator:
