@@ -25,6 +25,6 @@ def serialize_pstate(ps, stream):
         ] +
         [list_to_str(player) for player in ps.players] +
         [list_to_str(bullet) for bullet in ps.bullets]
-    )
+    ) + '\n'
     stream.write(representation.encode())
     stream.flush()
