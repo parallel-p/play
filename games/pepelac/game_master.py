@@ -20,7 +20,6 @@ class GameMaster:
         self._last_exploded_cell = (-1, -1)
         self._direction = 0
         self._turn = 0
-        self._state = start_state
         self._scores = {}
         for player in self._players:
             move = self._simulator.get_move(
@@ -28,6 +27,8 @@ class GameMaster:
                 serialize_field_side, deserialize_start
             )
             self._scores[player] = 0
+        self._state = start_state
+        self._simulator.report_state(self._state)
 
     def tick(self, state):
         self._state = state
@@ -64,21 +65,23 @@ class GameMaster:
             move = self._simulator.get_move(
                 player, ps, serialize_pstate, deserialize_move
             )
+
             if not self._is_correct_cell(old_pos, move):
                 raise IncorrectMoveException()
             new_row, new_col = new_pos = self._make_move(old_pos, move)
             cell = self._state.field[new_row][new_col]
             if cell > 0 and turn != cell - 1:
                 raise IncorrectMoveException()
-        except(DeserializeMoveException, IncorrectMoveException):
+        except(OSError, DeserializeMoveException, IncorrectMoveException) as e:
             self._state.dead_players.append(player)
             self._state.field[old_row][old_col] = EMPTY
             self._simulator.report_state(self._state)
             return
         if cell == BULLET:
             self._state.bullets[turn] += 1
-            self._state.field[old_row][old_col] = EMPTY
-            self._state.field[new_row][new_col] = turn
+
+        self._state.field[old_row][old_col] = EMPTY
+        self._state.field[new_row][new_col] = turn + 1
 
         for move in MOVES:
             if self._is_correct_cell(new_pos, move):
