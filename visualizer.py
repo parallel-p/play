@@ -51,9 +51,11 @@ class VideoVisualizer:
         self._paths = [os.path.abspath('.'), tempfile.mkdtemp()]
         self._frame_count = 0
         self.log = not _silent
+        self._tempfiles = []
 
     def _create_tempfile(self, suffix=""):
-        return tempfile.mkstemp(suffix)[1]
+        self._tempfiles.append(tempfile.mkstemp(suffix))
+        return self._tempfiles[-1]
 
     def _change_path(self, num):
         if num == 1 and os.path.abspath('.') != self._paths[1]:
@@ -62,12 +64,14 @@ class VideoVisualizer:
 
     def _create_frame(self, fname, number):
         self._change_path(1)
-        shutil.copyfile(fname, '{:09d}'.format(self._frame_count) + self.ext)
-        for i in range(self.inframe - 1):
-            os.symlink('{:09d}'.format(self._frame_count) + self.ext,
-                       '{:09d}'.format(self._frame_count + i + 1) + self.ext)
-        self._frame_count += self.inframe
+        begname = '{:09d}'.format(self._frame_count) + self.ext
+        shutil.copyfile(fname[1], begname)
+        for loop in range(number * self.inframe - 1):
+            os.symlink(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+        self._frame_count += self.inframe * number
         self._change_path(0)
+        os.close(fname[0])
+        os.remove(fname[1])
 
     def _get_game_controller(self, filename):
         '''Unpickles a game controller.'''
@@ -90,10 +94,10 @@ class VideoVisualizer:
             # Unfortunately, MPEG1/2 format does not support any framerates
             # lower than 24 fps. So we have to clone images:
             file_list.append(self._create_tempfile(self.ext))
-            with open(file_list[-1], "wb") as f:
+            with open(file_list[-1][1], "wb") as f:
                 f.write(image)
             if self.size is None:
-                im = Image.open(file_list[-1])
+                im = Image.open(file_list[-1][1])
                 self.size = im.size
         return file_list
 
@@ -139,7 +143,7 @@ class VideoVisualizer:
             draw.text(((self.size[0] - width) / 2, y), line, font=font,
                       fill=(255, 255, 255))
             y += dy
-        im.save(temptitle)
+        im.save(temptitle[1])
         # Compiling into a video file:
         TIME_IN_SEC = 4
         self._create_frame(temptitle, TIME_IN_SEC * self.framerate)
@@ -174,7 +178,7 @@ class VideoVisualizer:
                 self._create_frame(fname, 1)
 
         self._change_path(1)
-        print('Compiling into a video file...')
+        print('Compiling the video file...')
         try:
             with open(os.devnull, 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
@@ -189,3 +193,11 @@ class VideoVisualizer:
             raise FileNotFoundError('You need to install ffmpeg to use'
                                     ' this class.')
         print('Compiling finished.')
+    def __del__(self):
+        if self.log:
+            print('Cleaning up...')
+        for fname in self._tempfiles:
+            if os.path.exists(fname[1]):
+                os.close(fname[0])
+                os.remove(fname[1])
+        shutil.rmtree(self._paths[1])
