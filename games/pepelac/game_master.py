@@ -51,9 +51,13 @@ class GameMaster:
                 elif cell > 0:
                     player_id = cell - 1  # players numering from the 1
                     if player_id == turn:
-                        ps.current_player = (i, j, self._state.bullets[cell - 1])
+                        ps.current_player = (
+                            i, j, self._state.bullets[cell - 1]
+                        )
                     else:
-                        ps.players.append((i, j, self._state.bullets[cell - 1]))
+                        ps.players.append(
+                            (i, j, self._state.bullets[cell - 1])
+                        )
 
         old_row, old_col = old_pos = ps.current_player[:2]
         try:
@@ -62,7 +66,7 @@ class GameMaster:
             )
             if not self._is_correct_cell(old_pos, move):
                 raise IncorrectMoveException()
-            new_row, new_col = self._make_move(old_pos, move)
+            new_row, new_col = new_pos = self._make_move(old_pos, move)
             cell = self._state.field[new_row][new_col]
             if cell > 0 and turn != cell - 1:
                 raise IncorrectMoveException()
@@ -71,16 +75,16 @@ class GameMaster:
             self._state.field[old_row][old_col] = EMPTY
             self._simulator.report_state(self._state)
             return
-
         if cell == BULLET:
             self._state.bullets[turn] += 1
             self._state.field[old_row][old_col] = EMPTY
             self._state.field[new_row][new_col] = turn
 
         for move in MOVES:
-            if self_is_correct_cell(new_pos, move):
-                col, row = pos = self._make_move(new_pos,move)
-                if self._state.field[col][row] > 0 and self._fight(new_pos, pos):
+            if self._is_correct_cell(new_pos, move):
+                col, row = pos = self._make_move(new_pos, move)
+                if(self._state.field[col][row] > 0 and
+                   self._fight(new_pos, pos)):
                     self._simulator.report_state(state)
                     return
 
@@ -100,9 +104,9 @@ class GameMaster:
     def _is_correct_cell(self, position, move):
         new_row, new_col = new_pos = self._make_move(position, move)
         for x in new_pos:
-            if not 0 <= x < self._state.field_side:
+            if not (0 <= x < self._state.field_side):
                 return False
-        if self._state.field[new_row][new_col] != EXPLODED:
+        if self._state.field[new_row][new_col] == EXPLODED:
             return False
         return True
 
@@ -138,5 +142,5 @@ class GameMaster:
         elif(self._state.bullets[p1] > 0 and
              self._state.bullets[p2] == 0):
             self._state.dead_players.append(self._players[p2])
-            self._state.field[row2][col2] = EMPTY            
+            self._state.field[row2][col2] = EMPTY
         return False
