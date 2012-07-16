@@ -35,7 +35,6 @@ def set_color(color, print_result=False):
     return(code)
 
 
-
 def image_resize(path, output_weight):
     from PIL import Image
     image = Image.open(path)
@@ -46,8 +45,8 @@ def image_resize(path, output_weight):
 
 class Painter:
     _is_initialized = False
-    chars=('@@', '[]', '**', 'P{:1x}')
-    colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
+    chars = ('@@', '[]', '**', 'P{:1x}')
+    colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
 
     class Cell():
 
@@ -103,7 +102,7 @@ class Painter:
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3) # total reset
+        prev_color = (None, None, 3)  # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as
@@ -122,7 +121,6 @@ class Painter:
         for line in cell_field:
             text_field += self._generate_line(line) + '\n'
         return text_field
-
 
     def paint(self, jury_state):
         '''
@@ -144,12 +142,10 @@ class Painter:
         Start drawing field
         '''
         colors = ['', 'red', 'blue', 'green', 'pink', 'black', 'yellow']
-        players_count = 0
 
         draw = ImageDraw.Draw(image)
 
         for num, player in enumerate(self.players):
-            name = self.players[players_count].author_name
             self.draw_on_the_left(num + 1,
                                   player.author_name,
                                   colors[num + 1], image

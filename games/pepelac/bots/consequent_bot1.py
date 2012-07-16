@@ -21,8 +21,10 @@ def make_move(current_position, current_target):
             print('RIGHT')
     sys.stdout.flush()
 
+
 def get_dist(cur, dist):
     return abs(cur[0] - dist[0]) + abs(cur[1] - dist[1])
+
 
 def get_target(curpos, bpos):
     ans = bpos[0]
@@ -30,6 +32,7 @@ def get_target(curpos, bpos):
         if get_dist(bullet, curpos) < get_dist(ans, curpos):
             ans = bullet
     return ans
+
 
 def main():
     '''

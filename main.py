@@ -24,6 +24,7 @@ import config
 from tournament_stages.tournament import Tournament
 from utils import print_tournament_system_results
 
+
 class Main:
 
     def __init__(self, game_path, tournament_id):

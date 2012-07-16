@@ -4,8 +4,8 @@ import ascii_painter_test_data
 import unittest
 from unittest.mock import Mock
 
-class ascii_painter_test(unittest.TestCase):
 
+class ascii_painter_test(unittest.TestCase):
     def test_output(self):
         test_subject = Painter()
         mock_js = Mock()

@@ -2,6 +2,7 @@
 import unittest
 from log import logger
 
+
 def main():
     # no log messages
     logger.setLevel(1000000000000)

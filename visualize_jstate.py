@@ -1,11 +1,11 @@
 import sys
 import os
-import subprocess 
+import subprocess
 
 if len(sys.argv) < 4:
     print('''visualize_jstate.py takes 4 arguments:
-             game's path, framerate of video, 
-             directory with GameController files, 
+             game's path, framerate of video,
+             directory with GameController files,
              file mask of GameController files (regular expression)''')
     exit()
 

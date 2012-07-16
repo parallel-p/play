@@ -1,14 +1,11 @@
-from player import Player
-
-
 class JuryState:
     def __init__(self, field_side, field, bullets,
-                 explosion_time, dead_players
-                 ):
+                 explosion_time, dead_players,
+                 collisions):
         '''
         field_side is side of field
         field is the current field:
-        
+
         if field[i][j] = -2 then that cell is charred
         if field[i][j] = -1 then there is a bullet in cell (i, j)
         if field[i][j] = 0 then cell (i, j) is empty
@@ -23,3 +20,4 @@ class JuryState:
         self.bullets = bullets
         self.explosion_time = explosion_time
         self.dead_players = dead_players
+        self.collisions = collisions

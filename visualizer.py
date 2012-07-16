@@ -24,6 +24,7 @@ class NoJuryStatesException(Exception):
     '''Thrown if no jury states found.'''
     pass
 
+
 class VideoVisualizer:
     '''Composes video file from game data.'''
 
@@ -185,7 +186,7 @@ class VideoVisualizer:
                                  self.ext, self.size[0], self.size[1], output_name)
                                  .split(), stdout=fnull, stderr=fnull,
                                  stdin=subprocess.PIPE).communicate(
-                                 'y\n'.encode()*10)
+                                 'y\n'.encode() * 10)
             self._change_path(0)
             os.replace(os.path.join(self._paths[1], output_name),
                        os.path.join(self.working_dir, output_name))
@@ -193,6 +194,7 @@ class VideoVisualizer:
             raise FileNotFoundError('You need to install ffmpeg to use'
                                     ' this class.')
         print('Compiling finished.')
+
     def __del__(self):
         if self.log:
             print('Cleaning up...')
