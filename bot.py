@@ -210,7 +210,10 @@ class Bot:
         '''
         if not self._is_running():
             return
-        self._process.kill()
+        try:
+            self._process.kill()
+        except psutil.NoSuchProcess:
+            pass
         self._process.communicate()
         logger.info('process with cmd line "%s" was killed',
                     self._player_command)
