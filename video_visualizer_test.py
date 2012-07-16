@@ -23,7 +23,7 @@ class GameControllerMock:
         return self.signature < other.signature
 
 
-class VideoVisualizerTest(unittest.TestCase):
+class VideoVisualizerIntegrationTest(unittest.TestCase):
     def setUp(self):
         if os.path.exists('test'):
             shutil.rmtree('test')
@@ -39,36 +39,8 @@ class VideoVisualizerTest(unittest.TestCase):
 
         # There should be an image folder containing GIF images with specified
         # names (see below).
-        painter_obj = Mock()
-        painter_obj.paint = side_effect
-
-        self.viz = visualizer.VideoVisualizer(3, painter_obj, '.*\.gc', 'test')
-
-    def test_collect_game_images_to_video(self):
-        os.chdir('..')
-        if os.path.exists(visualizer.TEMPFILE_NAME):
-            os.remove(visualizer.TEMPFILE_NAME)
-
-        self.viz.collect_game_images_to_video([str(randrange(19) + 1).zfill(2)
-                                              + '.gif'
-                                              for i in range(randint(3, 20))])
-
-        self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME))
-        self.assertEqual(len(os.listdir('test')), 0)
-
-    def test_generate_tournament_status(self):
-        os.chdir('..')
-        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
-            os.remove(visualizer.TEMPFILE_NAME_TITLE)
-
-        # The visualizer doesn't know the frame size as it wasn't given any
-        # game frames.
-        self.viz.size = (640, 480)
-        self.viz.generate_tournament_status(GameControllerMock())
-
-        self.assertTrue(os.path.exists(visualizer.TEMPFILE_NAME_TITLE))
-        for fname in os.listdir('test'):
-            self.assertTrue(fname.endswith('.gc'))
+        self.painter_obj = Mock()
+        self.painter_obj.paint = side_effect
 
     def test_compile(self):
         # Generate many random GameControllers.
@@ -85,17 +57,11 @@ class VideoVisualizerTest(unittest.TestCase):
                         with open('contr' + str(filenum) + '.gc', 'wb') as f:
                             pickle.dump(gc, f)
         os.chdir('..')
-        if os.path.exists(visualizer.TEMPFILE_NAME):
-            os.remove(visualizer.TEMPFILE_NAME)
-        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
-            os.remove(visualizer.TEMPFILE_NAME_TITLE)
         if os.path.exists(os.path.join('test', 'result.avi')):
             os.remove(os.path.join('test', 'result.avi'))
 
-        self.viz.compile('result.avi')
+        visualizer.VideoVisualizer(3, self.painter_obj, '.*\.gc', 'test').compile('result.avi')
 
-        self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME))
-        self.assertFalse(os.path.exists(visualizer.TEMPFILE_NAME_TITLE))
         # Check whether all images have been removed:
         for fname in os.listdir('test'):
             self.assertTrue(fname.endswith('.gc') or fname == 'result.avi')
@@ -104,10 +70,6 @@ class VideoVisualizerTest(unittest.TestCase):
         # To be able to watch the resulting video file manually, let's copy it.
         if os.path.exists(os.path.join('test', 'result.avi')):
             shutil.copyfile(os.path.join('test', 'result.avi'), 'result.avi')
-        if os.path.exists(visualizer.TEMPFILE_NAME):
-            os.remove(visualizer.TEMPFILE_NAME)
-        if os.path.exists(visualizer.TEMPFILE_NAME_TITLE):
-            os.remove(visualizer.TEMPFILE_NAME_TITLE)
         shutil.rmtree('test')
 
 

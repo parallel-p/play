@@ -3,6 +3,7 @@ import os
 import pickle
 import re
 import shutil
+import tempfile
 from textwrap import wrap
 from PIL import Image, ImageDraw, ImageFont
 from math import log10
@@ -23,15 +24,11 @@ class NoJuryStatesException(Exception):
     '''Thrown if no jury states found.'''
     pass
 
-
-TEMPFILE_NAME = 'tempvideo.mpg'
-TEMPFILE_NAME_TITLE = 'temptitle.mpg'
-
-
 class VideoVisualizer:
     '''Composes video file from game data.'''
 
-    def __init__(self, _framerate, _painter_obj, _file_mask, _working_dir='.'):
+    def __init__(self, _framerate, _painter_obj, _file_mask, _working_dir='.',
+                 _silent=False):
         '''
         Constructor. Parameters:
             * _framerate - framerate of video (max=24)
@@ -39,16 +36,38 @@ class VideoVisualizer:
             * _file_mask - file mask of GameController files (regular
             expression)
             * _working_dir - directory with GameController files
+            * _silent - if True, compiler will write nothing to screen
         '''
         self.painter = _painter_obj
         self.file_mask = _file_mask
         self.working_dir = _working_dir
         self.framerate = _framerate
+        self.inframe = int(48.0 / _framerate)
         self.file_list = None
         # Image filemask given to ffmpeg
         self.imagefile_name = None
         # Image size
         self.size = None
+        self._paths = [os.path.abspath('.'), tempfile.mkdtemp()]
+        self._frame_count = 0
+        self.log = not _silent
+
+    def _create_tempfile(self, suffix=""):
+        return tempfile.mkstemp(suffix)[1]
+
+    def _change_path(self, num):
+        if num == 1 and os.path.abspath('.') != self._paths[1]:
+            self._paths[0] = os.path.abspath('.')
+        os.chdir(self._paths[num])
+
+    def _create_frame(self, fname, number):
+        self._change_path(1)
+        shutil.copyfile(fname, '{:09d}'.format(self._frame_count) + self.ext)
+        for i in range(self.inframe - 1):
+            os.symlink('{:09d}'.format(self._frame_count) + self.ext,
+                       '{:09d}'.format(self._frame_count + i + 1) + self.ext)
+        self._frame_count += self.inframe
+        self._change_path(0)
 
     def _get_game_controller(self, filename):
         '''Unpickles a game controller.'''
@@ -61,54 +80,26 @@ class VideoVisualizer:
 
     def _generate_game_images(self, jstates):
         '''Generates frames for video.'''
-        repeat = max(int(48.0 / self.framerate), 1)
         # We need filenames with leading zeroes for ffmpeg
-        zero_count = int(log10(len(jstates) * repeat) + 1)
-        self.file_list = []
-        ext = None
+        zero_count = int(log10(len(jstates)) + 1)
+        file_list = []
+        self.ext = None
         for ind, jstate in enumerate(jstates):
             image = self.painter.paint(jstate)
-            ext = ext or get_image_format(image)
+            self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
             # lower than 24 fps. So we have to clone images:
-            for loop in range(repeat):
-                self.file_list.append(os.path.join(self.working_dir,
-                                      ('tempimage' + str(ind * repeat + loop)
-                                      .zfill(zero_count) + ext)))
-                with open(self.file_list[-1], "wb") as f:
-                    f.write(image)
+            file_list.append(self._create_tempfile(self.ext))
+            with open(file_list[-1], "wb") as f:
+                f.write(image)
             if self.size is None:
-                im = Image.open(self.file_list[-1])
+                im = Image.open(file_list[-1])
                 self.size = im.size
-
-        self.imagefile_name = ('tempimage%0{}d' + ext).format(zero_count)
-
-    def collect_game_images_to_video(self, jstates):
-        '''Composes a video file from jury states list.'''
-        self._generate_game_images(jstates)
-
-        # The command below compiles images into a video file:
-        try:
-            with open(os.devnull, 'w') as fnull:
-                subprocess.call(('ffmpeg -f image2 -i {} -r 48 -s {}x{} {}'.
-                                format(os.path.join(self.working_dir,
-                                self.imagefile_name), self.size[0],
-                                self.size[1], TEMPFILE_NAME).split()),
-                                stdout=fnull, stderr=fnull)
-        except FileNotFoundError:
-            raise FileNotFoundError('You need to install ffmpeg to make video'
-                                    ' files.')
-        finally:
-            # Removing generated images:
-            for filename in self.file_list:
-                os.remove(filename)
+        return file_list
 
     def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status.'''
-        TEMPIMAGEFILE_TITLE = os.path.join(self.working_dir,
-                                           'tempimage_title{:03d}.png')
-        TEMP_FOR_FFMPEG = os.path.join(self.working_dir,
-                                       'tempimage_title%03d.png')
+        temptitle = self._create_tempfile(self.ext)
         # Text displayed on the frame:
         info = (wrap('Tournament: ' + str(contr.signature.tournament_id),
                      width=40) +
@@ -126,6 +117,7 @@ class VideoVisualizer:
         cfsize = 100
         done_once = False
         # Here we should find the best fitting font size.
+        self._change_path(0)
         while True:
             font = ImageFont.truetype(os.path.join('fonts',
                                       'Lucida Console.ttf'), cfsize,
@@ -138,9 +130,8 @@ class VideoVisualizer:
             done_once = True
             cfsize = min(cfsize - 1, int(cfsize * min((self.size[0] - 10)
                          / textlen, (self.size[1] - 10) / textheight)))
-        # Distance between corners of texts:
+        # Distance between corners of texts, starting position:
         dy = font.getsize('T')[1] + 1
-        # Starting position:
         y = (self.size[1] - dy * len(info)) / 2
         # Finally, we draw it:
         for line in info:
@@ -148,31 +139,15 @@ class VideoVisualizer:
             draw.text(((self.size[0] - width) / 2, y), line, font=font,
                       fill=(255, 255, 255))
             y += dy
-        im.save(TEMPIMAGEFILE_TITLE.format(0))
-
-        TIME_IN_SEC = 5
-        # We have to clone the frame (see the explanation above):
-        for i in range(24 * TIME_IN_SEC - 1):
-            shutil.copyfile(TEMPIMAGEFILE_TITLE.format(0),
-                            TEMPIMAGEFILE_TITLE.format(i + 1))
-        # Compilind into a video file:
-        try:
-            with open(os.devnull, 'w') as fnull:
-                subprocess.call(('ffmpeg -f image2 -i ' + TEMP_FOR_FFMPEG +
-                                ' -r 48 -s {}x{} {}').format(self.size[0],
-                                self.size[1], TEMPFILE_NAME_TITLE).split(),
-                                stdout=fnull, stderr=fnull)
-        except FileNotFoundError:
-            raise FileNotFoundError('You need to install ffmpeg to make video'
-                                    ' files.')
-        finally:
-            # Cleaning up:
-            for i in range(24 * TIME_IN_SEC):
-                os.remove(TEMPIMAGEFILE_TITLE.format(i))
+        im.save(temptitle)
+        # Compiling into a video file:
+        TIME_IN_SEC = 4
+        self._create_frame(temptitle, TIME_IN_SEC * self.framerate)
 
     def compile(self, output_name):
         '''
         Compiles all games given by the specified filemask into one video file.
+        The file will be saved into the log folder.
         '''
         controllers = []
         for filename in os.listdir(self.working_dir):
@@ -182,27 +157,35 @@ class VideoVisualizer:
         # The games should be given in the right order:
         controllers = list(sorted(controllers))
 
-        output_name = os.path.join(self.working_dir, output_name)
-        name = output_name[:output_name.rfind('.')] + '1'
+        vfile_list = []
+        for ind, controller in enumerate(controllers):
+            if self.log:
+                print('Processing game {}:{}:{}:{} ({} of {}):'.format(
+                      controller.signature.tournament_id,
+                      controller.signature.round_id,
+                      controller.signature.series_id,
+                      controller.signature.game_id, ind + 1, len(controllers)))
+                print('    Generating game images...')
+            t = self._generate_game_images(controller.jury_states)
+            self.generate_tournament_status(controller)
+            if self.log:
+                print('    Creating frames...')
+            for fname in t:
+                self._create_frame(fname, 1)
 
-        with open(name + ".mpg", "wb") as result:
-            for controller in controllers:
-                self.collect_game_images_to_video(controller.jury_states)
-                self.generate_tournament_status(controller)
-                with open(TEMPFILE_NAME_TITLE, 'rb') as file:
-                    result.write(file.read())
-                os.remove(TEMPFILE_NAME_TITLE)
-                with open(TEMPFILE_NAME, 'rb') as file:
-                    result.write(file.read())
-                os.remove(TEMPFILE_NAME)
-
+        self._change_path(1)
+        print('Compiling into a video file...')
         try:
             with open(os.devnull, 'w') as fnull:
-                subprocess.call(('ffmpeg -i ' + name + '.mpg -sameq ' +
-                                output_name).split(), stdout=fnull,
-                                stderr=fnull)
+                subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
+                                 self.ext, self.size[0], self.size[1], output_name)
+                                 .split(), stdout=fnull, stderr=fnull,
+                                 stdin=subprocess.PIPE).communicate(
+                                 'y\n'.encode()*10)
+            self._change_path(0)
+            os.replace(os.path.join(self._paths[1], output_name),
+                       os.path.join(self.working_dir, output_name))
         except FileNotFoundError:
-            raise FileNotFoundError('You need to install ffmpeg to make video'
-                                    ' files.')
-        finally:
-            os.remove(name + '.mpg')
+            raise FileNotFoundError('You need to install ffmpeg to use'
+                                    ' this class.')
+        print('Compiling finished.')
