@@ -46,3 +46,6 @@ class GameController:
 
     def __lt__(self, other):
         return self.signature < other.signature
+
+    def get_players(self):
+        return _players
