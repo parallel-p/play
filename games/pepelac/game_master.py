@@ -7,6 +7,10 @@ EXPLODED = -2
 MOVES = [(0, -1), (1, 0), (0, 1), (-1, 0)]
 
 
+class NumberOfPlayersException(Exception):
+    pass
+
+
 class IncorrectMoveException(Exception):
     pass
 
@@ -15,6 +19,9 @@ class GameMaster:
     def __init__(self, simulator, start_state):
         self._simulator = simulator
         self._players = simulator.get_players()
+        if len(self._players) != 2:
+            raise NumberOfPlayersException(
+                'Number of players should be equal to 2')
         side = start_state.field_side
         self._number_of_correct_cells = side ** 2
         self._last_exploded_cell = (-1, -1)
