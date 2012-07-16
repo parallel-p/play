@@ -8,7 +8,8 @@ class JuryState:
         '''
         field_side is side of field
         field is the current field:
-
+        
+        if field[i][j] = -2 then that cell is charred
         if field[i][j] = -1 then there is a bullet in cell (i, j)
         if field[i][j] = 0 then cell (i, j) is empty
         if field[i][j] >= 1 then there is player in cell (i, j)
