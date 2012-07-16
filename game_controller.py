@@ -48,4 +48,4 @@ class GameController:
         return self.signature < other.signature
 
     def get_players(self):
-        return _players
+        return self._players
