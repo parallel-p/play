@@ -68,6 +68,7 @@ class Painter:
         self._cell_side = FRAME_SIDE / jury_state.field_side
 
     def draw_on_the_left(self, players, text, color, image):
+        from PIL import Image, ImageDraw, ImageFont
         font = ImageFont.truetype('times.ttf', 40)
         draw = ImageDraw.Draw(image)
 
