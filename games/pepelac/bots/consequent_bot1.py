@@ -58,7 +58,7 @@ def main():
     current_target = (n // 2, n // 2)
     (curx, cury, curb) = map(int, input().split())
     for player in range(players - 1):
-            (tmpx, tmpy) = map(int, input().split())
+            (tmpx, tmpy, tmpb) = map(int, input().split())
     while (curx, cury) != current_target:
         make_move((curx, cury), current_target)
         (players, bullets, k) = map(int, input().split())
