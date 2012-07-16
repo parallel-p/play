@@ -10,7 +10,7 @@ class GameMasterTests(unittest.TestCase):
         players = [Mock(name='player 0'), Mock(name='player 1')]
         generator = Generator()
         start_states = list(
-            generator.generate_start_positions(Mock(), players)
+            generator.generate_start_positions(Mock(), len(players))
         )
         self._start_state = random.choice(start_states)
         self._simulator = self._get_simulator(players)
