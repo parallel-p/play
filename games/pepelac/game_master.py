@@ -4,7 +4,7 @@ from move import *
 EMPTY = 0
 BULLET = -1
 EXPLODED = -2
-MOVES = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+MOVES = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 
 class NumberOfPlayersException(Exception):
