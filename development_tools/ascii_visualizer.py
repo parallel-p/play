@@ -39,7 +39,7 @@ class AsciiVisualizer:
         self.frame_number = new_frame_number
         return '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
-            self.painter_factory().ascii_paint(
+            self.painter_factory(self.game_controller.players).ascii_paint(
                 self.game_controller.jury_states[new_frame_number]),
             color=Fore.YELLOW + Style.BRIGHT,
             nocolor=Fore.RESET + Style.NORMAL)
@@ -171,4 +171,5 @@ class AsciiVisualizer:
         ''' Dumps full game into something writable. '''
         for index, jury_state in enumerate(self.game_controller.jury_states):
             writable.write('Frame #{0:d}:\n{1:s}\n'.format(
-                index, self.painter_factory().ascii_paint(jury_state)))
+                index, self.painter_factory(
+                    self.game_controller.players).ascii_paint(jury_state)))
