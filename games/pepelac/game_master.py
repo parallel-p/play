@@ -121,6 +121,10 @@ class GameMaster:
                 direction = (direction + 1) % len(MOVES)
             new_pos = self._make_move(last_cell, MOVES[direction])
 
+        cell = self._state.field[new_pos[0]][new_pos[1]]
+        if cell > 0:
+            self._state.dead_players.append(cell - 1)
+
         self._state.field[new_pos[0]][new_pos[1]] = EXPLODED
         self._last_exploded_cell = new_pos
         self._direction = direction
@@ -129,8 +133,8 @@ class GameMaster:
     def _fight(self, pos1, pos2):
         row1, col1 = pos1
         row2, col2 = pos2
-        p1 = field[row1][col1] - 1
-        p2 = field[row2][col2] - 1
+        p1 = self._state.field[row1][col1] - 1
+        p2 = self._state.field[row2][col2] - 1
         delta = min(self._state.bullets[p1], self._state.bullets[p2])
         self._state.bullets[p1] -= delta
         self._state.bullets[p2] -= delta
