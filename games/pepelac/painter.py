@@ -20,6 +20,9 @@ def image_resize(path, output_weight):
 class Painter:
     _is_initialized = False
 
+    def __init__(self, players):
+        self.players = players
+
     def _initialize(self, jury_state):
         self._is_initialized = True
         self._cell_side = FRAME_SIDE / jury_state.field_side
@@ -49,6 +52,7 @@ class Painter:
                           (FRAME_SIDE + FREE_SIDE + RIGHT_MARGIN, FRAME_SIDE),
                           'white'
                           )
+
         if not self._is_initialized:
             self._initialize(jury_state)
 
@@ -79,7 +83,7 @@ class Painter:
                 elif cell == 0:
                     draw.rectangle(rectangle, outline='black')
                 else:
-                    name = jury_state.players[players_count].author_name
+                    name = self.players[players_count].author_name
                     self.draw_on_the_left(players_count,
                                           name,
                                           colors[cell], image

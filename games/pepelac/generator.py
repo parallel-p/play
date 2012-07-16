@@ -28,8 +28,8 @@ class Generator:
             new_field[bullet_x][bullet_y] = -1
         return new_field
 
-    def generate_start_positions(self, game_signature, players):
-        self.players_count = len(players)
+    def generate_start_positions(self, game_signature, players_count):
+        self.players_count = players_count
         '''Generates a list of start positions'''
         random.seed()
         self.time = random.randint(3, 10)
