@@ -99,15 +99,16 @@ class Bot:
 
             if process_memory > memory_limit_mb:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded memory limit", self._player_command)
+                logger.error("bot with cmd '%s' exceeded memory limit",
+                             self._player_command)
                 raise MemoryLimitException
 
     def _get_cpu_time(self):
         '''
         Get CPU time used by bot's process.
         '''
-        times = self._process.get_cpu_times()
         try:
+            times = self._process.get_cpu_times()
             return times.system + times.user
         except psutil.NoSuchProcess:
             return None
@@ -170,12 +171,14 @@ class Bot:
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded time limit", self._player_command)
+                logger.error("bot with cmd '%s' exceeded time limit",
+                             self._player_command)
                 raise TimeLimitException
 
             if cpu_time - cpu_time_start > config.cpu_time_limit_seconds:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded cpu time limit", self._player_command)
+                logger.error("bot with cmd '%s' exceeded cpu time limit",
+                             self._player_command)
                 raise TimeLimitException
 
             if hasattr(self, "_deserialize_exc") and self._deserialize_exc:
