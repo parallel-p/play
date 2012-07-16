@@ -169,7 +169,7 @@ class Bot:
             cpu_time = self._get_cpu_time()
             real_time = self._get_real_time()
 
-            if not cpu_time:
+            if cpu_time is None:
                 # psutil was raised NoSuchProcess
                 raise ProcessNotRunningException
 
