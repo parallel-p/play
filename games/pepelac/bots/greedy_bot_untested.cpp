@@ -49,7 +49,7 @@ bool up(){
   }
   else{
     players[0].y--;
-    cout << "Up" << endl;
+    cout << "UP" << endl;
     cout.flush();
     return 1;
   }
@@ -61,7 +61,7 @@ bool down(){
   }
   else{
     players[0].y++;
-    cout << "Down" << endl;
+    cout << "DOWN" << endl;
     cout.flush();
     return 1;
   }
@@ -73,7 +73,7 @@ bool left(){
   }
   else{
     players[0].x--;
-    cout << "Left" << endl;
+    cout << "LEFT" << endl;
     cout.flush();
     return 1;
   }
@@ -85,14 +85,14 @@ bool right(){
   }
   else{
     players[0].x++;
-    cout << "Right" << endl;
+    cout << "RIGHT" << endl;
     cout.flush();
     return 1;
   }
 }
 
 bool stay(){
-  cout << "Stay" << endl;
+  cout << "STAND" << endl;
   cout.flush();
   return 1;
 }
@@ -155,13 +155,13 @@ void go(int x, int y){
   bool f;
 
   if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
-    right();
+    f = right();
   if (players[0].x > x && !f && dan[players[0].x - 1][players[0].y] < big)
-    left();
+    f = left();
   if (players[0].y < y && !f && dan[players[0].x][players[0].y + 1] < big)
-    down();
+    f = down();
   if (players[0].y > y && !f && dan[players[0].x][players[0].y - 1] < big)
-    up();
+    f = up();
   if (!f)
     stay();
 }
