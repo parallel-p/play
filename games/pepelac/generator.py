@@ -4,7 +4,6 @@ from jury_state import JuryState
 
 _field_size = 15
 
-
 class Generator:
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
@@ -30,11 +29,12 @@ class Generator:
 
     def generate_start_positions(self, game_signature, players_count):
         self.players_count = players_count
+        self._games_count = 1
         '''Generates a list of start positions'''
         random.seed()
         self.time = random.randint(3, 10)
         self.bullets_count = self.players_count * 5
-        for game in range(self.players_count):
+        for game in range(self._games_count):
             field = [[0 for i in range(_field_size)]
                      for j in range(_field_size)]
             field = self.generate_players(field, self.players_count)
