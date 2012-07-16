@@ -86,7 +86,7 @@ class FrameVisualizer(tk.Frame):
         to be used to draw the image.'''
         self.frame_number = new_frame_number
         self.img = ImageTk.PhotoImage(image=_bytes2image(
-            self.painter_factory(self.game_controller.players).paint(
+            self.painter_factory(self.game_controller.get_players()).paint(
                 self.game_controller.jury_states[self.frame_number])))
         self.frame_label['image'] = self.img
         self.control_panel._set_frame_number(self.frame_number)
