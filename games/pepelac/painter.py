@@ -75,22 +75,22 @@ class Painter:
         del draw
 
     def _cell_line(self, line):
-    out = []
-    for pos in line:
-        if pos == -2:
-            cell = self.Cell(self.chars[0], self.colors[0])
-            # default: bright yellow '@@' on red
-        elif pos == 0:
-            cell = self.Cell(self.chars[1], self.colors[1])
-            # default: cyan '[]' on green
-        elif pos == -1:
-            cell = self.Cell(self.chars[2], self.colors[2])
-            # default: black '**' on yellow
-        else:
-            cell = self.Cell(self.chars[3].format(pos), self.colors[3])
-            # default: bright white 'P{hex number of player}' on magenta
-        out.append(cell)
-    return out
+        out = []
+        for pos in line:
+            if pos == -2:
+                cell = self.Cell(self.chars[0], self.colors[0])
+                # default: bright yellow '@@' on red
+            elif pos == 0:
+                cell = self.Cell(self.chars[1], self.colors[1])
+                # default: cyan '[]' on green
+            elif pos == -1:
+                cell = self.Cell(self.chars[2], self.colors[2])
+                # default: black '**' on yellow
+            else:
+                cell = self.Cell(self.chars[3].format(pos), self.colors[3])
+                # default: bright white 'P{hex number of player}' on magenta
+            out.append(cell)
+        return out
 
     def _generate_line(self, cell_line):
         prev_color = (None, None, 3) # total reset
