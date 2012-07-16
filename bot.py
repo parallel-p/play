@@ -169,6 +169,10 @@ class Bot:
             cpu_time = self._get_cpu_time()
             real_time = self._get_real_time()
 
+            if not cpu_time:
+                # psutil was raised NoSuchProcess
+                break
+
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
                 logger.error("bot with cmd '%s' exceeded time limit",
