@@ -1,4 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
+import os.path
+
 
 FRAME_SIDE = 1024
 FREE_SIDE = 512
@@ -6,6 +8,10 @@ RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
 LINE_WIDTH = 1
+MY_DIR = __file__[:-10]
+
+def get_path(filename):
+    return os.path.join(MY_DIR, filename)
 
 
 def set_color(color, print_result=False):
@@ -31,6 +37,7 @@ def set_color(color, print_result=False):
 
 
 def image_resize(path, output_weight):
+    from PIL import Image
     image = Image.open(path)
     if image.mode not in ('L', 'RGB', 'RGBA'):
         image = image.convert('RGB')
@@ -123,6 +130,7 @@ class Painter:
         '''
         width = FRAME_SIDE + FREE_SIDE + RIGHT_MARGIN
         height = FRAME_SIDE
+        from PIL import Image, ImageDraw
         image = Image.new('RGBA',
                           (width, height),
                           'white'
@@ -147,9 +155,9 @@ class Painter:
                                   )
 
         if not self.fight:
-            fire_ico = image_resize('images/fire.png', self._cell_side - 4)
-            patron_ico = image_resize('images/patron.png', self._cell_side - 4)
-            player_ico = image_resize('images/player.png', self._cell_side - 4)
+            fire_ico = image_resize(get_path('images/fire.png'), self._cell_side - 4)
+            patron_ico = image_resize(get_path('images/patron.png'), self._cell_side - 4)
+            player_ico = image_resize(get_path('images/player.png'), self._cell_side - 4)
 
             for x in range(FREE_SIDE, FREE_SIDE + FRAME_SIDE + 1,
                            self._cell_side):
@@ -181,7 +189,7 @@ class Painter:
                         draw.rectangle(rectangle, fill=colors[cell])
                         image.paste(player_ico, (y + 2, x + 2), player_ico)
         else:
-            player_ico = image_resize('images/player.png', width / 3)
+            player_ico = image_resize(get_path('images/player.png'), width / 3)
             size = player_ico.size[0]
             rectangle = (width / 8, height / 5,
                          width / 8 + size - 5, height / 5 + size - 5)
@@ -204,7 +212,7 @@ class Painter:
             draw.text((width / 4 + width / 2, height / 4 * 2.8),
                       str(jury_state.bullets[1]), fill='black',
                       font=patron_font)
-            patron_ico = image_resize('images/patron-90.png', 80)
+            patron_ico = image_resize(get_path('images/patron-90.png'), 80)
             image.paste(patron_ico, (int(width / 3.2), int(height / 4 * 2.8)),
                         patron_ico)
             image.paste(patron_ico, (int(width / 3.2) + width / 2,
