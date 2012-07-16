@@ -70,7 +70,13 @@ class GameSimulator:
         game_master = config.GameMaster(self, self._start_state)
         while not self._game_controller.is_finished:
             copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
-            game_master.tick(copied_js)
+            try:
+                game_master.tick(copied_js)
+            except:
+                logger.critical("game master was raised an unhandled exception, aborting")
+                self._kill_bots()
+                logger.critical("re-raising game master's exception")
+                raise
         self._kill_bots()
         return self._game_controller
 
