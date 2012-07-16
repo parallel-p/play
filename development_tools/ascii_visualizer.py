@@ -8,12 +8,11 @@ import colorama.ansitowin32 as ansi2w32
 import config
 from lib.keyboard_capture import getch
 from time import sleep
-from os import name as osname
+from os import name, system
 
 
 def _clear():
     '''this function clears the console by executing the appropriate command'''
-    from os import name, system
     if name == 'posix':
         system('clear')
     elif name == 'nt':
@@ -35,6 +34,22 @@ class AsciiVisualizer:
         self.painter_factory = config.Painter
         self.game_controller = game_controller
         self.frame_number = 0
+        if name == 'nt':
+            self.key_sets = {
+                'next':'DdNn.>]}+= ',
+                'prev':'BbAa|,<[{-_',
+                'jump':'0123456789SsJjFfRrGg',
+                'auto':'WwMmPp',
+                'quit':'QqXx'
+                }
+        else:
+            self.key_sets = {
+                'next':'CcNn.>]}+= ',
+                'prev':'Ddb|,<[{-_',
+                'jump':'0123456789BJjFfRrGg',
+                'auto':'AaMmPp',
+                'quit':'QqEe'
+                }
 
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
@@ -51,25 +66,47 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        print('''{brt}{bl}Navigation help:
+        if name == 'nt':
+            msg = '''{brt}{bl}Navigation help:
+                ____
+               |{gr} W  {bl}|
+               |{mg}auto{bl}|
+          ____  ____  ____
+         |{gr} A  {bl}||{gr} S  {bl}||{gr} D  {bl}|
+         |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
+
+        forward       : {gr}D,N,SPACE{bl}             (Alt: {gr}>,],+{bl})
+        back          : {gr}A,B{bl}              (Alt: {gr}<,[,-{bl})
+        jump to frame : {gr}S,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
+
+        autoplay      : {gr}W,M,P{bl}
+        stop autoplay : {gr}Ctrl-Z{bl}
+
+        quit          : {gr}Q,''X{bl}
+
+        display this message : {gr}any other key{norm}
+        '''
+        else:
+            msg = '''{brt}{bl}Navigation help:
                 ____
                |{gr} Up {bl}|
                |{mg}auto{bl}|
-          ____  ____  ____ 
+          ____  ____  ____
          |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
-         |{mg}prev{bl}||{mg}jump{bl}||{mg}Next{bl}|
-         
+         |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
+
         forward       : {gr}RIGHT,N,SPACE{bl}         (Alt: {gr}>,],+{bl})
-        back          : {gr}LEFT,B,P{bl}              (Alt: {gr}<,[,-{bl})
+        back          : {gr}LEFT,B{bl}              (Alt: {gr}<,[,-{bl})
         jump to frame : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
         autoplay      : {gr}UP,A,M,P{bl}
-        stop autoplay : {gr}^C{bl} (or {gr}Ctrl-Z{bl} on Windows)
+        stop autoplay : {gr}^C{bl}
 
         quit          : {gr}Q,E{bl}
 
         display this message : {gr}any other key{norm}
-        '''.format(
+        '''
+        print(msg.format(
             gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
 
@@ -95,23 +132,23 @@ class AsciiVisualizer:
         print(self._frame2string(0))
         while True:
             key = getch()
-            if osname=='nt':
+            if name == 'nt':
                 key=key.decode()
-            if key in 'CcNn.>]}+= ':#next
+            if key in self.key_sets['next']:#next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif key in 'Ddb|,<[{-_':#prev
+            elif key in self.key_sets['prev']:#prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the first frame.')
-            elif key in 'AaMmPp':
+            elif key in self.key_sets['auto']:
                 while True:
                     self._prompt(
                         'Enter FPS and the last frame (optional)')
@@ -147,10 +184,10 @@ class AsciiVisualizer:
                                 pass
                             break
                     self._error('The speed must be a real nonzero number')
-            elif key in 'QqEe':
+            elif key in self.key_sets['quit']:
                 print('Quit')
                 return None
-            elif key in '0123456789BJjFfRrGg':
+            elif key in self.key_sets['jump']:
                 while True:
                     self._prompt('Enter frame number')
                     frame = input()
