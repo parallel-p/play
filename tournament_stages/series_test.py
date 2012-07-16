@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 from tournament_stages.game_signature import GameSignature
 from log import logger
-with patch.dict('sys.modules', {'game': Mock()}):
+with patch.dict('sys.modules', {'game': Mock(), 'config': Mock()}):
     import game
     from tournament_stages.series import Series
 
