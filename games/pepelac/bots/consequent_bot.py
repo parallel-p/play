@@ -30,7 +30,7 @@ def main():
     '''
     n = int(input())
     current_target = NONE
-    (players, bullets) = map(int, input().split())
+    (players, bullets, k) = map(int, input().split())
     while bullets > 0:
         (curx, cury, curb) = map(int, input().split())
         #Here we just forget about others
@@ -43,14 +43,14 @@ def main():
         if current_target == NONE:
             current_target = (bx, by)
         make_move((curx, cury), current_target)
-        players, bullets = map(int, input().split())
+        (players, bullets, k) = map(int, input().split())
     current_target = (n // 2, n // 2)
     (curx, cury, curb) = map(int, input().split())
     for player in range(players - 1):
             (tmpx, tmpy) = map(int, input().split())
     while (curx, cury) != current_target:
         make_move((curx, cury), current_target)
-        p, b = map(int, input().split())
+        (players, bullets, k) = map(int, input().split())
         (curx, cury, curb) = map(int, input().split())
         for player in range(players - 1):
             (tmpx, tmpy) = map(int, input().split())
