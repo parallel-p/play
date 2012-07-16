@@ -42,7 +42,7 @@ class Painter:
                 x += self._delta_x
             y += self._delta_y
         bytes = BytesIO()
-        image.save(bytes, format='png')
+        image.save(bytes, format='gif')
         return bytes.getvalue()
         # We should return BYTES, not str!!
 
