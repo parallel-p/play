@@ -62,9 +62,9 @@ class Painter:
         colors = ['', 'black', 'yellow', 'green', 'pink', 'red', 'blue']
         players_count = 0
 
-        fire_ico = image_resize('fire.jpg', self._cell_side - 10)
-        patron_ico = image_resize('patron.jpg', self._cell_side - 10)
-        player_ico = image_resize('player.png', self._cell_side - 10)
+        fire_ico = image_resize('images/fire.jpg', self._cell_side - 10)
+        patron_ico = image_resize('images/patron.jpg', self._cell_side - 10)
+        player_ico = image_resize('images/player.png', self._cell_side - 10)
 
         for i, row in enumerate(jury_state.field):
             for j, cell in enumerate(row):
