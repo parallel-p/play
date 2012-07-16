@@ -207,7 +207,7 @@ int main(){
       //cout << "going to" << " " << bb.x << " " << bb.y << endl;
       go(bb.x, bb.y);
     }
-    else if (b == 0 && players[0].b >= players[1].b){
+    else if (players[0].b >= players[1].b + b){
       go(n / 2 + 1, n / 2 + 1);
     }
     else{
