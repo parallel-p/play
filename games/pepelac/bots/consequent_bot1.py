@@ -21,7 +21,15 @@ def make_move(current_position, current_target):
             print('RIGHT')
     sys.stdout.flush()
 
+def get_dist(cur, dist):
+    return abs(cur[0] - dist[0]) + abs(cur[1] - dist[1])
 
+def get_target(curpos, bpos):
+    ans = bpos[0]
+    for bullet in bpos:
+        if get_dist(bullet, curpos) < get_dist(ans, curpos):
+            ans = bullet
+    return ans
 
 def main():
     '''
@@ -36,12 +44,15 @@ def main():
         #Here we just forget about others
         for player in range(players - 1):
             (tmpx, tmpy, tmpb) = map(int, input().split())
+        bpos = []
         for bullet in range(bullets):
             (bx, by) = map(int, input().split())
-        if current_target == (curx, cury):
-            current_target = NONE
-        if current_target == NONE:
-            current_target = (bx, by)
+            bpos.append((bx, by))
+        current_target = get_target((curx, cury), bpos)
+        # if current_target == (curx, cury):
+        #     current_target = NONE
+        # if current_target == NONE:
+        #     current_target = (bx, by)
         make_move((curx, cury), current_target)
         (players, bullets, k) = map(int, input().split())
     current_target = (n // 2, n // 2)
