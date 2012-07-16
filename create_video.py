@@ -22,7 +22,7 @@ if __name__ == '__main__':
     initialize_game_environment(game_path)
     import config
     beg = clock()
-    players = layers_parse(config.players_config)
+    players = players_parse(config.players_config)
     visualizer = VideoVisualizer(framerate, config.Painter(players), log_mask,
                                  log_path, silent)
     visualizer.compile(res_name)
