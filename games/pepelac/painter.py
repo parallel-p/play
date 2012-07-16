@@ -1,14 +1,32 @@
 ﻿# -*- coding: utf-8 -*-
-from PIL import Image, ImageDraw, ImageFont
-from jury_state import JuryState
-from player import Player
-from io import BytesIO
 
 FRAME_SIDE = 1024
 FREE_SIDE = 1024
 RIGHT_MARGIN = 256
 SMALL_SIDE = 50
 MARGIN = 20
+
+
+def set_color(color, print_result=False):
+    '''takes a 3-tuple with codes for Background, Foreground and Style and
+    returns a string with ANSI escape codes for each of them.
+    Any of them can be None, in which case the respective codes will not be
+    added to the string.
+    If print_result is True, then it also writes these codes to stdout'''
+    (back, fore, style) = color
+    from sys import stdout
+    CSI = '\x1b['
+    backc = ['40', '44', '46', '42', '45', '41', '49', '47', '43']
+    forec = ['30', '34', '36', '32', '35', '31', '39', '37', '33']
+    stylec = ['1', '2', '22', '0']
+    code = ''
+    for param, arg in zip([backc, forec, stylec], [back, fore, style]):
+        if arg is not None:
+            code += (CSI + param[arg] + 'm')
+    if print_result:
+        stdout.write(code)
+    return(code)
+
 
 
 def image_resize(path, output_weight):
@@ -33,6 +51,10 @@ class Painter:
         self.players = players
 
     def _initialize(self, jury_state):
+        from PIL import Image, ImageDraw, ImageFont
+        from jury_state import JuryState
+        from player import Player
+        from io import BytesIO
         self._is_initialized = True
         self._cell_side = FRAME_SIDE / jury_state.field_side
 
@@ -52,23 +74,23 @@ class Painter:
                        )
         del draw
 
-        def _cell_line(self, line):
-        out = []
-        for pos in line:
-            if pos == -2:
-                cell = self.Cell(self.chars[0], self.colors[0])
-                # default: bright yellow '@@' on red
-            elif pos == 0:
-                cell = self.Cell(self.chars[1], self.colors[1])
-                # default: cyan '[]' on green
-            elif pos == -1:
-                cell = self.Cell(self.chars[2], self.colors[2])
-                # default: black '**' on yellow
-            else:
-                cell = self.Cell(self.chars[3].format(pos), self.colors[3])
-                # default: bright white 'P{hex number of player}' on magenta
-            out.append(cell)
-        return out
+    def _cell_line(self, line):
+    out = []
+    for pos in line:
+        if pos == -2:
+            cell = self.Cell(self.chars[0], self.colors[0])
+            # default: bright yellow '@@' on red
+        elif pos == 0:
+            cell = self.Cell(self.chars[1], self.colors[1])
+            # default: cyan '[]' on green
+        elif pos == -1:
+            cell = self.Cell(self.chars[2], self.colors[2])
+            # default: black '**' on yellow
+        else:
+            cell = self.Cell(self.chars[3].format(pos), self.colors[3])
+            # default: bright white 'P{hex number of player}' on magenta
+        out.append(cell)
+    return out
 
     def _generate_line(self, cell_line):
         prev_color = (None, None, 3) # total reset
