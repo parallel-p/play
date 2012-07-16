@@ -126,7 +126,7 @@ class GameMaster:
 
         cell = self._state.field[new_pos[0]][new_pos[1]]
         if cell > 0:
-            self._state.dead_players.append(cell - 1)
+            self._state.dead_players.append(self._players[cell - 1])
 
         self._state.field[new_pos[0]][new_pos[1]] = EXPLODED
         self._last_exploded_cell = new_pos
