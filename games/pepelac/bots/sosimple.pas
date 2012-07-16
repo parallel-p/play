@@ -15,8 +15,9 @@ begin
     todot := move;
 end;
 begin
-    while True do
     readln(n);
+    
+    while True do
     begin
         readln(p, b, k);
         readln(x, y, b0);
@@ -37,7 +38,11 @@ begin
             for i := 1 to b do
             begin
                 if abs(x - bullets[i][1]) + abs(y - bullets[i][2]) < min then
+                begin
                     min := abs(x - bullets[i][1]) + abs(y - bullets[i][2]);
+                    xb := bullets[i][1];
+                    yb := bullets[i][2];
+                end;
             end;
             move := todot(x, y, xb, yb);
         end;
