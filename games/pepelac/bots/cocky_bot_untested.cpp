@@ -106,13 +106,13 @@ void read(){
   players.clear();
   for (i = 0; i < p; i++){
     cin >> t1 >> t2 >> t3;
-    players.push_back(player(t1, t2, t3));
+    players.push_back(player(t2, t1, t3));
   }
 
   bullets.clear();
   for (i = 0; i < b; i++){
     cin >> t1 >> t2;
-    bullets.push_back(bullet(t1, t2));
+    bullets.push_back(bullet(t2, t1));
   }
 }
 
