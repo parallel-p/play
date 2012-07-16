@@ -14,7 +14,7 @@ import config_helpers
 config_helpers.initialize_game_environment(sys.argv[1])
 import config
 
-output_name = 'outputt.mpg'
+output_name = 'output.mpg'
 framerate = int(sys.argv[2])
 log_dir_name = sys.argv[3]
 log_files_mask = sys.argv[4]
@@ -27,6 +27,7 @@ vjs = VideoVisualizer(framerate, config.Painter(), log_files_mask, log_dir_name)
 #vjs = VideoVisualizer(25, config.Painter(), '0-0-0\.jstate', 'logs/tournament1')
 vjs.compile(output_name)
 
+output_name = output_name[:output_name.rfind('.')] + '1.mpg'
 output_place = os.path.join(os.path.dirname(__file__), log_dir_name, output_name)
 
 '''
