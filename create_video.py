@@ -1,4 +1,4 @@
-from config_helpers import initialize_game_environment
+from config_helpers import initialize_game_environment, players_parse
 from visualizer import VideoVisualizer
 import sys
 from time import clock
@@ -22,6 +22,9 @@ if __name__ == '__main__':
     initialize_game_environment(game_path)
     import config
     beg = clock()
-    VideoVisualizer(framerate, config.Painter(), log_mask, log_path, silent).compile(res_name)
+    players = layers_parse(config.players_config)
+    visualizer = VideoVisualizer(framerate, config.Painter(players), log_mask,
+                                 log_path, silent)
+    visualizer.compile(res_name)
     if not silent:
         print('Compiled in', clock() - beg, 'sec.')
