@@ -86,7 +86,8 @@ class BotTest(unittest.TestCase):
 
         def test_with_timelimit_error():
             deserialize.side_effect = side_effect_for_deserialize(TIME)
-            serialize.side_effect = side_effect_for_serialize(PLAYER_STATE, TIME)
+            serialize.side_effect = side_effect_for_serialize(PLAYER_STATE,
+                                                              TIME)
             test_bot.create_process()
             move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
             self.assertRaises(TimeLimitException)

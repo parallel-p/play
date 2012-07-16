@@ -63,8 +63,8 @@ class BotCompilerTest(unittest.TestCase):
         for bot in bots:
             command_line = bot.split('\"')[5]
             process = subprocess.Popen(command_line, shell=True,
-                cwd = os.path.abspath(os.curdir),
-                stdout = subprocess.PIPE)
+                cwd=os.path.abspath(os.curdir),
+                stdout=subprocess.PIPE)
             out = process.stdout.read()
             process.kill()
             self.assertEqual(out, b'Hello, world!\n')

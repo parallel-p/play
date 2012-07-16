@@ -101,7 +101,8 @@ class Bot:
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded time limit", self._player_command)
+                logger.error("bot with cmd '%s' exceeded time limit",
+                             self._player_command)
                 raise TimeLimitException
 
             if hasattr(self, "_deserialize_exc") and self._deserialize_exc:
