@@ -2,7 +2,7 @@ import random
 import copy
 from jury_state import JuryState
 
-_field_size = 50
+_field_size = 8
 
 
 class Generator:
@@ -36,11 +36,11 @@ class Generator:
         self.bullets_count = self.players_count * 5
         for game in range(self.players_count):
             field = [[0 for i in range(_field_size)]
-                for j in range(_field_size)]
+                     for j in range(_field_size)]
             field = self.generate_players(field, self.players_count)
             self.bullets = []
             for player in range(self.players_count):
                 self.bullets.append(0)
             field = self.generate_bullets(field, self.bullets_count)
             yield JuryState(_field_size, field, self.bullets, self.time,
-                players, [])
+                            players, [])

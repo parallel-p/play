@@ -13,7 +13,7 @@ class GameMaster:
         self._players = simulator.get_players()
         if len(self._players) != 2:
             raise NumberOfPlayersException(
-              'Number of players should be equal to 2')
+                'Number of players should be equal to 2')
 
     def tick(self, state):
         scores = dict(zip(self._players, [1, 1]))
@@ -21,8 +21,8 @@ class GameMaster:
         while sum(state.heap_sizes) != 0:
             current_player = self._players[turn]
             try:
-                move = self._simulator.get_move(current_player,
-                  state.heap_sizes, serialize, deserialize)
+                move = self._simulator.get_move(
+                    current_player, state.heap_sizes, serialize, deserialize)
             except OSError:
                 break
             if not self._is_valid_move(state, move):

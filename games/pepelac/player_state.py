@@ -12,15 +12,18 @@ class PlayerState:
 
 
 def list_to_str(lst):
-    return ' '.join(map(str,lst))
+    return ' '.join(map(str, lst))
 
 
 def serialize_pstate(ps, stream):
     representation = '\n'.join(
-        [list_to_str([len(ps.players) + 1, len(ps.bullets), ps.explosion_time]),
-        list_to_str(ps.current_player)]+[
-        list_to_str(player) for player in ps.players]+[
-        list_to_str(bullet) for bullet in ps.bullets]
+        [
+            list_to_str(
+                [len(ps.players) + 1, len(ps.bullets), ps.explosion_time]
+            ), list_to_str(ps.current_player)
+        ] +
+        [list_to_str(player) for player in ps.players] +
+        [list_to_str(bullet) for bullet in ps.bullets]
     )
     stream.write(representation.encode())
     stream.flush()
