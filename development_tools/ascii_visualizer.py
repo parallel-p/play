@@ -8,6 +8,7 @@ import colorama.ansitowin32 as ansi2w32
 import config
 from lib.keyboard_capture import getch
 from time import sleep
+from os import name as osname
 
 
 def _clear():
@@ -94,6 +95,8 @@ class AsciiVisualizer:
         print(self._frame2string(0))
         while True:
             key = getch()
+            if osname=='nt':
+                key=key.decode()
             if key in 'CcNn.>]}+= ':#next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
