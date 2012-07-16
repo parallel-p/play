@@ -124,7 +124,9 @@ void armageddon(){
       isbul[i][j] = 0;
     }
   }
-
+  if (p > 1){
+    dan[players[1].x][players[1].y] = big;
+  }
   t = k;
 
   for (s = 1; t <= 0; s++){
