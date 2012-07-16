@@ -8,7 +8,7 @@ using namespace std;
 const int MaxN = int(1e5) + 100;
 
 int n, p, s, k;
-int px[MaxN], py[MaxN];
+int px[MaxN], py[MaxN], pb[MaxN];
 int bx[MaxN], by[MaxN];
 int dx[] = {0, 0, 0, 1, -1};
 int dy[] = {0, 1, -1, 0, 0};
@@ -25,9 +25,9 @@ int main()
   while (1)
   {
     scanf("%d%d%d", &p, &s, &k);
-    for (int i = 0; i < s; ++i)
-      scanf("%d%d", &px[i], &py[i]);
     for (int i = 0; i < p; ++i)
+      scanf("%d%d%d", &px[i], &py[i], &pb[i]);
+    for (int i = 0; i < s; ++i)
       scanf("%d%d", &bx[i], &by[i]);
     srand(time(NULL));
     while (1)
