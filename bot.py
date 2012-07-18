@@ -85,7 +85,7 @@ class Bot:
         memory_limit_mb = config.memory_limit_mb
 
         exit_code = None
-        while exit_code is None:
+        while exit_code is None or self._is_running():
             try:
                 exit_code = self._process.wait(CHECK_TIME_SECONDS)
             except psutil.TimeoutExpired:
@@ -95,7 +95,7 @@ class Bot:
                 megabyte = 1 << 20
                 process_memory = self._process.get_memory_info().rss / megabyte
             except psutil.NoSuchProcess:
-                return
+                break
 
             if process_memory > memory_limit_mb:
                 self.kill_process()
