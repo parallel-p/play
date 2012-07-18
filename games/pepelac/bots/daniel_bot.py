@@ -83,9 +83,11 @@ def randfix(x):
 
 
 def towards(to):
+    if PLAYERS_COUNT == 1:
+        return randfix((nX, nY))
+
     danger = mLUZ <= oLUZ
     nX, nY = sign(to[0] - mX), sign(to[1] - mY)
-    return randfix((nX, nY))
     if not danger:
         if (abs(mX - oX) == 1) and (abs(mY - oY) == 1):
             return randfix(sub((oX, oY), (mX, mY)))
@@ -106,6 +108,8 @@ def towards(to):
                 return ([-1, 1][randint(0, 1)], 0)
             else:
                 return (0, nY)
+    return randfix((nX, nY))
+
 
 gX, gY = int(FIELD_SIZE / 2) + 1, int(FIELD_SIZE / 2) + [1, 0][FIELD_SIZE % 2]
 finish = (gX, gY)

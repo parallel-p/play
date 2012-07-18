@@ -12,9 +12,9 @@ class Generator:
             val += bool(field[x - 1][y])
         if y > 1:
             val += bool(field[x][y - 1])
-        if x < _field_size:
+        if x < _field_size - 1:
             val += bool(field[x + 1][y])
-        if y < _field_size:
+        if y < _field_size - 1:
             val += bool(field[x][y + 1])
 
         return bool(val)
