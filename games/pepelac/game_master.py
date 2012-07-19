@@ -55,19 +55,20 @@ class GameMaster:
         for i, row in enumerate(self._state.field):
             for j, cell in enumerate(row):
                 if cell == BULLET:
-                    ps.bullets.append((i, j))
+                    ps.bullets.append((i + 1, j + 1))
                 elif cell > 0:
                     player_id = cell - 1  # players numering from the 1
                     if player_id == turn:
                         ps.current_player = (
-                            i, j, self._state.bullets[player_id]
+                            i + 1, j + 1, self._state.bullets[player_id]
                         )
+                        old_pos = (i, j)
                     else:
                         ps.players.append(
-                            (i, j, self._state.bullets[player_id])
+                            (i + 1, j + 1, self._state.bullets[player_id])
                         )
 
-        old_row, old_col = old_pos = ps.current_player[:2]
+        old_row, old_col = old_pos
         try:
             move = self._simulator.get_move(
                 player, ps, serialize_pstate, deserialize_move
