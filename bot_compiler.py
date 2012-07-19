@@ -42,7 +42,7 @@ class BotCompiler():
         elif extension == "pas":
             execfile_string = "./" + filename
         elif extension == "py":
-            if operating_system == 'Windows':
+            if operating_system == 'win32':
                 execfile_string = "python " + filename
             else:
                 execfile_string = "python3 " + filename
