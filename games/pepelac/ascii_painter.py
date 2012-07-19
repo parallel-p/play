@@ -10,8 +10,12 @@ def set_color(color, print_result=False):
     (back, fore, style) = color
     from sys import stdout
     CSI = '\x1b['
+    #        0     1     2     3     4     5     6     7     8
+    #        black blue  cyan  green mag   red   RST   white yellow
     backc = ['40', '44', '46', '42', '45', '41', '49', '47', '43']
     forec = ['30', '34', '36', '32', '35', '31', '39', '37', '33']
+    #         0    1    2     3
+    #         brt  dim  norm  RST
     stylec = ['1', '2', '22', '0']
     code = ''
     for param, arg in zip([backc, forec, stylec], [back, fore, style]):
@@ -42,11 +46,26 @@ class Painter():
     The Player chars must be a valid format string with
     the player's number as its parameter and each of the
     colors must be a valid color tuple for the set_color function'''
-        self.players = players
+        self.players=players
         if len(chars) != 4 or len(colors) != 4:
             raise Exception('Invalid parameters')
         self.chars = chars
         self.colors = colors
+
+    def _generate_player_stats(players, bullets):
+        statstr = '{rok}Players in game:{rst}\n\n'.format(mob=set_color((0,5,None)), rst=set_color((None,6,None)))
+        for player,bulletn in zip(players,bullets):
+            statstr+='{gok}{player.bot_name:10s}{y} by {cy}{0.author_name:15s}{y}: {mg}{bullets:2d} {y}bullets{rst}\n'.format(
+                bullets=bulletn,
+                player=player,
+                gok=set_color((0,3,None)),
+                y=set_color((None,8,None)),
+                cy=set_color((None,2,None)),
+                mg=set_color((None,4,None)),
+                rst=set_color((None,6,None))
+            )
+        statstr+=set_color((None,None,3))
+        return statstr
 
     def _cell_line(self, line):
         out = []
@@ -61,13 +80,13 @@ class Painter():
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
             else:
-                cell = self.Cell(self.chars[3].format(pos), self.colors[3])
+                cell = self.Cell(self.chars[3].format(pos-1), self.colors[3])
                 # default: bright white 'P{hex number of player}' on magenta
             out.append(cell)
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3)  # total reset
+        prev_color = (None, None, 3) # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as
@@ -81,8 +100,9 @@ class Painter():
         return text_line
 
     def ascii_paint(self, jury_state):
+        player_stats = self._generate_player_stats(self.players, jury_state.bullets)
         text_field = ''
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
             text_field += self._generate_line(line) + '\n'
-        return text_field
+        return text_field+'\n'+player_stats
