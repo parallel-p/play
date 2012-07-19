@@ -1,6 +1,7 @@
 import tournament_systems.ascii_draw_tree as ascii_draw_tree
 from tournament_systems.tournament_system import TournamentSystem
 from math import log
+import copy
 
 
 class TournamentSystemOlympic(TournamentSystem):
@@ -35,13 +36,14 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         Yields lists of players for each round.
         '''
-        list_of_players = self._players_list
+        list_of_players = copy.deepcopy(self._players_list)
         count_of_players = len(list_of_players)
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
         count_of_all_rounds = round(log(count_of_players, 2))
         for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
+            next_round = self.get_round(count_of_players, list_of_players)
             yield self.get_round(count_of_players, list_of_players)
             list_of_players = self.update_list_of_players(count_of_players)
 
