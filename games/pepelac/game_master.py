@@ -19,15 +19,13 @@ class GameMaster:
     def __init__(self, simulator, start_state):
         self._simulator = simulator
         self._players = simulator.get_players()
-        if len(self._players) != 2:
-            raise NumberOfPlayersException(
-                'Number of players should be equal to 2')
         side = start_state.field_side
         self._number_of_correct_cells = side ** 2
         self._last_exploded_cell = (-1, -1)
         self._direction = 0
         self._turn = 0
         self._scores = {}
+        self._players_count = len(self._players)
         for player in self._players:
             move = self._simulator.get_move(
                 player, start_state.field_side,
