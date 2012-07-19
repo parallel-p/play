@@ -3,6 +3,7 @@ from log import logger
 import config
 import bot
 import copy
+import time
 
 
 class GameSimulator:
@@ -33,7 +34,7 @@ class GameSimulator:
         for player in self._game_controller._players:
             self.bots[player] = bot.Bot(player.command_line)
             self.bots[player].create_process()
-            logger.debug('created bot "%s"', player.bot_name)
+            logger.debug('created bot \'%s\'', player.bot_name)
         logger.info('all bots created')
 
     def get_move(self, player, player_state, serialaizer, deserializer):
@@ -42,7 +43,7 @@ class GameSimulator:
         '''
         new_move = self.bots[player].get_move(player_state,
                                               serialaizer, deserializer)
-        logger.info('bot "%s" made a move', player.bot_name)
+        logger.debug('bot \'%s\' made a move', player.bot_name)
         return new_move
 
     def _kill_bots(self):
@@ -67,16 +68,19 @@ class GameSimulator:
         all the bots.
         '''
         self._create_bots()
+        start_time = time.time()
         game_master = config.GameMaster(self, self._start_state)
         while not self._game_controller.is_finished:
             copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
             try:
                 game_master.tick(copied_js)
             except:
-                logger.critical("game master was raised an unhandled exception, aborting")
+                logger.critical('game master was raised an unhandled exception, aborting')
                 self._kill_bots()
-                logger.critical("re-raising game master's exception")
+                logger.critical('re-raising game master\'s exception')
                 raise
+        end_time = time.time()
+        logger.info('time spent on the game: %f sec', end_time - start_time)
         self._kill_bots()
         return self._game_controller
 
