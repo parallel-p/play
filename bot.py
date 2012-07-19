@@ -7,14 +7,16 @@ import config
 import copy
 
 
+MEGABYTE = 1 << 20
+
 '''
-    TODO:
-    while process.is_running():
-        // check limits and `sleep`
-    # to record information about CPU time,
-    # real time and memory
-    # then count of steps became equal to
-    # `y`, check limits and delete information
+TODO:
+while process.is_running():
+    // check limits and `sleep`
+# to record information about CPU time,
+# real time and memory
+# then count of steps became equal to
+# `y`, check limits and delete information
 '''
 
 
@@ -27,13 +29,13 @@ class ProcessNotRunningException(OSError):
 
 class TimeLimitException(OSError):
     '''
-    This exception is raised when bot process exceeded time limit.
+    This exception is raised when bot's process exceeded time limit.
     '''
 
 
 class MemoryLimitException(OSError):
     '''
-    This exception is raised when bot process exceeded memory limit.
+    This exception is raised when bot's process exceeded memory limit.
     '''
 
 
@@ -55,7 +57,7 @@ class Bot:
     def __init__(self, player_command):
         '''
         Constructor for class Bot.
-        player_command is a string which is used to invoke bot program.
+        `player_command` is a string which is used to invoke bot program.
         '''
         self._player_command = player_command
         self._process = None
@@ -63,8 +65,8 @@ class Bot:
     def create_process(self):
         '''
         Starts bot's process.
-        '''
-        logger.info('executing "%s"', self._player_command)
+        ''' 
+        logger.info('executing \'%s\'', self._player_command)
         self._process = psutil.Popen(
             self._player_command.split(),
             stdout=PIPE,
@@ -91,21 +93,21 @@ class Bot:
             except psutil.TimeoutExpired:
                 pass
 
-            try:
-                megabyte = 1 << 20
-                process_memory = self._process.get_memory_info().rss / megabyte
-            except psutil.NoSuchProcess:
+            process_memory = self._get_memory()
+            if not process_memory:
                 break
-
-            if process_memory > memory_limit_mb:
-                self.kill_process()
-                logger.error("bot with cmd '%s' exceeded memory limit",
-                             self._player_command)
-                raise MemoryLimitException
+            else:
+                process_memory /= MEGABYTE
+                if process_memory > memory_limit_mb:
+                    self.kill_process()
+                    logger.error('bot with cmd \'%s\' exceeded memory limit',
+                                 self._player_command)
+                    raise MemoryLimitException
 
     def _get_cpu_time(self):
         '''
-        Get CPU time used by bot's process.
+        Returns CPU time used by bot's process.
+        If psutil.NoSuchProcess exception has been raised, returns None.
         '''
         try:
             times = self._process.get_cpu_times()
@@ -115,86 +117,128 @@ class Bot:
 
     def _get_real_time(self):
         '''
-        Get real time used by bot's process.
+        Returns real time used by bot's process.
         '''
         return time.time()
 
-    def get_move(self, player_state, serialize, deserialize):
+    def _get_memory(self):
         '''
-        Serialize player_state and transfer it to bot,
-        then deserialize output received from bot to `move`.
-            ``player_state`` - object, which will be passed to
-        the bot after serialization.
-            ``serialize(player_state, writable)`` is a function,
-        which is responsible for serializing ``player_state`` and
-        writing it to ``writable``.
-            ``deserialize(readable)`` is a function, which is
-        responsible for reading data from ``readable`` and turning it
-        to a valid ``move`` object.
+        Returns memory used by process in *megabytes*.
+        If psutil.NoSuchProcess exception has been raised, returns None.
         '''
-        if not self._is_running:
-            raise ProcessNotRunningException
-        self._write(player_state, serialize)
-        move = self._read(deserialize)
-        return move
-
-    def _run_deserialize(self, deserialize):
-        ''' Invokes author's deserialization function and
-        stores received ``move`` into self._deserialize_result '''
         try:
-            self._deserialize_result = deserialize(self._process.stdout)
-        except (BaseException, Exception) as exc:
-            self._deserialize_exc = exc
+            return self._process.get_memory_info().rss / MEGABYTE
+        except psutil.NoSuchProcess:
+            return None
 
-    def _read(self, deserialize):
-        '''
-        Deserialize move with bot's `stdout`.
-        `stdout` is a stream opened to read per *byte*.
-        '''
-        if not self._is_running():
-            raise ProcessNotRunningException
-
-        deserialize_thread = threading.Thread(
-            target=self._run_deserialize,
-            args=(deserialize,),
-            name="deserialize thread",
-        )
-        deserialize_thread.daemon = True
-        deserialize_thread.start()
-
+    def _check_time_limits(self):
         real_time_start = self._get_real_time()
         cpu_time_start = self._get_cpu_time()
 
         while True:
             cpu_time = self._get_cpu_time()
             real_time = self._get_real_time()
-
             if cpu_time is None:
                 # psutil was raised NoSuchProcess
                 raise ProcessNotRunningException
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded time limit",
+                logger.error('bot with cmd \'%s\' exceeded time limit',
                              self._player_command)
                 raise TimeLimitException
 
             if cpu_time - cpu_time_start > config.cpu_time_limit_seconds:
                 self.kill_process()
-                logger.error("bot with cmd '%s' exceeded cpu time limit",
+                logger.error('bot with cmd \'%s\' exceeded cpu time limit',
                              self._player_command)
                 raise TimeLimitException
 
-            if hasattr(self, "_deserialize_exc") and self._deserialize_exc:
+            if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
+                logger.critical('unhandled exception has been raised in'
+                    'deserialize thread, aborting'
+                )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
                 raise self._deserialize_exc
 
-            if not deserialize_thread.is_alive():
+            if hasattr(self, '_deserialize_result'):
                 break
+
+    def get_move(self, player_state, serialize, deserialize):
+        '''
+        Serialize player_state and transfer it to bot,
+        then deserialize output received from bot to `move`.
+
+        `player_state` - object, which will be passed to
+        the bot after serialization.
+
+        `serialize(player_state, writable_stream)` is a function,
+        which is responsible for serializing `player_state` and
+        writing it to `writable_stream`.
+
+        `deserialize(readable_stream)` is a function, which is
+        responsible for reading data from `readable_stream` and turning it
+        to a valid `move` object.
+
+        If bot's process isn't running, raise ProcessNotRunningException.
+        '''
+        if not self._is_running:
+            raise ProcessNotRunningException
+
+        real_time = self._get_real_time()
+        cpu_time = self._get_cpu_time()
+
+        get_move_thread = threading.Thread(
+            target=self._get_move,
+            args=(player_state, serialize, deserialize)
+        )
+        get_move_thread.start()
+        
+        self._check_time_limits()
 
         res = copy.deepcopy(self._deserialize_result)
         del self._deserialize_result
         return res
+
+        memory = self._get_memory()
+
+        logger.debug('elapsed real time: %f sec'
+            ', elapsed cpu time: %f sec, used memory: %f mb',
+            self._get_real_time() - real_time,
+            self._get_cpu_time() - cpu_time,
+            memory
+        )
+        return move
+
+    def _get_move(self, player_state, serialize, deserialize):
+        self._write(player_state, serialize)
+        self._read(deserialize)
+
+    def _run_deserialize(self, deserialize):
+        '''
+        Invokes author's deserialization function and
+        stores received `move` into self._deserialize_result.
+
+        If deserialize function raised exception, this function stores
+        information about exception for re-raising.
+        '''
+        try:
+            self._deserialize_result = deserialize(self._process.stdout)
+        except (BaseException, Exception) as exc:
+            self._deserialize_exc = exc
+            return
+
+    def _read(self, deserialize):
+        '''
+        Deserialize move with bot's `stdout`.
+        `stdout` is a stream opened to read per *byte*.
+
+        If bot's process isn't running, raise ProcessNotRunningException.
+        '''
+        if not self._is_running():
+            raise ProcessNotRunningException
+
+        self._run_deserialize(deserialize)
 
     def _write(self, player_state, serialize):
         '''
@@ -215,7 +259,7 @@ class Bot:
         except psutil.NoSuchProcess:
             pass
         self._process.communicate()
-        logger.info('process with cmd line "%s" was killed',
+        logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
 
     def _is_running(self):
