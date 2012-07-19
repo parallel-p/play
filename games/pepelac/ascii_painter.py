@@ -53,18 +53,17 @@ class Painter():
         self.colors = colors
 
     def _generate_player_stats(self, players, bullets):
-        statstr = '{rok}Players in game:{rst}\n\n'.format(rok=set_color((0,5,None)), rst=set_color((None,6,None)))
+        statstr = '{hcl}Players in game:{rst}\n\n'.format( hcl=set_color((1,8,None)), rst=set_color((None,None,3)) )
         for player,bulletn in zip(players,bullets):
-            statstr+='{gok}{player.bot_name:10s}{y} by {cy}{0.author_name:15s}{y}: {mg}{bullets:2d} {y}bullets{rst}\n'.format(
+            statstr+='{gok}{player.bot_name:10s}{y} by {cy}{player.author_name:15s}{y}: {mg}{bullets:2d} {y}bullets{rst}\n'.format(
                 bullets=bulletn,
                 player=player,
                 gok=set_color((0,3,None)),
                 y=set_color((None,8,None)),
                 cy=set_color((None,2,None)),
                 mg=set_color((None,4,None)),
-                rst=set_color((None,6,None))
+                rst=set_color((None,None,3))
             )
-        statstr+=set_color((None,None,3))
         return statstr
 
     def _cell_line(self, line):
