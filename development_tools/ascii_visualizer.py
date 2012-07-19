@@ -184,7 +184,8 @@ class AsciiVisualizer:
             elif arrow == 'A' or key in self.key_sets['auto']:
                 while True:
                     self._prompt(
-                        'Enter FPS and, optionally, the frame to stop on (separated by a space)')
+                        'Enter FPS and, optionally, the frame to stop on'
+                        '(separated by a space)')
                     reply = input()
                     if reply:
                         cmd = reply.split()

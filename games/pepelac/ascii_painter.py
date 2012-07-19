@@ -42,7 +42,7 @@ class Painter():
     The Player chars must be a valid format string with
     the player's number as its parameter and each of the
     colors must be a valid color tuple for the set_color function'''
-        self.players=players
+        self.players = players
         if len(chars) != 4 or len(colors) != 4:
             raise Exception('Invalid parameters')
         self.chars = chars
@@ -67,7 +67,7 @@ class Painter():
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3) # total reset
+        prev_color = (None, None, 3)  # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as

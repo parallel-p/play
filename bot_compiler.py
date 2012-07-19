@@ -2,6 +2,7 @@ import psutil
 import subprocess
 import sys
 
+
 class BotCompiler():
     ''' Compiles players for current game.
     Usage:
