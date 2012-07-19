@@ -71,17 +71,17 @@ class Painter:
         self._is_initialized = True
         self._cell_side = FRAME_SIDE // jury_state.field_side
 
-    def draw_on_the_left(self, players, text, color, image):
+    def draw_on_the_left(self, x, players, text, color, image):
         font = ImageFont.truetype('times.ttf', 40)
         draw = ImageDraw.Draw(image)
 
-        x = 145
         y = players * (SMALL_SIDE + MARGIN) + 45
         draw.text((45, y + SMALL_SIDE // 5),
                   text,
                   fill='black',
                   font=font
                   )
+        x += 60
         draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE),
                        fill=color
                        )
@@ -148,8 +148,13 @@ class Painter:
 
         draw = ImageDraw.Draw(image)
 
+        x = -1
+        for player in self.players:
+            font = ImageFont.truetype('times.ttf', 40)
+            x = max(x, font.getsize(player.author_name)[0])
+
         for num, player in enumerate(self.players):
-            self.draw_on_the_left(num + 1,
+            self.draw_on_the_left(x, num + 1,
                                   player.author_name,
                                   colors[num + 1], image
                                   )
@@ -221,7 +226,8 @@ class Painter:
                       str(jury_state.bullets[1]), fill='black',
                       font=patron_font)
             patron_ico = image_resize(get_path('images/patron-90.png'), 80)
-            image.paste(patron_ico, (int(width // 3.2), int(height // 4 * 2.8)),
+            image.paste(patron_ico, (int(width // 3.2),
+                        int(height // 4 * 2.8)),
                         patron_ico)
             image.paste(patron_ico, (int(width // 3.2) + width // 2,
                         int(height // 4 * 2.8)),
