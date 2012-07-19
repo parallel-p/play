@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # This class is responsible for visualizing a game in ascii art,
-# if painter supports such feature
+# if the game's painter supports this feature
+
+DEBUG = False
 
 import colorama
 from colorama import Fore, Back, Style
@@ -36,27 +38,27 @@ class AsciiVisualizer:
         self.frame_number = 0
         if name == 'nt':
             self.key_sets = {
-                'next': 'DdNn.>]}+= ',
-                'prev': 'BbAa|,<[{-_',
-                'jump': '0123456789SsJjFfRrGg',
-                'auto': 'WwMmPp',
-                'quit': 'QqXx'
+                'next':'DdNn.>]}+= ',
+                'prev':'BbAa|,<[{-_',
+                'jump':'0123456789SsJjFfRrGg',
+                'auto':'WwMmPp',
+                'quit':'QqXx'
                 }
         else:
             self.key_sets = {
-                'next': 'CcNn.>]}+= ',
-                'prev': 'Ddb|,<[{-_',
-                'jump': '0123456789BJjFfRrGg',
-                'auto': 'AaMmPp',
-                'quit': 'QqEe'
+                'next':'Nn.>]}+= \r\n',
+                'prev':'Bb\|,<[{-_',
+                'jump':'0123456789JjFfRrGg',
+                'auto':'AaMmPp',
+                'quit':'QqEe'
                 }
 
     def _frame2string(self, new_frame_number):
         self.frame_number = new_frame_number
         return '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
-            self.painter_factory(
-                self.game_controller.get_players()).ascii_paint(
+            self.painter_factory(self.game_controller.get_players())\
+                .ascii_paint(
                     self.game_controller.jury_states[new_frame_number]),
             color=Fore.YELLOW + Style.BRIGHT,
             nocolor=Fore.RESET + Style.NORMAL)
@@ -95,8 +97,8 @@ class AsciiVisualizer:
          |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
          |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
 
-        forward       : {gr}RIGHT,N,SPACE{bl}         (Alt: {gr}>,],+{bl})
-        back          : {gr}LEFT,B{bl}              (Alt: {gr}<,[,-{bl})
+        forward       : {gr}RIGHT,N,SPACE,ENTER{bl}   (Alt: {gr}>,],+{bl})
+        back          : {gr}LEFT,B,\{bl}                (Alt: {gr}<,[,-{bl})
         jump to frame : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
 
         autoplay      : {gr}UP,A,M,P{bl}
@@ -125,30 +127,68 @@ class AsciiVisualizer:
         method. '''
         colorama.init()
         _clear()
+        key='any'
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         getch()
         _clear()
         print(self._frame2string(0))
+        self.nextc=False
+        self.prevspec=False
         while True:
+            if DEBUG:
+                print(repr(key))
             key = getch()
+            arrow=None
+            if self.nextc:
+                if key in 'ABCD':
+                    arrow=key
+                else:
+                    arrow=None
+                self.nextc=False
+            elif self.prevspec and key == '[':
+                self.nextc=True
+                self.prevspec=False
+                continue
+            elif name=='posix' and key == '\x1b':
+                self.prevspec=True
+                continue
+            if DEBUG:
+                if arrow is not None:
+                    print('Arrow ', end = arrow)
+                
+                if key in self.key_sets['auto']:
+                    print ('AAAAAAAAAAAAA!!!!')
+                elif key in self.key_sets['jump']:
+                    print ('Beam me up, Scotty!')
+                elif key in self.key_sets['next']:
+                    print ('Run, forest, run!')
+                elif key in self.key_sets['prev']:
+                    print('Everybody fall back!')
+                if key == 'q':
+                    break
+                continue
             if name == 'nt':
-                key = key.decode()
-            if key in self.key_sets['next']:  # next
+                try:
+                    key=key.decode()
+                except UnicodeDecodeError:
+                    self._error('I cannot recognise the key you just pressed')
+                    continue
+            if arrow == 'C' or key in self.key_sets['next']:#next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif key in self.key_sets['prev']:   # prev
+            elif arrow == 'D' or key in self.key_sets['prev']:#prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the first frame.')
-            elif key in self.key_sets['auto']:
+            elif arrow == 'A' or key in self.key_sets['auto']:
                 while True:
                     self._prompt(
                         'Enter FPS and the last frame (optional)')
@@ -187,7 +227,7 @@ class AsciiVisualizer:
             elif key in self.key_sets['quit']:
                 print('Quit')
                 return None
-            elif key in self.key_sets['jump']:
+            elif arrow == 'B' or key in self.key_sets['jump']:
                 while True:
                     self._prompt('Enter frame number')
                     frame = input()
