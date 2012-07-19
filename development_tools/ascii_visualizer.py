@@ -193,7 +193,7 @@ class AsciiVisualizer:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
-                    self._error('this is the last frame.')
+                    self._error('this is the last frame')
             elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
                 _clear()
                 if self.frame_number > 0:
