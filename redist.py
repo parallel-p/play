@@ -35,7 +35,7 @@ file_list = {'run_tools.py': 'run_tools.py',
              'tournament_stages/tournament.py': 'tournament_stages/tournament.py',
              'README': 'README',
              'log.py': 'log.py',
-             'bot.py': 'bot.py',
+             'bot_no_psutil.py': 'bot.py',
              'commands': 'commands',
              'lib/keyboard_capture.py': 'lib/keyboard_capture.py',
              'game_simulator.py': 'game_simulator.py'}
