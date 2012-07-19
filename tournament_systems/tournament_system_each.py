@@ -76,8 +76,8 @@ class TournamentSystemEach(TournamentSystem):
                 if first_player == second_player:
                     row.append('')
                 else:
-                    row.append(self._convert_score(scores[(first_player,
-                                                           second_player)]))
+                    row.append(self._convert_score(scores[(first_player[0],
+                                                           second_player[0])]))
             # Fills the score cell
             row.append(str(first_player[1]))
             table.append(row)
