@@ -87,14 +87,18 @@ class AsciiVisualizer:
          |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
          |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
 
-        forward       : {gr}RIGHT,N,SPACE,ENTER{bl}   (Alt: {gr}>,],+{bl})
-        back          : {gr}LEFT,B,\{bl}                (Alt: {gr}<,[,-{bl})
-        jump to frame : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
+        forward         : {gr}RIGHT,N,SPACE,ENTER{bl}   (Alt: {gr}>,],+{bl})
+        back            : {gr}LEFT,B,\{bl}              (Alt: {gr}<,[,-{bl})
+        fast-forward 5% : {gr}PgDn{bl}
+        rewind 5%       : {gr}PgUp{bl}
+        jump to frame   : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
+        jump to first   : {gr}HOME{bl}
+        jump to last    : {gr}END{bl}
+        
+        autoplay        : {gr}UP,A,M,P{bl}
+        stop autoplay   : {gr}^C{bl}
 
-        autoplay      : {gr}UP,A,M,P{bl}
-        stop autoplay : {gr}^C{bl}
-
-        quit          : {gr}Q,E{bl}
+        quit            : {gr}Q,E{bl}
 
         display this message : {gr}any other key{norm}
         '''
