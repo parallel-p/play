@@ -6,7 +6,7 @@ from sys import stdout
 from PIL import Image, ImageDraw, ImageFont
 
 FRAME_SIDE = 1024
-FREE_SIDE = 512
+FREE_SIDE = 800
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
@@ -27,16 +27,19 @@ def image_resize(path, output_weight):
 
 class Painter:
     _is_initialized = False
+    chars = ('@@', '[]', '**', 'P{:1x}')
+    colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
 
-    def __init__(self, players):
+    def __init__(self, players, fight=False):
         self.players = players
+        self.fight = fight
 
     def _initialize(self, jury_state):
         self._is_initialized = True
         self._cell_side = FRAME_SIDE // jury_state.field_side
 
     def draw_on_the_left(self, x, players, text, color, image):
-        font = ImageFont.truetype(get_path('times.ttf'), 40)
+        font = ImageFont.truetype('times.ttf', 40)
         draw = ImageDraw.Draw(image)
 
         y = players * (SMALL_SIDE + MARGIN) - 50
@@ -50,6 +53,13 @@ class Painter:
                        fill=color
                        )
         del draw
+
+    def ascii_paint(self, jury_state):
+        text_field = ''
+        cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
+        for line in cell_field:
+            text_field += self._generate_line(line) + '\n'
+        return text_field
 
     def paint(self, jury_state):
         '''
@@ -75,7 +85,7 @@ class Painter:
 
         x = -1
         for player in self.players:
-            font = ImageFont.truetype(get_path('times.ttf'), 40)
+            font = ImageFont.truetype('times.ttf', 40)
             x = max(x, font.getsize(player.author_name)[0])
 
         for num, player in enumerate(self.players):
@@ -84,7 +94,7 @@ class Painter:
                                   colors[num + 1], image
                                   )
 
-        if not jury_state.collision:
+        if not self.fight:
             fire_ico = image_resize(get_path(
                                     os.path.join('images', 'fire.png')),
                                     self._cell_side - 4)
@@ -129,40 +139,26 @@ class Painter:
                                       os.path.join('images', 'player.png')),
                                       width // 3)
             size = player_ico.size[0]
-            rectangle = (width // 8, int(height // 4.8),
+            rectangle = (width // 8, height // 5,
                          width // 8 + size - 5, height // 5 + size - 5)
-
-            player_one = jury_state.collision[0]
-            player_one_id = self.players.index(player_one) + 1
-            color_one = colors[player_one_id]
-            bullets_one = jury_state.bullets[player_one_id - 1]
-
-            draw.rectangle(rectangle, fill=color_one)
-            rectangle = (width // 8 + width // 2, int(height // 4.8),
+            draw.rectangle(rectangle, fill='red')
+            rectangle = (width // 8 + width // 2, height // 5,
                          width // 8 + width // 2 + size - 5,
                          height // 5 + size - 5)
-
-            player_two = jury_state.collision[1]
-            player_two_id = self.players.index(player_two) + 1
-            color_two = colors[player_two_id]
-            bullets_two = jury_state.bullets[player_two_id - 1]
-
-            draw.rectangle(rectangle, fill=color_two)
-            image.paste(player_ico, (width // 8, int(height // 4.8)),
+            draw.rectangle(rectangle, fill='blue')
+            image.paste(player_ico, (width // 8, height // 5), player_ico)
+            image.paste(player_ico, (width // 8 + width // 2, height // 5),
                         player_ico)
-            image.paste(player_ico, (width // 8 + width // 2,
-                        int(height // 4.8)),
-                        player_ico)
-            font = ImageFont.truetype(get_path('times.ttf'), 100)
+            font = ImageFont.truetype('times.ttf', 100)
             text = 'Gunplay!'
             draw.text((int(width // 2.3), height // 3),
                       text, fill='black', font=font)
-            patron_font = ImageFont.truetype(get_path('times.ttf'), 70)
+            patron_font = ImageFont.truetype('times.ttf', 70)
             draw.text((width // 4, int(height / 4 * 2.8)),
-                      str(bullets_one), fill='black',
+                      str(jury_state.bullets[0]), fill='black',
                       font=patron_font)
             draw.text((width // 4 + width // 2, int(height // 4 * 2.8)),
-                      str(bullets_two), fill='black',
+                      str(jury_state.bullets[1]), fill='black',
                       font=patron_font)
             patron_ico = image_resize(get_path('images/patron-90.png'), 80)
             image.paste(patron_ico, (int(width // 3.2),
@@ -172,12 +168,12 @@ class Painter:
                         int(height // 4 * 2.8)),
                         patron_ico)
 
-            if bullets_one == bullets_two:
+            if jury_state.bullets[0] == jury_state.bullets[1]:
                 text = 'Draw!'
-            elif bullets_one > bullets_two:
-                text = '{} win!'.format(player_one.author_name)
+            elif jury_state.bullets[0] > jury_state.bullets[1]:
+                text = '{} win!'.format(self.players[0].author_name)
             else:
-                text = '{} win!'.format(player_two.author_name)
+                text = '{} win!'.format(self.players[1].author_name)
             draw.text((int(width // 2.5), height // 20 * 16),
                       text, fill='black', font=font)
 
@@ -190,3 +186,14 @@ class Painter:
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
+
+
+painter = Painter([Player(None, 'Dima'), Player(None,
+                  'Vasya OLLOLOLOOLOtrsgyygu')], fight=False)
+side = 10
+field = [[0 for i in range(side)] for j in range(side)]
+field[7][3] = 1
+field[7][4] = 2
+field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
+jury_state = JuryState(side, field, [30, 17], None, None, None)
+painter.paint(jury_state)

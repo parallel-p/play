@@ -1,6 +1,3 @@
-python ./games/pepelac/bots/consequent_bot.py
-./games/pepelac/bots/greedy_bot_untested.exe
-./games/pepelac/bots/cocky_bot_untested.exe
-./games/pepelac/bots/p_pechatnov_bot.exe
-./games/pepelac/bots/lolita_bot.exe
-./games/pepelac/bots/random_bot.exe
+python3 ./games/pepelac/bots/consequent_bot.py
+./games/pepelac/bots/greedy_bot
+./games/pepelac/bots/random_bot

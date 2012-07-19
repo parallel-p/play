@@ -53,8 +53,8 @@ def dump_game_controller(gc, filename=None):
             filename = input('Enter name of file: ')
         else:
             return
-    file_ = open(filename, 'wb')
-    pickle.dump(gc, file_)
+    with open(filename, 'wb') as f:
+        f.write(pickle.dumps(gc))
 
 
 def load_game_controller(filename):

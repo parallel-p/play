@@ -8,19 +8,16 @@ from unittest.mock import Mock
 class ascii_painter_test(unittest.TestCase):
     def test_output(self):
         p1=Mock()
-        p1.bot_name='GoodBot'
-        p1.author_name='Longcat'
+        p1.bot_name='bot1'
+        p1.author_name='author1'
         p2=Mock()
-        p2.bot_name='BadBot'
-        p2.author_name='Tacgnol'
-        p3=Mock()
-        p3.bot_name='DeadBot'
-        p3.author_name='Tima'
+        p2.bot_name='bot2'
+        p2.author_name='author2'
 
-        test_subject = Painter([p1,p2,p3])
+        test_subject = Painter([p1,p2])
         mock_js = Mock()
-        mock_js.bullets=[6,3,0]
-        mock_js.dead_players=[p3]
+        mock_js.bullets=[6,0]
+        mock_js.dead_players=[p2]
         for test in ascii_painter_test_data.tests:
             mock_js.field = test[0]
             picture = test_subject.ascii_paint(mock_js)

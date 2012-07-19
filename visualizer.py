@@ -53,6 +53,7 @@ class VideoVisualizer:
         self._frame_count = 0
         self.log = not _silent
         self._tempfiles = []
+        self.mode = None
 
     def _create_tempfile(self, suffix=""):
         self._tempfiles.append(tempfile.mkstemp(suffix))
@@ -93,9 +94,10 @@ class VideoVisualizer:
             file_list.append(self._create_tempfile(self.ext))
             with open(file_list[-1][1], "wb") as f:
                 f.write(image)
-            if self.size is None:
+            if self.size is None or self.mode is None:
                 im = Image.open(file_list[-1][1])
                 self.size = im.size
+                self.mode = im.mode
         return file_list
 
     def generate_tournament_status(self, contr):
@@ -113,7 +115,7 @@ class VideoVisualizer:
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
 
-        im = Image.new('RGB', self.size, (0, 0, 255))
+        im = Image.new(self.mode, self.size, (0, 0, 255))
         draw = ImageDraw.Draw(im)
         cfsize = 100
         done_once = False
