@@ -17,7 +17,7 @@ if __name__ == '__main__':
         mfpos = 5
         while sys.argv[mfpos] != '-f':
             mfpos += 1
-        framerate = str(sys.argv[mfpos + 1])
+        framerate = int(sys.argv[mfpos + 1])
     silent = '--silent' in sys.argv
     initialize_game_environment(game_path)
     import config
