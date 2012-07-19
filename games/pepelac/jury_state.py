@@ -1,7 +1,7 @@
 class JuryState:
     def __init__(self, field_side, field, bullets,
                  explosion_time, dead_players,
-                 collisions):
+                 collision=None):
         '''
         field_side is side of field
         field is the current field:
@@ -20,4 +20,4 @@ class JuryState:
         self.bullets = bullets
         self.explosion_time = explosion_time
         self.dead_players = dead_players
-        self.collisions = collisions
+        self.collision = collision

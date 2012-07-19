@@ -21,7 +21,7 @@ class GameMaster:
         self._direction = 0
         self._turn = 0
         self._scores = {}
-        self._players_count = len(self._players)
+        self._players_poses = {}
         for player in self._players:
             move = self._simulator.get_move(
                 player, start_state.field_side,
@@ -40,8 +40,8 @@ class GameMaster:
 
         turn = self._turn
         self._turn = (turn + 1) % len(self._players)
-        player = self._players[turn]
-        if player in self._state.dead_players:
+        cur_player = self._players[turn]
+        if cur_player in self._state.dead_players:
             return
 
         ps = PlayerState()
@@ -52,20 +52,17 @@ class GameMaster:
                     ps.bullets.append((i + 1, j + 1))
                 elif cell > 0:
                     player_id = cell - 1  # players numering from the 1
+                    self._players_poses[self._players[player_id]] = (i, j)
+                    player = (i + 1, j + 1, self._state.bullets[player_id])
                     if player_id == turn:
-                        ps.current_player = (
-                            i + 1, j + 1, self._state.bullets[player_id]
-                        )
-                        old_pos = (i, j)
+                        ps.current_player = player
                     else:
-                        ps.players.append(
-                            (i + 1, j + 1, self._state.bullets[player_id])
-                        )
+                        ps.players.append(player)
 
-        old_row, old_col = old_pos
+        old_row, old_col = old_pos = self._players_poses[cur_player]
         try:
             move = self._simulator.get_move(
-                player, ps, serialize_pstate, deserialize_move
+                cur_player, ps, serialize_pstate, deserialize_move
             )
 
             if not self._is_correct_cell(old_pos, move):
@@ -75,10 +72,10 @@ class GameMaster:
             if cell > 0 and turn != cell - 1:
                 raise IncorrectMoveException()
         except(OSError, DeserializeMoveException, IncorrectMoveException) as e:
-            self._state.dead_players.append(player)
-            self._state.field[old_row][old_col] = EMPTY
-            self._simulator.report_state(self._state)
+            self._kill_player(cur_player)
+            self._end_tick()
             return
+
         if cell == BULLET:
             self._state.bullets[turn] += 1
 
@@ -88,11 +85,14 @@ class GameMaster:
         for move in MOVES:
             if self._is_correct_cell(new_pos, move):
                 col, row = pos = self._make_move(new_pos, move)
-                if(self._state.field[col][row] > 0 and
-                   self._fight(new_pos, pos)):
-                    self._simulator.report_state(state)
-                    return
+                if(self._state.field[col][row] > 0):
+                    self._fight([new_pos, pos])
+                    if cur_player in self._state.dead_players:
+                        break
 
+        self._end_tick()
+
+    def _end_tick(self):
         for player in self._players:
             if not player in self._state.dead_players:
                 self._scores[player] += 1
@@ -101,7 +101,7 @@ class GameMaster:
         if self._state.explosion_time < 0:
             self._explode_cell()
 
-        self._simulator.report_state(state)
+        self._simulator.report_state(self._state)
 
     def _make_move(self, position, move):
         return tuple(x + dx for x, dx in zip(position, move))
@@ -128,28 +128,37 @@ class GameMaster:
 
         cell = self._state.field[new_pos[0]][new_pos[1]]
         if cell > 0:
-            self._state.dead_players.append(self._players[cell - 1])
+            self._kill_player(self._players[cell - 1])
 
         self._state.field[new_pos[0]][new_pos[1]] = EXPLODED
         self._last_exploded_cell = new_pos
         self._direction = direction
         self._number_of_correct_cells -= 1
 
-    def _fight(self, pos1, pos2):
-        row1, col1 = pos1
-        row2, col2 = pos2
-        p1 = self._state.field[row1][col1] - 1
-        p2 = self._state.field[row2][col2] - 1
-        delta = min(self._state.bullets[p1], self._state.bullets[p2])
-        self._state.bullets[p1] -= delta
-        self._state.bullets[p2] -= delta
-        if(self._state.bullets[p1] == 0 and
-           self._state.bullets[p2] > 0):
-            self._state.dead_players.append(self._players[p1])
-            self._state.field[row1][col1] = EMPTY
-            return True
-        elif(self._state.bullets[p1] > 0 and
-             self._state.bullets[p2] == 0):
-            self._state.dead_players.append(self._players[p2])
-            self._state.field[row2][col2] = EMPTY
-        return False
+    def _fight(self, poses):
+        players = []
+        for pos in poses:
+            players.append(self._state.field[pos[0]][pos[1]] - 1)
+
+        self._state.collision = players
+        self._simulator.report_state(self._state)
+        self._state.collision = None
+
+        delta = min([self._state.bullets[player] for player in players])
+
+        kill = 0
+        for player, pos in zip(players, poses):
+            self._state.bullets[player] -= delta
+            if self._state.bullets[player] == 0:
+                kill ^= 1
+                kill_player_id = player
+                kill_player_pos = pos
+
+        if kill == 1:
+            self._kill_player(self._players[kill_player_id])
+        self._simulator.report_state(self._state)
+
+    def _kill_player(self, player):
+        self._state.dead_players.append(player)
+        pos = self._players_poses[player]
+        self._state.field[pos[0]][pos[1]] = EMPTY
