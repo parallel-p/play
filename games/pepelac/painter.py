@@ -10,6 +10,7 @@ MARGIN = 20
 LINE_WIDTH = 1
 MY_DIR = __file__[:-10]
 
+
 def get_path(filename):
     return os.path.join(MY_DIR, filename)
 

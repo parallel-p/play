@@ -17,6 +17,7 @@ class AsciiVisualizerTestCase(ut.TestCase):
             game_controller.jury_states.append(sample_jury_state)
         vis = AsciiVisualizer(game_controller)
         vis.activate()
+
     def test_dump(self):
         game_controller = Mock()
         game_controller.jury_states = []

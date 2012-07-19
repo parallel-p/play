@@ -36,19 +36,19 @@ class AsciiVisualizer:
         self.frame_number = 0
         if name == 'nt':
             self.key_sets = {
-                'next':'DdNn.>]}+= ',
-                'prev':'BbAa|,<[{-_',
-                'jump':'0123456789SsJjFfRrGg',
-                'auto':'WwMmPp',
-                'quit':'QqXx'
+                'next': 'DdNn.>]}+= ',
+                'prev': 'BbAa|,<[{-_',
+                'jump': '0123456789SsJjFfRrGg',
+                'auto': 'WwMmPp',
+                'quit': 'QqXx'
                 }
         else:
             self.key_sets = {
-                'next':'CcNn.>]}+= ',
-                'prev':'Ddb|,<[{-_',
-                'jump':'0123456789BJjFfRrGg',
-                'auto':'AaMmPp',
-                'quit':'QqEe'
+                'next': 'CcNn.>]}+= ',
+                'prev': 'Ddb|,<[{-_',
+                'jump': '0123456789BJjFfRrGg',
+                'auto': 'AaMmPp',
+                'quit': 'QqEe'
                 }
 
     def _frame2string(self, new_frame_number):
@@ -133,15 +133,15 @@ class AsciiVisualizer:
         while True:
             key = getch()
             if name == 'nt':
-                key=key.decode()
-            if key in self.key_sets['next']:#next
+                key = key.decode()
+            if key in self.key_sets['next']:  # next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif key in self.key_sets['prev']:#prev
+            elif key in self.key_sets['prev']:   # prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))

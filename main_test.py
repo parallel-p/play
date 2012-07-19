@@ -1,7 +1,7 @@
 import unittest
-from unittest.mock import MagicMock, Mock, patch
-import sys
-with patch.dict('sys.modules', 
+from unittest.mock import MagicMock, patch
+
+with patch.dict('sys.modules',
                 {'config_helpers': MagicMock(),
                  'config': MagicMock(),
                  'tournament_stages.tournament': MagicMock(),

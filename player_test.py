@@ -10,5 +10,5 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(player.bot_name, 'SuperMegaKiller')
         self.assertEqual(player.command_line, 'python3 bot143.py')
 
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.main()

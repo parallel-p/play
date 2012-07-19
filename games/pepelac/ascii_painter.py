@@ -54,7 +54,7 @@ class Painter():
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3) # total reset
+        prev_color = (None, None, 3)  # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as

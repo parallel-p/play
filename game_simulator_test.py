@@ -16,7 +16,7 @@ class GameSimulatorTest(unittest.TestCase):
         game_master.is_finished = False
         game_master.tick.side_effect = game_side_effect
         config = Mock()
-        config.GameMaster.side_effect=game_master_side_effect
+        config.GameMaster.side_effect = game_master_side_effect
         eng = game_simulator.GameSimulator(config, [], [], [])
         result = eng.play()
         game_master.tick.assert_called_once()
