@@ -4,7 +4,7 @@ import sys
 from time import clock
 
 if len(sys.argv) < 5:
-    print('Usage: game2video.py <path to game env> <folder with game logs> '
+    print('Usage: create_video.py <path to game env> <folder with game logs> '
           '<filemask of logs (regular expression)> <resw_name> '
           '[-f <framerate>] [--silent]')
     exit()
