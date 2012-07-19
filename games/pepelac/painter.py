@@ -36,7 +36,7 @@ class Painter:
         self._cell_side = FRAME_SIDE // jury_state.field_side
 
     def draw_on_the_left(self, x, players, text, color, image):
-        font = ImageFont.truetype('times.ttf', 40)
+        font = ImageFont.truetype(get_path('times.ttf'), 40)
         draw = ImageDraw.Draw(image)
 
         y = players * (SMALL_SIDE + MARGIN) - 50
@@ -75,7 +75,7 @@ class Painter:
 
         x = -1
         for player in self.players:
-            font = ImageFont.truetype('times.ttf', 40)
+            font = ImageFont.truetype(get_path('times.ttf'), 40)
             x = max(x, font.getsize(player.author_name)[0])
 
         for num, player in enumerate(self.players):
@@ -153,11 +153,11 @@ class Painter:
             image.paste(player_ico, (width // 8 + width // 2,
                         int(height // 4.8)),
                         player_ico)
-            font = ImageFont.truetype('times.ttf', 100)
+            font = ImageFont.truetype(get_path('times.ttf'), 100)
             text = 'Gunplay!'
             draw.text((int(width // 2.3), height // 3),
                       text, fill='black', font=font)
-            patron_font = ImageFont.truetype('times.ttf', 70)
+            patron_font = ImageFont.truetype(get_path('times.ttf'), 70)
             draw.text((width // 4, int(height / 4 * 2.8)),
                       str(bullets_one), fill='black',
                       font=patron_font)
