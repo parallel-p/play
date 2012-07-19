@@ -68,7 +68,7 @@ class BotCompiler():
         ''' Compilates all bot source codes for each player and writes
         ``author's name`` ``name of the bot`` ``execution command`` string
         to file ``config.ini`` '''
-        config_file = open('config.ini', 'w')
+        config_file = open('players_config', 'w')
         for player in players:
             author_name = player[0]
             bot_name = player[1]
