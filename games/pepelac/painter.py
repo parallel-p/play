@@ -84,7 +84,7 @@ class Painter:
                                   colors[num + 1], image
                                   )
 
-        if not jury_state.collisions:
+        if not jury_state.collision:
             fire_ico = image_resize(get_path(
                                     os.path.join('images', 'fire.png')),
                                     self._cell_side - 4)
@@ -132,7 +132,7 @@ class Painter:
             rectangle = (width // 8, int(height // 4.8),
                          width // 8 + size - 5, height // 5 + size - 5)
 
-            player_one = jury_state.collisions[0]
+            player_one = jury_state.collision[0]
             player_one_id = self.players.index(player_one) + 1
             color_one = colors[player_one_id]
             bullets_one = jury_state.bullets[player_one_id - 1]
@@ -142,7 +142,7 @@ class Painter:
                          width // 8 + width // 2 + size - 5,
                          height // 5 + size - 5)
 
-            player_two = jury_state.collisions[1]
+            player_two = jury_state.collision[1]
             player_two_id = self.players.index(player_two) + 1
             color_two = colors[player_two_id]
             bullets_two = jury_state.bullets[player_two_id - 1]
@@ -190,15 +190,3 @@ class Painter:
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
-
-tima = Player(None, 'Tima')
-dima = Player(None, 'Dima')
-vasya = Player(None, 'Vasya Olololololololosh')
-painter = Painter([tima, dima, vasya])
-side = 10
-field = [[0 for i in range(side)] for j in range(side)]
-field[7][3] = 1
-field[7][4] = 2
-field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17, 16], None, None, [dima, vasya])
-painter.paint(jury_state)
