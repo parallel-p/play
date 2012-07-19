@@ -137,7 +137,7 @@ class AsciiVisualizer:
 
     def _read_key(self):
         key = getch()
-        arrow = self._detect_arrow()
+        arrow = self._detect_arrow(key)
         if arrow is not None:
             key = None
             return (key, arrow)
