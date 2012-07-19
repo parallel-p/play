@@ -67,7 +67,7 @@ class BotCompiler():
         else:
             return_code = 0
         if return_code == 0:
-                compile_string = self.define_execfile(filename, extension)
+            compile_string = self.define_execfile(filename, extension)
             return compile_string
         else:
             raise Exception("Compilation Error: compiler returned code "
