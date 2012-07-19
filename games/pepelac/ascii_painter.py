@@ -30,8 +30,21 @@ class Painter():
             self.value = val
             self.color = color
 
-    def __init__(self, chars=('@@', '[]', '**', 'P{:1x}'),
+    def __init__(self, players, chars=('@@', '[]', '**', 'P{:1x}'),
     colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))):
+    '''This is the class constructor which optionally takes
+    custom characters or colors for in-game objects in
+    the following order:
+    0: Burning Ground
+    1: Normal Ground
+    2: Shells
+    3: Players
+    The Player chars must be a valid format string with
+    the player's number as its parameter and each of the
+    colors must be a valid color tuple for the set_color function'''
+        self.players=players
+        if len(chars) != 4 or len(colors) != 4:
+            raise Exception('Invalid parameters')
         self.chars = chars
         self.colors = colors
 
@@ -54,7 +67,7 @@ class Painter():
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3)  # total reset
+        prev_color = (None, None, 3) # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as
