@@ -1,5 +1,4 @@
-﻿# -*- coding: utf-8 -*-
-import os
+﻿import os
 from jury_state import JuryState
 from player import Player
 from io import BytesIO
@@ -7,7 +6,7 @@ from sys import stdout
 from PIL import Image, ImageDraw, ImageFont
 
 FRAME_SIDE = 1024
-FREE_SIDE = 800
+FREE_SIDE = 512
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
@@ -28,12 +27,9 @@ def image_resize(path, output_weight):
 
 class Painter:
     _is_initialized = False
-    chars = ('@@', '[]', '**', 'P{:1x}')
-    colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
 
-    def __init__(self, players, fight=False):
+    def __init__(self, players):
         self.players = players
-        self.fight = fight
 
     def _initialize(self, jury_state):
         self._is_initialized = True
@@ -88,7 +84,7 @@ class Painter:
                                   colors[num + 1], image
                                   )
 
-        if not self.fight:
+        if not jury_state.collisions:
             fire_ico = image_resize(get_path(
                                     os.path.join('images', 'fire.png')),
                                     self._cell_side - 4)
@@ -133,15 +129,29 @@ class Painter:
                                       os.path.join('images', 'player.png')),
                                       width // 3)
             size = player_ico.size[0]
-            rectangle = (width // 8, height // 5,
+            rectangle = (width // 8, int(height // 4.8),
                          width // 8 + size - 5, height // 5 + size - 5)
-            draw.rectangle(rectangle, fill='red')
-            rectangle = (width // 8 + width // 2, height // 5,
+
+            player_one = jury_state.collisions[0]
+            player_one_id = self.players.index(player_one) + 1
+            color_one = colors[player_one_id]
+            bullets_one = jury_state.bullets[player_one_id - 1]
+
+            draw.rectangle(rectangle, fill=color_one)
+            rectangle = (width // 8 + width // 2, int(height // 4.8),
                          width // 8 + width // 2 + size - 5,
                          height // 5 + size - 5)
-            draw.rectangle(rectangle, fill='blue')
-            image.paste(player_ico, (width // 8, height // 5), player_ico)
-            image.paste(player_ico, (width // 8 + width // 2, height // 5),
+
+            player_two = jury_state.collisions[1]
+            player_two_id = self.players.index(player_two) + 1
+            color_two = colors[player_two_id]
+            bullets_two = jury_state.bullets[player_two_id - 1]
+
+            draw.rectangle(rectangle, fill=color_two)
+            image.paste(player_ico, (width // 8, int(height // 4.8)),
+                        player_ico)
+            image.paste(player_ico, (width // 8 + width // 2,
+                        int(height // 4.8)),
                         player_ico)
             font = ImageFont.truetype('times.ttf', 100)
             text = 'Gunplay!'
@@ -149,10 +159,10 @@ class Painter:
                       text, fill='black', font=font)
             patron_font = ImageFont.truetype('times.ttf', 70)
             draw.text((width // 4, int(height / 4 * 2.8)),
-                      str(jury_state.bullets[0]), fill='black',
+                      str(bullets_one), fill='black',
                       font=patron_font)
             draw.text((width // 4 + width // 2, int(height // 4 * 2.8)),
-                      str(jury_state.bullets[1]), fill='black',
+                      str(bullets_two), fill='black',
                       font=patron_font)
             patron_ico = image_resize(get_path('images/patron-90.png'), 80)
             image.paste(patron_ico, (int(width // 3.2),
@@ -162,12 +172,12 @@ class Painter:
                         int(height // 4 * 2.8)),
                         patron_ico)
 
-            if jury_state.bullets[0] == jury_state.bullets[1]:
+            if bullets_one == bullets_two:
                 text = 'Draw!'
-            elif jury_state.bullets[0] > jury_state.bullets[1]:
-                text = '{} win!'.format(self.players[0].author_name)
+            elif bullets_one > bullets_two:
+                text = '{} win!'.format(player_one.author_name)
             else:
-                text = '{} win!'.format(self.players[1].author_name)
+                text = '{} win!'.format(player_two.author_name)
             draw.text((int(width // 2.5), height // 20 * 16),
                       text, fill='black', font=font)
 
@@ -181,13 +191,14 @@ class Painter:
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-
-painter = Painter([Player(None, 'Dima'), Player(None,
-                  'Vasya OLLOLOLOOLOtrsgyygu')], fight=False)
+tima = Player(None, 'Tima')
+dima = Player(None, 'Dima')
+vasya = Player(None, 'Vasya Olololololololosh')
+painter = Painter([tima, dima, vasya])
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
 field[7][3] = 1
 field[7][4] = 2
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17], None, None, None)
+jury_state = JuryState(side, field, [30, 17, 16], None, None, [dima, vasya])
 painter.paint(jury_state)
