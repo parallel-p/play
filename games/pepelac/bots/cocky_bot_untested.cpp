@@ -10,6 +10,7 @@
 
 using namespace std;
 
+bool debug = 0;
 
 struct Player{
    int x, y, b;
@@ -50,7 +51,8 @@ bool up(){
   else{
     players[0].y--;
     cout << "UP" << endl;
-    cout.flush();
+
+    debug || cout.flush();
     return 1;
   }
 }
@@ -62,7 +64,7 @@ bool down(){
   else{
     players[0].y++;
     cout << "DOWN" << endl;
-    cout.flush();
+    debug || cout.flush();
     return 1;
   }
 }
@@ -74,7 +76,7 @@ bool left(){
   else{
     players[0].x--;
     cout << "LEFT" << endl;
-    cout.flush();
+    debug || cout.flush();
     return 1;
   }
 }
@@ -86,14 +88,14 @@ bool right(){
   else{
     players[0].x++;
     cout << "RIGHT" << endl;
-    cout.flush();
+    debug || cout.flush();
     return 1;
   }
 }
 
 bool stay(){
   cout << "STAND" << endl;
-  cout.flush();
+  debug || cout.flush();
   return 1;
 }
 
@@ -124,9 +126,48 @@ void armageddon(){
       isbul[i][j] = 0;
     }
   }
-  if (p > 1){
-    dan[players[1].x][players[1].y] = big;
+
+  for (i = 0; i < b; i++)
+    isbul[bullets[i].x][bullets[i].y] = 1;
+
+  dan[players[1].x][players[1].y] = big;
+  if (p > 1 && players[1].b > players[0].b){
+    dan[players[1].x][players[1].y - 1] = big;
+    dan[players[1].x][players[1].y + 1] = big;
+    dan[players[1].x - 1][players[1].y] = big;
+    dan[players[1].x + 1][players[1].y] = big;
+
+    dan[players[1].x + 2][players[1].y] = big;
+    dan[players[1].x][players[1].y + 2] = big;
+    if (players[1].x > 2)
+      dan[players[1].x - 2][players[1].y] = big;
+    if (players[1].y > 2)
+      dan[players[1].x][players[1].y - 2] = big;
   }
+
+  if (p > 1 && players[1].b >= players[0].b){
+    if (isbul[players[1].x][players[1].y - 1]){
+      dan[players[1].x][players[1].y - 2] = big;
+      dan[players[1].x - 1][players[1].y - 1] = big;
+      dan[players[1].x + 1][players[1].y - 1] = big;
+    }
+    if (isbul[players[1].x][players[1].y + 1]){
+      dan[players[1].x][players[1].y + 2] = big;
+      dan[players[1].x - 1][players[1].y + 1] = big;
+      dan[players[1].x + 1][players[1].y + 1] = big;
+    }
+    if (isbul[players[1].x - 1][players[1].y]){
+      dan[players[1].x - 2][players[1].y] = big;
+      dan[players[1].x - 1][players[1].y + 1] = big;
+      dan[players[1].x - 1][players[1].y - 1] = big;
+    }
+    if (isbul[players[1].x + 1][players[1].y]){
+      dan[players[1].x + 2][players[1].y] = big;
+      dan[players[1].x + 1][players[1].y + 1] = big;
+      dan[players[1].x + 1][players[1].y - 1] = big;
+    }
+  }
+
   t = k;
 
   for (s = 1; t <= 0; s++){
@@ -151,6 +192,20 @@ void armageddon(){
 
 void go(int x, int y){
   bool f;
+  debug && (cout << "going to" << y <<  " " << x << endl);
+
+  if (debug){
+    for (int i = 1; i <= n; i++){
+      for (int j = 1; j <= n; j++){
+        cout << dan[j][i] << " ";
+      }
+      cout << endl;
+    }
+
+    for (int i = 0; i < b; i++){
+      cout << bullets[i].y << " " << bullets[i].x << "   " << bullets[i].c << endl;
+    }
+  }
 
   if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
     f = right();
@@ -166,8 +221,7 @@ void go(int x, int y){
 
 int main(){
   //freopen("input.txt", "r", stdin);
-  //freopen("outputtxt", "w", stdout);
-  big = n;
+  //freopen("output.txt", "w", stdout);
   int i, f, i1, j1;
   Bullet bb;
   cin >> n;//field size
@@ -180,10 +234,12 @@ int main(){
 
     //cout << "armageddoned" << endl;
 
-    if (b > 0 && players[0].b <= players[1].b){
+    if (players[0].b > players[1].b){
+      go(players[1].x, players[1].y);
+    }
+    else if (b > 0){
 
-      for (i = 0; i < b; i++)
-        isbul[bullets[i].x][bullets[i].y] = 1;
+
 
       for (i = 0; i < b; i++){
         bullets[i].c = 2 * n - abs(bullets[i].x - players[0].x) - abs(bullets[i].y - players[0].y);
@@ -199,6 +255,18 @@ int main(){
             bullets[i].c += isbul[i1][j1] * n / 4;
           }
         }
+
+        for (int j = 0; j <= n + 1; j++){
+          dan[j][0] = big;
+          dan[j][n + 1] = big;
+          dan[0][i] = big;
+          dan[n + 1][i] = big;
+        }
+
+        if (dan[bullets[i].x][bullets[i].y] == big || (dan[bullets[i].x - 1][bullets[i].y] == big && dan[bullets[i].x + 1][bullets[i].y] == big && dan[bullets[i].x][bullets[i].y - 1] == big && dan[bullets[i].x][bullets[i].y  +1] == big))
+          bullets[i].c = -100500;
+
+
       }
 
       bb = bullets[0];
@@ -212,10 +280,8 @@ int main(){
     else if (players[0].b >= players[1].b + b){
       go(n / 2 + 1, n / 2 + 1);
     }
-    else if (players[0].b > players[1].b){
-      go(players[1].x, players[1].y);
-    }
     else{
+      debug && (cout << "oh fuck" << endl);
       stay();
       //failed
     }
