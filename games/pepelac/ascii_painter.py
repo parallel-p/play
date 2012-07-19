@@ -52,17 +52,21 @@ class Painter():
         self.chars = chars
         self.colors = colors
 
-    def _generate_player_stats(self, players, bullets):
-        statstr = '{hcl}Players in game:{rst}\n\n'.format( hcl=set_color((1,8,None)), rst=set_color((None,None,3)) )
-        for player,bulletn in zip(players,bullets):
-            statstr+='{gok}{player.bot_name:10s}{y} by {cy}{player.author_name:15s}{y}: {mg}{bullets:2d} {y}bullets{rst}\n'.format(
+    def _generate_player_stats(self, players, bullets, dead):
+        statstr = '{headercolor}Players in game:{reset}\n'.format( headercolor=set_color((1,8,0)), reset=set_color((None,None,3)) )
+        for pnum,(player,bulletn) in enumerate(zip(players,bullets)):
+            bg = (5,None,None) if player in dead else (0,None,None)
+            statstr+='{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets{reset}\n'.format(
                 bullets=bulletn,
                 player=player,
-                gok=set_color((0,3,None)),
-                y=set_color((None,8,None)),
-                cy=set_color((None,2,None)),
-                mg=set_color((None,4,None)),
-                rst=set_color((None,None,3))
+                player_index=self.chars[3].format(pnum),
+                bkgnd=set_color(bg),
+                icolor=set_color((None,7,0)),
+                botcolor=set_color((None,3,2)),
+                textc=set_color((None,8,2)),
+                authorcolor=set_color((None,2,None)),
+                numcolor=set_color((None,4,None)),
+                reset=set_color((None,None,3))
             )
         return statstr
 
@@ -99,7 +103,7 @@ class Painter():
         return text_line
 
     def ascii_paint(self, jury_state):
-        player_stats = self._generate_player_stats(self.players, jury_state.bullets)
+        player_stats = self._generate_player_stats(self.players, jury_state.bullets, jury_state.dead_players)
         text_field = ''
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
