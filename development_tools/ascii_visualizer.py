@@ -80,9 +80,9 @@ class AsciiVisualizer:
         '''
         else:
             msg = '''{brt}{bl}Navigation help:
-                ____
-               |{gr} Up {bl}|
-               |{mg}auto{bl}|
+          ____  ____ ____
+         |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
+         |{mg}Bk5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
           ____  ____  ____
          |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
          |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
@@ -177,10 +177,9 @@ class AsciiVisualizer:
         method. '''
         colorama.init()
         _clear()
-        key = 'any'
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
-        getch()
+        self._detect_arrow(getch())
         self._print_frame(0)
         self.nextc = False
         self.prevspec = False
@@ -188,7 +187,23 @@ class AsciiVisualizer:
             (key, arrow) = self._read_key()
             if arrow is None and key is None:
                 continue
-            if arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
+            if arrow == 'H':
+                self._print_frame(0)
+            elif arrow == 'E':
+                self._print_frame(len(self.game_controller.jury_states)-1)
+            elif arrow == 'N':
+                self._print_frame(
+                    min(
+                        len(self.game_controller.jury_states)-1,
+                        self.frame_number +
+                            int(len(self.game_controller.jury_states)/20)
+                    )
+                )
+            elif arrow == 'U':
+                self._print_frame(
+                    max(0, self.frame_number-int(len(self.game_controller.jury_states)/20) )
+                )
+            elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 if self.frame_number < self._jury_state_count() - 1:
                     self._print_frame(self.frame_number + 1)
                 else:
