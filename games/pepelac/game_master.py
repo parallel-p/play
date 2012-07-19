@@ -81,6 +81,7 @@ class GameMaster:
 
         self._state.field[old_row][old_col] = EMPTY
         self._state.field[new_row][new_col] = turn + 1
+        self._players_poses[cur_player] = new_pos
 
         for move in MOVES:
             if self._is_correct_cell(new_pos, move):
@@ -140,23 +141,27 @@ class GameMaster:
         for pos in poses:
             players.append(self._state.field[pos[0]][pos[1]] - 1)
 
-        self._state.collision = players
+        bullets = [self._state.bullets[player_id] for player_id in players]
+        if max(bullets) == 0:
+            return
+        delta = min(bullets)
+
+        kill = 0
+        for player_id in players:
+            self._state.bullets[player_id] -= delta
+            if self._state.bullets[player_id] == 0:
+                kill ^= 1
+                kill_player_id = player_id
+
+        self._state.collision = [
+            self._players[player_id] for player_id in players
+        ]
         self._simulator.report_state(self._state)
         self._state.collision = None
 
-        delta = min([self._state.bullets[player] for player in players])
-
-        kill = 0
-        for player, pos in zip(players, poses):
-            self._state.bullets[player] -= delta
-            if self._state.bullets[player] == 0:
-                kill ^= 1
-                kill_player_id = player
-                kill_player_pos = pos
-
         if kill == 1:
             self._kill_player(self._players[kill_player_id])
-        self._simulator.report_state(self._state)
+            self._simulator.report_state(self._state)
 
     def _kill_player(self, player):
         self._state.dead_players.append(player)
