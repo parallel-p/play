@@ -1,9 +1,3 @@
-'''
-A simple bot, trying to collect more bullets
-than the enemy.
-'''
-
-
 import sys
 
 
@@ -43,12 +37,12 @@ def update_target():
     return target
 
 
-def shortest(current_location, target):
+def shortest(current_location, distation):
     '''
     Calculates the Hamming distance between two bullets.
     '''
-    return abs(current_location[0] - target[0]) \
-            + abs(current_location[1] - target[1])
+    return abs(current_location[0] - distation[0]) \
+            + abs(current_location[1] - distation[1])
 
 
 def go(current_location, current_target):
@@ -90,47 +84,43 @@ def all_is_ok():
         else:
             return 0
 
-def main():
-    STEP = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAND']
-    N = int(input())
-    players, bullets, armageddon = 2, 50, 10  # default values
-    current_target, current_x, current_y, enemy_x, enemy_y = (0, 0), 0, 0, 0, 0
-    current_location, current_bullets = (current_x, current_y), 0
-    enemy_location, enemy_bullets = (enemy_x, enemy_y), 0
-    asylum = (N // 2, N // 2)
+
+STEP = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAND']
+N = int(input())
+players, bullets, armageddon = 2, 50, 10  # Default values
+current_target, current_x, current_y, enemy_x, enemy_y = (0, 0), 0, 0, 0, 0
+current_location, current_bullets = (current_x, current_y), 0
+enemy_location, enemy_bullets = (enemy_x, enemy_y), 0
+asylum = (N // 2, N // 2)
+update_info()
+while all_is_ok() == 0:
+    current_target = update_target()
+    print(STEP[go(current_location, current_target)])
+    sys.stdout.flush()
     update_info()
-    while all_is_ok() == 0:
+while all_is_ok() == -1:
+    if bullets > 0:
         current_target = update_target()
-        print(STEP[go(current_location, current_target)])
-        sys.stdout.flush()
-        update_info()
-    while all_is_ok() == -1:
-        if bullets > 0:
-            current_target = update_target()
-        asylum = (N // 2, N // 2 - 2)
-        if current_location != asylum:
-            print(STEP[go(current_location, asylum)])
-        else:
-            print(STEP[4])
-        update_info()
-        sys.stdout.flush()
-    while all_is_ok() == 2:
-        if bullets > 0:
-            current_target = update_target()
-        target = enemy_location
-        print(STEP[go(current_location, target)])
-        update_info()
-        sys.stdout.flush()
-    while True:
-        if bullets > 0:
-            current_target = update_target()
-        if current_location != asylum:
-            print(STEP[go(current_location, asylum)])
-        else:
-            print(STEP[4])
-        update_info()
-        sys.stdout.flush()
-
-
-if __name__ == '__main__':
-    main()
+    asylum = (N // 2, N // 2 - 2)
+    if current_location != asylum:
+        print(STEP[go(current_location, asylum)])
+    else:
+        print(STEP[4])
+    update_info()
+    sys.stdout.flush()
+while all_is_ok() == 2:
+    if bullets > 0:
+        current_target = update_target()
+    target = enemy_location
+    print(STEP[go(current_location, target)])
+    update_info()
+    sys.stdout.flush()
+while True:
+    if bullets > 0:
+        current_target = update_target()
+    if current_location != asylum:
+        print(STEP[go(current_location, asylum)])
+    else:
+        print(STEP[4])
+    update_info()
+    sys.stdout.flush()
