@@ -1,7 +1,7 @@
 "1" "stand" "python3 games/pepelac/bots/stand"
 "2" "conseq" "python3 games/pepelac/bots/consequent_bot"
 "3" "1moving" "python3 games/pepelac/bots/first_moving_bot"
-"4" "greedy" "./games/pepelac/bots/greedy_bot_untested"
+"4" "greedy" "./games/pepelac/bots/greedy_bot"
 "5" "kamikad" "python3 games/pepelac/bots/kamikadze"
 "6" "random" "./games/pepelac/bots/random_bot"
 "7" "simple" "./games/pepelac/bots/simple_bot"
