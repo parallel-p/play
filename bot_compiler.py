@@ -1,6 +1,6 @@
 import psutil
 import subprocess
-
+import sys
 
 class BotCompiler():
     ''' Compiles players for current game.
@@ -35,13 +35,17 @@ class BotCompiler():
     def define_execfile(self, filename, extension):
         ''' Determines execution command for compiled file.
         Supports c++, Pascal and Python. '''
+        operating_system = sys.platform
         if extension == "cpp" or extension == "c++" or (
                 extension == "cxx"):
             execfile_string = "./" + filename
         elif extension == "pas":
             execfile_string = "./" + filename
         elif extension == "py":
-            execfile_string = "python3 " + filename
+            if operating_system == 'Windows':
+                execfile_string = "python " + filename
+            else:
+                execfile_string = "python3 " + filename
         else:
             raise Exception("Language of this file is not supported")
         return execfile_string
