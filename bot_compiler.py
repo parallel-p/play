@@ -53,7 +53,7 @@ class BotCompiler():
         filename, extension = file_name.split(".")
         compiler_string = self.define_compiler(filename, extension)
         compiler_string.append(file_name)
-        if compiler_string != []:
+        if len(compiler_string) >= 2:
             return_code = subprocess.call(compiler_string)
         else:
             return_code = 0
