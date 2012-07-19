@@ -33,7 +33,7 @@ class AsciiVisualizer:
         field, that is an enumeration of ``JuryState`` objects, which
         will be passed to the painter. '''
         self.output_string = ''
-        self.painter_factory = config.AsciiPainter
+        self.painter_factory = config.Painter
         self.game_controller = game_controller
         self.frame_number = 0
         if name == 'nt':
@@ -208,9 +208,11 @@ class AsciiVisualizer:
                                     (self.frame_number + addv) < jscount) and (
                                         self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
+
+                                    frame=self._frame2string(
+                                        self.frame_number + addv)
                                     _clear()
-                                    print(self._frame2string(
-                                        self.frame_number + addv))
+                                    print(frame)
                                     sleep(time)
                             except KeyboardInterrupt:
                                 pass
@@ -227,8 +229,9 @@ class AsciiVisualizer:
                     if frame.isnumeric():
                         number = int(frame) - 1
                         if number >= 0 and number < self._jury_state_count():
+                            frame = self._frame2string(number)
                             _clear()
-                            print(self._frame2string(number))
+                            print(frame)
                             break
                         else:
                             self._error('No such frame.')
