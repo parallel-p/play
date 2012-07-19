@@ -1,4 +1,5 @@
-﻿import os
+﻿# -*- coding: utf-8 -*-
+import os
 from jury_state import JuryState
 from player import Player
 from io import BytesIO
@@ -53,13 +54,6 @@ class Painter:
                        fill=color
                        )
         del draw
-
-    def ascii_paint(self, jury_state):
-        text_field = ''
-        cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
-        for line in cell_field:
-            text_field += self._generate_line(line) + '\n'
-        return text_field
 
     def paint(self, jury_state):
         '''
