@@ -33,7 +33,7 @@ class AsciiVisualizer:
         field, that is an enumeration of ``JuryState`` objects, which
         will be passed to the painter. '''
         self.output_string = ''
-        self.painter_factory = config.Painter
+        self.painter_factory = config.AsciiPainter
         self.game_controller = game_controller
         self.frame_number = 0
         if name == 'nt':
@@ -130,7 +130,7 @@ class AsciiVisualizer:
                 if key in 'ABCD':
                     arrow = key
                 elif key in 'H':
-                    pass
+                    
         elif name == 'windows' and key == b'\xe0':
             pass
         return arrow
