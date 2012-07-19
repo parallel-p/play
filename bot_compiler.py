@@ -74,11 +74,11 @@ class BotCompiler():
             raise Exception("Compilation Error: compiler returned code "
                 + str(int(return_code)))
 
-    def compile(self, players):
+    def compile(self, players, players_config_file):
         ''' Compilates all bot source codes for each player and writes
         ``author's name`` ``name of the bot`` ``execution command`` string
         to file ``config.ini`` '''
-        config_file = open('players_config', 'w')
+        config_file = open(players_config_file, 'w')
         for player in players:
             author_name = player[0]
             bot_name = player[1]
