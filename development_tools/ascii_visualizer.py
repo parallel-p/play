@@ -121,6 +121,35 @@ class AsciiVisualizer:
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
         + Style.NORMAL + Fore.RESET)
 
+    def _detect_arrow(self, key):
+        arrow=None
+        if name == 'posix' and key == '\x1b':
+            key = getch()
+            if key == '[':
+                key = getch()
+                if key in 'ABCD':
+                    arrow = key
+                elif key in 'H'
+        elif name == 'windows' and key == b'\xe0':
+            pass
+        return arrow
+
+    def _read_key(self):
+        key = getch()
+        arrow=self._detect_arrow()
+        if arrow is not None:
+            key=None
+            return (key, arrow)
+
+        if name == 'nt':
+            try:
+                key=key.decode()
+            except UnicodeDecodeError:
+                key=None
+                self._error('I cannot recognise the key you just pressed')
+
+        return (key, arrow)
+
     def activate(self):
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
@@ -136,44 +165,7 @@ class AsciiVisualizer:
         self.nextc=False
         self.prevspec=False
         while True:
-            if DEBUG:
-                print(repr(key))
-            key = getch()
-            arrow=None
-            if self.nextc:
-                if key in 'ABCD':
-                    arrow=key
-                else:
-                    arrow=None
-                self.nextc=False
-            elif self.prevspec and key == '[':
-                self.nextc=True
-                self.prevspec=False
-                continue
-            elif name=='posix' and key == '\x1b':
-                self.prevspec=True
-                continue
-            if DEBUG:
-                if arrow is not None:
-                    print('Arrow ', end = arrow)
-                
-                if key in self.key_sets['auto']:
-                    print ('AAAAAAAAAAAAA!!!!')
-                elif key in self.key_sets['jump']:
-                    print ('Beam me up, Scotty!')
-                elif key in self.key_sets['next']:
-                    print ('Run, forest, run!')
-                elif key in self.key_sets['prev']:
-                    print('Everybody fall back!')
-                if key == 'q':
-                    break
-                continue
-            if name == 'nt':
-                try:
-                    key=key.decode()
-                except UnicodeDecodeError:
-                    self._error('I cannot recognise the key you just pressed')
-                    continue
+            (key,arrow) = self._read_key()
             if arrow == 'C' or key in self.key_sets['next']:#next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
@@ -191,7 +183,7 @@ class AsciiVisualizer:
             elif arrow == 'A' or key in self.key_sets['auto']:
                 while True:
                     self._prompt(
-                        'Enter FPS and the last frame (optional)')
+                        'Enter FPS and, optionally, the frame to stop on (separated by a space)')
                     reply = input()
                     if reply:
                         cmd = reply.split()
