@@ -65,7 +65,7 @@ class Bot:
     def create_process(self):
         '''
         Starts bot's process.
-        ''' 
+        '''
         logger.info('executing \'%s\'', self._player_command)
         self._process = psutil.Popen(
             self._player_command.split(),
@@ -155,7 +155,8 @@ class Bot:
                 raise TimeLimitException
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
-                logger.critical('unhandled exception has been raised in'
+                logger.critical(
+                    'unhandled exception has been raised in'
                     'deserialize thread, aborting'
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
@@ -193,7 +194,7 @@ class Bot:
             args=(player_state, serialize, deserialize)
         )
         get_move_thread.start()
-        
+
         self._check_time_limits()
 
         res = copy.deepcopy(self._deserialize_result)
@@ -202,7 +203,8 @@ class Bot:
 
         memory = self._get_memory()
 
-        logger.debug('elapsed real time: %f sec'
+        logger.debug(
+            'elapsed real time: %f sec'
             ', elapsed cpu time: %f sec, used memory: %f mb',
             self._get_real_time() - real_time,
             self._get_cpu_time() - cpu_time,

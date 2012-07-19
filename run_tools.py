@@ -76,16 +76,27 @@ def new_game(args):
 
 def main():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('-c', '--bot-commands-file', required=True,
-      help='file where each line represents command to launch bot')
-    arg_parser.add_argument('-d', '--directory', required=True,
-      help='directory with game')
-    arg_parser.add_argument('-v', '--visualize', action='store_true',
-      help='visualize game after run')
+    arg_parser.add_argument(
+        '-c', '--bot-commands-file', required=True,
+        help='file where each line represents command to launch bot'
+    )
+
+    arg_parser.add_argument(
+        '-d', '--directory', required=True,
+        help='directory with game'
+    )
+
+    arg_parser.add_argument(
+        '-v', '--visualize', action='store_true',
+        help='visualize game after run'
+    )
+
     arg_parser.add_argument('-s', '--save-to', help='save game log to file')
     arg_parser.add_argument('-f', '--from-file', help='visualize log')
-    arg_parser.add_argument('-r', '--only-run', action='store_true',
-      help='don\'t visualize and save logs, only run game')
+    arg_parser.add_argument(
+        '-r', '--only-run', action='store_true',
+        help='don\'t visualize and save logs, only run game'
+    )
 
     args = arg_parser.parse_args()
 
