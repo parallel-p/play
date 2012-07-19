@@ -234,7 +234,7 @@ int main(){
 
     //cout << "armageddoned" << endl;
 
-    if (players[0].b > players[1].b){
+    if (p > 1 && players[0].b > players[1].b){
       go(players[1].x, players[1].y);
     }
     else if (b > 0){
