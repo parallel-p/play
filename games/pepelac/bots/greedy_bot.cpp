@@ -130,42 +130,82 @@ void armageddon(){
   for (i = 0; i < b; i++)
     isbul[bullets[i].x][bullets[i].y] = 1;
 
-  dan[players[1].x][players[1].y] = big;
-  if (p > 1 && players[1].b > players[0].b){
-    dan[players[1].x][players[1].y - 1] = big;
-    dan[players[1].x][players[1].y + 1] = big;
-    dan[players[1].x - 1][players[1].y] = big;
-    dan[players[1].x + 1][players[1].y] = big;
+  for (i = 1; i < p; i++){
 
-    dan[players[1].x + 2][players[1].y] = big;
-    dan[players[1].x][players[1].y + 2] = big;
-    if (players[1].x > 2)
-      dan[players[1].x - 2][players[1].y] = big;
-    if (players[1].y > 2)
-      dan[players[1].x][players[1].y - 2] = big;
-  }
+    dan[players[i].x][players[i].y] = big;
+    if (players[i].b > players[0].b){
+      dan[players[i].x][players[i].y - 1] = big;
+      dan[players[i].x][players[i].y + 1] = big;
+      dan[players[i].x - 1][players[i].y] = big;
+      dan[players[i].x + 1][players[i].y] = big;
+      dan[players[i].x + 2][players[i].y] = big;
+      dan[players[i].x][players[i].y + 2] = big;
+      if (players[i].x > 2)
+        dan[players[i].x - 2][players[i].y] = big;
+      if (players[i].y > 2)
+        dan[players[i].x][players[i].y - 2] = big;
+    }
 
-  if (p > 1 && players[1].b >= players[0].b){
-    if (isbul[players[1].x][players[1].y - 1]){
-      dan[players[1].x][players[1].y - 2] = big;
-      dan[players[1].x - 1][players[1].y - 1] = big;
-      dan[players[1].x + 1][players[1].y - 1] = big;
+    if (players[i].b > players[0].b){
+      if (isbul[players[i].x][players[i].y - 1]){
+        dan[players[i].x][players[i].y - 2] = big;
+        dan[players[i].x - 1][players[i].y - 1] = big;
+        dan[players[i].x + 1][players[i].y - 1] = big;
+      }
+      if (isbul[players[i].x][players[i].y + 1]){
+        dan[players[i].x][players[i].y + 2] = big;
+        dan[players[i].x - 1][players[i].y + 1] = big;
+        dan[players[i].x + 1][players[i].y + 1] = big;
+      }
+      if (isbul[players[i].x - 1][players[i].y]){
+        dan[players[i].x - 2][players[i].y] = big;
+        dan[players[i].x - 1][players[i].y + 1] = big;
+        dan[players[i].x - 1][players[i].y - 1] = big;
+      }
+      if (isbul[players[i].x + 1][players[i].y]){
+        dan[players[i].x + 2][players[i].y] = big;
+        dan[players[i].x + 1][players[i].y + 1] = big;
+        dan[players[i].x + 1][players[i].y - 1] = big;
+      }
     }
-    if (isbul[players[1].x][players[1].y + 1]){
-      dan[players[1].x][players[1].y + 2] = big;
-      dan[players[1].x - 1][players[1].y + 1] = big;
-      dan[players[1].x + 1][players[1].y + 1] = big;
+
+    int x = players[i].x, y = players[i].y;
+
+    if (players[i].b == players[0].b){
+      if (isbul[players[i].x][players[i].y - 1]){
+        if (!isbul[x][y - 2])
+          dan[players[i].x][players[i].y - 2] = big;
+        if (!isbul[x - 1][y - 1])
+          dan[players[i].x - 1][players[i].y - 1] = big;
+        if (!isbul[x + 1][y - 1])
+          dan[players[i].x + 1][players[i].y - 1] = big;
+      }
+      if (isbul[players[i].x][players[i].y + 1]){
+        if (!isbul[x][y + 2])
+          dan[players[i].x][players[i].y + 2] = big;
+        if (!isbul[x - 1][y + 1])
+          dan[players[i].x - 1][players[i].y + 1] = big;
+        if (!isbul[x + 1][y + 1])
+          dan[players[i].x + 1][players[i].y + 1] = big;
+      }
+      if (isbul[players[i].x - 1][players[i].y]){
+        if (!isbul[x - 2][y])
+          dan[players[i].x - 2][players[i].y] = big;
+        if (!isbul[x - 1][y + 1])
+          dan[players[i].x - 1][players[i].y + 1] = big;
+        if (!isbul[x - 1][y - 1])
+          dan[players[i].x - 1][players[i].y - 1] = big;
+      }
+      if (isbul[players[i].x + 1][players[i].y]){
+        if (!isbul[x + 2][y])
+          dan[players[i].x + 2][players[i].y] = big;
+        if (!isbul[x + 1][y + 1])
+          dan[players[i].x + 1][players[i].y + 1] = big;
+        if (!isbul[x + 1][y - 1])
+          dan[players[i].x + 1][players[i].y - 1] = big;
+      }
     }
-    if (isbul[players[1].x - 1][players[1].y]){
-      dan[players[1].x - 2][players[1].y] = big;
-      dan[players[1].x - 1][players[1].y + 1] = big;
-      dan[players[1].x - 1][players[1].y - 1] = big;
-    }
-    if (isbul[players[1].x + 1][players[1].y]){
-      dan[players[1].x + 2][players[1].y] = big;
-      dan[players[1].x + 1][players[1].y + 1] = big;
-      dan[players[1].x + 1][players[1].y - 1] = big;
-    }
+
   }
 
   t = k;
@@ -207,7 +247,7 @@ void go(int x, int y){
     }
   }
 
-  if (!f && isbul[x - 1][y] && dan[x - 1][y] < big){
+  /*if (!f && isbul[x - 1][y] && dan[x - 1][y] < big){
     f = left();
   }
   if (!f && isbul[x + 1][y] && dan[x + 1][y] < big){
@@ -218,10 +258,10 @@ void go(int x, int y){
   }
   if (!f && isbul[x][y + 1] && dan[x][y + 1] < big){
     f = down();
-  }
+  }*/
 
 
-  if (x == players[0].x && y == players[0].y)
+  if (!f && x == players[0].x && y == players[0].y)
     f = stay();
 
   if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
@@ -235,6 +275,24 @@ void go(int x, int y){
   if (!f)
     stay();
 }
+
+void safe(){
+  int x = players[0].x, y = players[0].y, gx = x, gy = y;
+  if (dan[x][y] > dan[x - 1][y]){
+    gx = x - 1;
+  }
+  if (dan[x][y] > dan[x + 1][y]){
+    gx = x + 1;
+  }
+  if (dan[x][y] > dan[x][y - 1]){
+    gy = y - 1;
+  }
+  if (dan[x][y] > dan[x][y + 1]){
+    gy = y + 1;
+  }
+  go(gx, gy);
+}
+
 
 int main(){
   //freopen("input.txt", "r", stdin);
@@ -296,12 +354,12 @@ int main(){
       //cout << "going to" << " " << bb.x << " " << bb.y << endl;
       go(bb.x, bb.y);
     }
-    else if (players[0].b >= players[1].b + b){
+    else if (p == 2 && players[0].b >= players[1].b + b){
       go(n / 2 + 1, n / 2 + 1);
     }
     else{
       debug && (cout << "oh fuck" << endl);
-      stay();
+      safe();
       //failed
     }
 
