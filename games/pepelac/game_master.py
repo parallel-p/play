@@ -7,10 +7,6 @@ EXPLODED = -2
 MOVES = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 
-class NumberOfPlayersException(Exception):
-    pass
-
-
 class IncorrectMoveException(Exception):
     pass
 
