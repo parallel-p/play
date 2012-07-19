@@ -207,6 +207,9 @@ void go(int x, int y){
     }
   }
 
+  if (x == players[0].x && y == players[0].y)
+    f = stay();
+
   if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
     f = right();
   if (players[0].x > x && !f && dan[players[0].x - 1][players[0].y] < big)
@@ -230,11 +233,16 @@ int main(){
     read();
     //cout << "read" << endl;
 
-    armageddon();
+    if (p > 1)
+      armageddon();
 
     //cout << "armageddoned" << endl;
 
-    if (b > 0){
+    if (p < 2){
+      stay();
+      //fuck yeah
+    }
+    else if (b > 0){
 
 
 

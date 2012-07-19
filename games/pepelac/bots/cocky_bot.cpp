@@ -229,12 +229,16 @@ int main(){
   while (1){
     read();
     //cout << "read" << endl;
-
-    armageddon();
+    if (p > 1)
+      armageddon();
 
     //cout << "armageddoned" << endl;
 
-    if (p > 1 && players[0].b > players[1].b){
+    if (p < 2){
+      stay();
+      //fuck yeah
+    }
+    else if (players[0].b > players[1].b){
       go(players[1].x, players[1].y);
     }
     else if (b > 0){
