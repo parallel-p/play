@@ -129,7 +129,8 @@ class AsciiVisualizer:
                 key = getch()
                 if key in 'ABCD':
                     arrow = key
-                elif key in 'H'
+                elif key in 'H':
+                    pass
         elif name == 'windows' and key == b'\xe0':
             pass
         return arrow
