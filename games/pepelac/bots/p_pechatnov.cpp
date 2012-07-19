@@ -51,7 +51,7 @@ int N, P, B, T;
 const Point LEFT(0, -1), RIGHT(0, +1), UP(-1, 0), DOWN(+1, 0), STAND(0, 0);
 const Point ad[4] = {RIGHT, DOWN, LEFT, UP};
 int armdir = 0;
-Point armpos(1, 0);
+Point armpos(1, 0), fc;
 
 Player players[12000];
 Point patrons[12000];
@@ -152,12 +152,15 @@ int fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point 
     }
     if (P == 1)
         goto END_of_fitness;
-
+    if (P == 1 || players[0].pc > players[1].pc + B){
+        fitness = -dist(I, fc);
+        goto END_of_fitness;
+    }
     for (int i = 0; i < B; i++){
         if (dist(I, patrons[i]) < dist(players[1].pos, patrons[i]))
             mindist = min(mindist, dist(I, patrons[i])), min2dist = min(min2dist, dist(players[1].pos, patrons[i]));
     }
-    fitness = -(mindist * 10000 + min2dist);
+    fitness = -(mindist * 3 + min2dist);
     if (mindist == 0)
         players[0].pc++;
     if (players[0].pc < players[1].pc && dist(I, players[1].pos) < 3)
@@ -195,7 +198,8 @@ int main()
     //return 0;
     scanf("%d", &N);
     Field field(N);
-    int t = 0;
+    fc = Point((N + 2) / 2, (N + 1) / 2);
+    int t = 1;
     bool fl = 1;
     Point CC;
     while (true){
