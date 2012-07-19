@@ -7,3 +7,5 @@
 "John Doe" "Bot #7 (simple)" "games/pepelac/bots/simple_bot.cpp"
 "John Doe" "Bot #8 (sosimple)" "games/pepelac/bots/sosimple.pas"
 "John Doe" "Bot #9 (valzevul)" "games/pepelac/bots/valzevul_bot.py"
+"Andrey Putilin" "Bot #10 (lolita)" "games/pepelac/bots/lolita_bot.py"
+"Yuri Pechatnov" "Bot #11 (fitness count)" "games/pepelac/bots/p_pechatnov_bot.py"
