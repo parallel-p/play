@@ -185,7 +185,7 @@ class AsciiVisualizer:
         self.prevspec = False
         while True:
             (key, arrow) = self._read_key()
-            if key is None:
+            if arrow is None and key is None:
                 continue
             if arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 _clear()
