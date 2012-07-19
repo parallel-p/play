@@ -67,7 +67,6 @@ class BotCompiler():
         else:
             return_code = 0
         if return_code == 0:
-            try:
                 compile_string = self.define_execfile(filename, extension)
             return compile_string
         else:
