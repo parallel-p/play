@@ -14,7 +14,7 @@ def update_info():
     global bullets_locations, current_location
     (players, bullets, armageddon) = map(int, input().split())
     (current_x, current_y, current_bullets) = map(int, input().split())
-    if players > 1:
+    for i in range(players - 1):
         (enemy_x, enemy_y, enemy_bullets) = map(int, input().split())
     current_location = (current_x, current_y)
 
