@@ -1,17 +1,22 @@
-import game_master
-import generator
-import ascii_painter
+def Generator(*args, **kwargs):
+    import generator
+    return generator.Generator(*args, **kwargs)
 
 
-def LazyPainter(*args, **kwargs):
+def GameMaster(*args, **kwargs):
+    import game_master
+    return game_master.GameMaster(*args, **kwargs)
+
+
+def Painter(*args, **kwargs):
     import painter
     return painter.Painter(*args, **kwargs)
 
 
-Generator = generator.Generator
-GameMaster = game_master.GameMaster
-Painter = LazyPainter
-AsciiPainter = ascii_painter.Painter
+def AsciiPainter(*args, **kwargs):
+    import ascii_painter
+    return ascii_painter.Painter(*args, **kwargs)
+
 
 players_config = 'players_config'
 
