@@ -5,7 +5,7 @@ def main():
     Creates tournament from all the bots that listed in players_config
     '''
     compiler = bot_compiler.BotCompiler()
-    players_config = open('games/pepelac/players_config', 'r')
+    players_config = open('games/pepelac/players_files', 'r')
     bot = players_config.readline().split('"')
     bots = []
     while bot != ['']:
