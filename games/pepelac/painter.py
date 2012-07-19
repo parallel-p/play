@@ -11,9 +11,8 @@ except:
 finally:
     from PIL import Image, ImageDraw, ImageFont
 
-
 FRAME_SIDE = 1024
-FREE_SIDE = 512
+FREE_SIDE = 800
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
@@ -75,14 +74,14 @@ class Painter:
         font = ImageFont.truetype('times.ttf', 40)
         draw = ImageDraw.Draw(image)
 
-        y = players * (SMALL_SIDE + MARGIN) + 45
+        y = players * (SMALL_SIDE + MARGIN) - 50
         draw.text((45, y + SMALL_SIDE // 5),
                   text,
                   fill='black',
                   font=font
                   )
         x += 60
-        draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE),
+        draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
                        fill=color
                        )
         del draw
@@ -239,7 +238,7 @@ class Painter:
                 text = '{} win!'.format(self.players[0].author_name)
             else:
                 text = '{} win!'.format(self.players[1].author_name)
-            draw.text((width // 3, height // 20),
+            draw.text((int(width // 2.5), height // 20 * 16),
                       text, fill='black', font=font)
 
         '''
@@ -253,7 +252,8 @@ class Painter:
         return bytes.getvalue()
 
 
-painter = Painter([Player(None, 'Dima'), Player(None, 'Vasya')], fight=False)
+painter = Painter([Player(None, 'Dima'), Player(None,
+                  'Vasya OLLOLOLOOLOtrsgyygu')], fight=False)
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
 field[7][3] = 1
