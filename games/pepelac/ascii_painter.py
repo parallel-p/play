@@ -53,7 +53,7 @@ class Painter():
         self.colors = colors
 
     def _generate_player_stats(self, players, bullets):
-        statstr = '{rok}Players in game:{rst}\n\n'.format(mob=set_color((0,5,None)), rst=set_color((None,6,None)))
+        statstr = '{rok}Players in game:{rst}\n\n'.format(rok=set_color((0,5,None)), rst=set_color((None,6,None)))
         for player,bulletn in zip(players,bullets):
             statstr+='{gok}{player.bot_name:10s}{y} by {cy}{0.author_name:15s}{y}: {mg}{bullets:2d} {y}bullets{rst}\n'.format(
                 bullets=bulletn,
