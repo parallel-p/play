@@ -207,6 +207,19 @@ void go(int x, int y){
     }
   }
 
+  if (!f && isbul[x - 1][y] && dan[x - 1][y] < big){
+    f = left();
+  }
+  if (!f && isbul[x + 1][y] && dan[x + 1][y] < big){
+    f = right();
+  }
+  if (!f && isbul[x][y - 1] && dan[x][y - 1] < big){
+    f = up();
+  }
+  if (!f && isbul[x][y + 1] && dan[x][y + 1] < big){
+    f = down();
+  }
+
   if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
     f = right();
   if (players[0].x > x && !f && dan[players[0].x - 1][players[0].y] < big)
