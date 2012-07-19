@@ -130,8 +130,8 @@ class AsciiVisualizer:
                 if key in 'ABCD':
                     arrow = key
                 elif key in 'H':
-                    
-        elif name == 'windows' and key == b'\xe0':
+                    pass
+        elif name == 'nt' and key == b'\xe0':
             pass
         return arrow
 
