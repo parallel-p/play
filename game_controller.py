@@ -1,4 +1,5 @@
 from log import logger
+import copy
 
 
 class GameNotFinishedException(Exception):
@@ -28,6 +29,11 @@ class GameController:
         self.jury_states = [jury_state]
         self.is_finished = False
         self.simulator = _simulator
+
+    def __getstate__(self):
+        state = copy.copy(self.__dict__)
+        del state['simulator']
+        return state
 
     def __setstate__(self, d):
         self.__dict__ = d
