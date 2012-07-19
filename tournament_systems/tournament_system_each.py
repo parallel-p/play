@@ -30,11 +30,16 @@ class TournamentSystemEach(TournamentSystem):
         Retuns the scores of the tournament in a table
         (list of strings).
         '''
-        scores = {}
+        # List of list of cells
         table = []
+        # Gets tuple of score using tuple of players
+        scores = {}
+        # Used to sort players in correct order, tuple (player, score)
+        players = []
+        # Current row
         row = []
-        #Used to sort rows and then add to table
-        rows = []
+
+        # Fills scores dict
         for game in self._results.values():
             current_game = []
             for player, score in game.items():
@@ -44,31 +49,37 @@ class TournamentSystemEach(TournamentSystem):
             scores[(first_player, second_player)] =\
                   (first_score, second_score)
             scores[(second_player, first_player)] =\
-                  (second_score, first_score)
-        #Header
-        row.append('')
+                   (second_score, first_score)
+
+        # Fills players list
         for player in self._players_list:
-            row.append(str(player))
+            sum = 0
+            for second_player in self._players_list:
+                if player != second_player:
+                    sum += scores[(player, second_player)][0]
+            players.append((player, sum))
+        # Sort players by score
+        players.sort(reverse=True, key=lambda player: player[1])
+
+        # Fills the header
+        row.append('')
+        for player in players:
+            row.append(str(player[0]))
         row.append('Sum')
         table.append(row)
 
-        #Main data
-        for first_player in self._players_list:
-            row = [(str(first_player))]
-            current_sum = 0
-            for second_player in self._players_list:
+        # Fills the main data
+        for first_player in players:
+            # Player's name
+            row = [str(first_player[0])]
+            for second_player in players:
                 if first_player == second_player:
                     row.append('')
                 else:
-                    score = scores[(first_player, second_player)]
-                    current_sum += score[0]
-                    score = self._convert_score(score)
-                    row.append(score)
-            #Score cell
-            row.append(str(current_sum))
-            rows.append((current_sum, row))
-        rows.sort(reverse=True)
-        for row in rows:
-            table.append(row[1])
+                    row.append(self._convert_score(scores[(first_player,
+                                                           second_player)]))
+            # Fills the score cell
+            row.append(str(first_player[1]))
+            table.append(row)
         ascii_drawer = tournament_systems.ascii_draw_table.ASCIIDrawTable()
         return ascii_drawer.draw_table(table)
