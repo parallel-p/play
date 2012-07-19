@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import game_master
 import generator
 import painter
@@ -5,6 +6,7 @@ import painter
 Generator = generator.Generator
 GameMaster = game_master.GameMaster
 Painter = painter.Painter
+AsciiPainter = painter.Painter
 
 players_config = 'players_config'
 
