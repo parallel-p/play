@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool debug = 0;
+bool debug = 0, stupid = 1;
 
 struct Player{
    int x, y, b;
@@ -209,8 +209,11 @@ void armageddon(){
   }
 
   t = k;
+  if (t <= 0 && stupid){
+    t -= p - 1;
+  }
 
-  for (s = 1; t <= 0; s++){
+  for (s = 1; t <= 0 && s < 2 * n; s++){
     for (i = s; i <= n - s && t <= 0; i++){
       dan[i][s] = big;
       t++;
