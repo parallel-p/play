@@ -11,6 +11,7 @@
 using namespace std;
 
 bool debug = 0, stupid = 1;
+int big = 100000000;
 
 struct Player{
    int x, y, b;
@@ -39,7 +40,6 @@ Bullet bullet(int x, int y){
 
 int n, p, k, b, dan[100][100];
 bool isbul[100][100];
-int big = 1000000000;
 vector<Player> players;
 vector<Bullet> bullets;
 
@@ -215,19 +215,19 @@ void armageddon(){
 
   for (s = 1; t <= 0 && s < 2 * n; s++){
     for (i = s; i <= n - s && t <= 0; i++){
-      dan[i][s] = big;
+      dan[i][s] = 2 * big;
       t++;
     }
     for (i = s; i <= n - s && t <= 0; i++){
-      dan[s][i] = big;
+      dan[s][i] = 2 * big;
       t++;
     }
     for (i = n - s + 1; i >= s + 1 && t <= 0; i--){
-      dan[i][n - s + 1] = big;
+      dan[i][n - s + 1] = 2 * big;
       t++;
     }
     for (i = n - s + 1; i >= s + 1 && t <= 0; i--){
-      dan[n - s + 1][i] = big;
+      dan[n - s + 1][i] = 2 * big;
       t++;
     }
   }
@@ -281,16 +281,20 @@ void go(int x, int y){
 
 void safe(){
   int x = players[0].x, y = players[0].y, gx = x, gy = y;
-  if (dan[x][y] > dan[x - 1][y]){
+  if (dan[gx][gy] > dan[x - 1][y]){
     gx = x - 1;
+    gy = y;
   }
-  if (dan[x][y] > dan[x + 1][y]){
+  if (dan[gx][gy] > dan[x + 1][y]){
     gx = x + 1;
+    gy = y;
   }
-  if (dan[x][y] > dan[x][y - 1]){
+  if (dan[gx][gy] > dan[x][y - 1]){
+    gx = x;
     gy = y - 1;
   }
-  if (dan[x][y] > dan[x][y + 1]){
+  if (dan[gx][gy] > dan[x][y + 1]){
+    gx = x;
     gy = y + 1;
   }
   go(gx, gy);
