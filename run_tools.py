@@ -11,7 +11,7 @@ def get_js(players_cnt):
 
     gen = generator.Generator()
     signature = GameSignature(1, 1, 1, 1)
-    return gen.generate_start_positions(signature, 2)
+    return gen.generate_start_positions(signature, players_cnt)
 
 
 def parse_bots_file(filename):
