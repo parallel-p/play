@@ -124,15 +124,33 @@ class AsciiVisualizer:
     def _detect_arrow(self, key):
         arrow = None
         if name == 'posix' and key == '\x1b':
-            key = getch()
-            if key == '[':
+            if getch() == '[':
                 key = getch()
-                if key in 'ABCD':
-                    arrow = key
-                elif key in 'H':
-                    pass
+                nixdict={
+                    'A':'A',
+                    'B':'B',
+                    'C':'C',
+                    'D':'D',
+                    'H':'H',
+                    'F':'E'
+                    }
+                arrow = nixdict.get(key)
+                if not arrow and key in '56':
+                    if getch() == '~':
+                        arrow = {'5':'U', '6':'N'}.get(key)
         elif name == 'nt' and key == b'\xe0':
-            pass
+            windict={
+                b'H':'A',
+                b'P':'B',
+                b'M':'C',
+                b'K':'D',
+                b'G':'H',
+                b'O':'E',
+                b'I':'U',
+                b'Q':'N'}
+            key=getch()
+            arrow = windict.get(key)
+
         return arrow
 
     def _read_key(self):
@@ -167,21 +185,21 @@ class AsciiVisualizer:
         self.prevspec = False
         while True:
             (key, arrow) = self._read_key()
-            if arrow == 'C' or key in self.key_sets['next']:  # next
+            if arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif arrow == 'D' or key in self.key_sets['prev']:  # prev
+            elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the first frame.')
-            elif arrow == 'A' or key in self.key_sets['auto']:
+            elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
                 while True:
                     self._prompt(
                         'Enter FPS and, optionally, the frame to stop on'
@@ -220,10 +238,10 @@ class AsciiVisualizer:
                                 pass
                             break
                     self._error('The speed must be a real nonzero number')
-            elif key in self.key_sets['quit']:
+            elif arrow is None and key in self.key_sets['quit']:
                 print('Quit')
                 return None
-            elif arrow == 'B' or key in self.key_sets['jump']:
+            elif arrow == 'B' or arrow is None and key in self.key_sets['jump']:
                 while True:
                     self._prompt('Enter frame number')
                     frame = input()
