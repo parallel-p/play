@@ -160,7 +160,7 @@ class AsciiVisualizer:
             key = None
             return (key, arrow)
 
-        if name == 'nt':
+        if name == 'nt' and key is not None:
             try:
                 key = key.decode()
             except UnicodeDecodeError:
@@ -185,6 +185,8 @@ class AsciiVisualizer:
         self.prevspec = False
         while True:
             (key, arrow) = self._read_key()
+            if key is None:
+                continue
             if arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
@@ -202,8 +204,7 @@ class AsciiVisualizer:
             elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
                 while True:
                     self._prompt(
-                        'Enter FPS and, optionally, the frame to stop on'
-                        '(separated by a space)')
+                        'Enter FPS and, optionally, the frame to stop on (separated by a space)')
                     reply = input()
                     if reply:
                         cmd = reply.split()
