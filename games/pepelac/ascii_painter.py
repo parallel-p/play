@@ -32,7 +32,7 @@ class Painter():
 
     def __init__(self, players, chars=('@@', '[]', '**', 'P{:1x}'),
     colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))):
-    '''This is the class constructor which optionally takes
+        '''This is the class constructor which optionally takes
     custom characters or colors for in-game objects in
     the following order:
     0: Burning Ground
