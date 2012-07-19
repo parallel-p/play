@@ -26,7 +26,7 @@ class BotCompiler():
         elif extension == "pas":
             compiler_string = ["fpc"]
         elif extension == "py":
-            compiler_string = ["python", "-O"]
+            compiler_string = []
             # TODO: Will we add Python 2?
         else:
             raise Exception("Language of this file is not supported")
@@ -53,7 +53,10 @@ class BotCompiler():
         filename, extension = file_name.split(".")
         compiler_string = self.define_compiler(filename, extension)
         compiler_string.append(file_name)
-        return_code = subprocess.call(compiler_string)
+        if compile_string != []:
+            return_code = subprocess.call(compiler_string)
+        else:
+            return_code = 0
         if return_code == 0:
             compile_string = self.define_execfile(filename, extension)
             return compile_string
