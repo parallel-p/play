@@ -14,7 +14,7 @@ def main():
         bots.append((bot[1], bot[3], bot[5]))
         bot = players_config.readline().split('"')
     compiler.compile(bots)
-    shutil.copyfile('config.ini', 'games/pepelac/players_config')
+    shutil.copyfile('players_config', 'games/pepelac/players_config')
 
 if __name__ == "__main__":
     main()
