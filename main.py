@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 from exceptions import MainArgumentException, PlayersException
 
 '''
@@ -15,29 +16,20 @@ with function initialize_game_environment it add game_path to sys.path
 '''
 import config_helpers
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('''
+    arg_parser = argparse.ArgumentParser(description='''
 Usage: main.py game_directory
 Framework runs game, placed in "game_directory
 path. Players in this tournament read from file
 "players_config" file, placed in "game_directory"
 path. Other settings of torunament should be written
 in file "config.py", placed in "game_directory" path.
-            ''')
-        exit(0)
-    elif sys.argv[1] == '--help':
-        print('''
-Usage: main.py game_directory
-Framework runs game, placed in "game_directory"
-path. Players in this tournament read from file
-"players_config" file, placed in "game_directory"
-path. Other settings of torunament should be written
-in file "config.py", placed in "game_directory" path.
-            ''')
-        exit(0)
-    elif len(sys.argv) != 2:
-        raise MainArgumentException('Arguments count mismatch')
-    game_path = sys.argv[1]
+                                                 ''')
+    arg_parser.add_argument(
+        '-d', '--game-path', required=True,
+        help='Directory containing game'
+    )
+    args = arg_parser.parse_args()
+    game_path = args.game_path
     config_helpers.initialize_game_environment(game_path)
 import config
 
