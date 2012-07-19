@@ -69,7 +69,7 @@ class Painter:
 
     def _initialize(self, jury_state):
         self._is_initialized = True
-        self._cell_side = FRAME_SIDE / jury_state.field_side
+        self._cell_side = FRAME_SIDE // jury_state.field_side
 
     def draw_on_the_left(self, players, text, color, image):
         font = ImageFont.truetype('times.ttf', 40)
@@ -77,7 +77,7 @@ class Painter:
 
         x = 145
         y = players * (SMALL_SIDE + MARGIN) + 45
-        draw.text((45, y + SMALL_SIDE / 5),
+        draw.text((45, y + SMALL_SIDE // 5),
                   text,
                   fill='black',
                   font=font
@@ -197,34 +197,34 @@ class Painter:
         else:
             player_ico = image_resize(get_path(
                                       os.path.join('images', 'player.png')),
-                                      width / 3)
+                                      width // 3)
             size = player_ico.size[0]
-            rectangle = (width / 8, height / 5,
-                         width / 8 + size - 5, height / 5 + size - 5)
+            rectangle = (width // 8, height // 5,
+                         width // 8 + size - 5, height // 5 + size - 5)
             draw.rectangle(rectangle, fill='red')
-            rectangle = (width / 8 + width / 2, height / 5,
-                         width / 8 + width / 2 + size - 5,
-                         height / 5 + size - 5)
+            rectangle = (width // 8 + width // 2, height // 5,
+                         width // 8 + width // 2 + size - 5,
+                         height // 5 + size - 5)
             draw.rectangle(rectangle, fill='blue')
-            image.paste(player_ico, (width / 8, height / 5), player_ico)
-            image.paste(player_ico, (width / 8 + width / 2, height / 5),
+            image.paste(player_ico, (width // 8, height // 5), player_ico)
+            image.paste(player_ico, (width // 8 + width // 2, height // 5),
                         player_ico)
             font = ImageFont.truetype('times.ttf', 100)
             text = 'Gunplay!'
-            draw.text((int(width / 2.3), height / 3),
+            draw.text((int(width // 2.3), height // 3),
                       text, fill='black', font=font)
             patron_font = ImageFont.truetype('times.ttf', 70)
-            draw.text((width / 4, int(height / 4 * 2.8)),
+            draw.text((width // 4, int(height / 4 * 2.8)),
                       str(jury_state.bullets[0]), fill='black',
                       font=patron_font)
-            draw.text((width / 4 + width / 2, int(height / 4 * 2.8)),
+            draw.text((width // 4 + width // 2, int(height // 4 * 2.8)),
                       str(jury_state.bullets[1]), fill='black',
                       font=patron_font)
             patron_ico = image_resize(get_path('images/patron-90.png'), 80)
-            image.paste(patron_ico, (int(width / 3.2), int(height / 4 * 2.8)),
+            image.paste(patron_ico, (int(width // 3.2), int(height // 4 * 2.8)),
                         patron_ico)
-            image.paste(patron_ico, (int(width / 3.2) + width / 2,
-                        int(height / 4 * 2.8)),
+            image.paste(patron_ico, (int(width // 3.2) + width // 2,
+                        int(height // 4 * 2.8)),
                         patron_ico)
 
             if jury_state.bullets[0] == jury_state.bullets[1]:
@@ -233,7 +233,7 @@ class Painter:
                 text = '{} win!'.format(self.players[0].author_name)
             else:
                 text = '{} win!'.format(self.players[1].author_name)
-            draw.text((width / 3, height / 20),
+            draw.text((width // 3, height // 20),
                       text, fill='black', font=font)
 
         '''
@@ -247,11 +247,11 @@ class Painter:
         return bytes.getvalue()
 
 
-painter = Painter([Player(None, 'Dima'), Player(None, 'Vasya')], fight=True)
+painter = Painter([Player(None, 'Dima'), Player(None, 'Vasya')], fight=False)
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
 field[7][3] = 1
 field[7][4] = 2
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17], None, None)
+jury_state = JuryState(side, field, [30, 17], None, None, None)
 painter.paint(jury_state)
