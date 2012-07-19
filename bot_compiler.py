@@ -63,7 +63,11 @@ class BotCompiler():
         else:
             return_code = 0
         if return_code == 0:
-            compile_string = self.define_execfile(filename, extension)
+            try:
+                compile_string = self.define_execfile(filename, extension)
+            except FileNotFoundError:
+                raise Exception("Compiler for file " + filename + 
+                    " not found. Play required g++, fpc and python.")
             return compile_string
         else:
             raise Exception("Compilation Error: compiler returned code "
