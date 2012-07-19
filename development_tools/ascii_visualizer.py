@@ -53,16 +53,6 @@ class AsciiVisualizer:
                 'quit': 'QqEe'
                 }
 
-    def _frame2string(self, new_frame_number):
-        self.frame_number = new_frame_number
-        return '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
-            self.frame_number + 1, self._jury_state_count(),
-            self.painter_factory(self.game_controller.get_players())\
-                .ascii_paint(
-                    self.game_controller.jury_states[new_frame_number]),
-            color=Fore.YELLOW + Style.BRIGHT,
-            nocolor=Fore.RESET + Style.NORMAL)
-
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
 
@@ -153,6 +143,18 @@ class AsciiVisualizer:
 
         return arrow
 
+    def _print_frame(self,index):
+        self.frame_number = index
+        frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
+            self.frame_number + 1, self._jury_state_count(),
+            self.painter_factory(self.game_controller.get_players())\
+                .ascii_paint(
+                    self.game_controller.jury_states[index]),
+            color=Fore.YELLOW + Style.BRIGHT,
+            nocolor=Fore.RESET + Style.NORMAL)
+        _clear()
+        print(frame_text)
+
     def _read_key(self):
         key = getch()
         arrow = self._detect_arrow(key)
@@ -179,8 +181,7 @@ class AsciiVisualizer:
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         getch()
-        _clear()
-        print(self._frame2string(0))
+        self._print_frame(0)
         self.nextc = False
         self.prevspec = False
         while True:
@@ -188,18 +189,16 @@ class AsciiVisualizer:
             if arrow is None and key is None:
                 continue
             if arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
-                _clear()
                 if self.frame_number < self._jury_state_count() - 1:
-                    print(self._frame2string(self.frame_number + 1))
+                    self._print_frame(self.frame_number + 1)
                 else:
-                    print(self._frame2string(self.frame_number))
+                    self._print_frame(self.frame_number)
                     self._error('this is the last frame.')
             elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
-                _clear()
                 if self.frame_number > 0:
-                    print(self._frame2string(self.frame_number - 1))
+                    self._print_frame(self.frame_number - 1)
                 else:
-                    print(self._frame2string(self.frame_number))
+                    self._print_frame(self.frame_number)
                     self._error('this is the first frame.')
             elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
                 while True:
@@ -229,11 +228,7 @@ class AsciiVisualizer:
                                     (self.frame_number + addv) < jscount) and (
                                         self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
-
-                                    frame = self._frame2string(
-                                        self.frame_number + addv)
-                                    _clear()
-                                    print(frame)
+                                    self._print_frame(self.frame_number + addv)
                                     sleep(time)
                             except KeyboardInterrupt:
                                 pass
@@ -250,17 +245,14 @@ class AsciiVisualizer:
                     if frame.isnumeric():
                         number = int(frame) - 1
                         if number >= 0 and number < self._jury_state_count():
-                            frame = self._frame2string(number)
-                            _clear()
-                            print(frame)
+                            self._print_frame(number)
                             break
                         else:
                             self._error('No such frame.')
                     else:
                         self._error('enter a NUMBER.')
             else:
-                _clear()
-                print(self._frame2string(self.frame_number))
+                self._print_frame(self.frame_number)
                 self._help()
         colorama.deinit()
 
