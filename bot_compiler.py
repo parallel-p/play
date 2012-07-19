@@ -59,15 +59,16 @@ class BotCompiler():
         compiler_string = self.define_compiler(filename, extension)
         compiler_string.append(file_name)
         if len(compiler_string) >= 2:
-            return_code = subprocess.call(compiler_string)
+            try:
+                return_code = subprocess.call(compiler_string)
+            except FileNotFoundError:
+                raise Exception("Compiler for file " + filename + 
+                    " not found. Play required g++, fpc and python.")
         else:
             return_code = 0
         if return_code == 0:
             try:
                 compile_string = self.define_execfile(filename, extension)
-            except FileNotFoundError:
-                raise Exception("Compiler for file " + filename + 
-                    " not found. Play required g++, fpc and python.")
             return compile_string
         else:
             raise Exception("Compilation Error: compiler returned code "
