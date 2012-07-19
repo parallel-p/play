@@ -29,6 +29,7 @@ class Game:
             str(self.game_info.game_id) + '.jstate'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
+        self.game_controller.simulator = None
         pickle.dump(self.game_controller, log_file)
         log_file.close()
 

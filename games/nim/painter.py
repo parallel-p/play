@@ -10,6 +10,9 @@ MARGIN = 10
 class Painter:
     _is_initialized = False
 
+    def __init__(self, players):
+        pass
+
     def _initialize(self, jury_state):
         self._is_initialized = True
         self._delta_x = ((FRAME_WIDTH - 2 * BORDER) /

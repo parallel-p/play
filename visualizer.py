@@ -76,12 +76,8 @@ class VideoVisualizer:
 
     def _get_game_controller(self, filename):
         '''Unpickles a game controller.'''
-        try:
-            with open(filename, "rb") as file:
-                return pickle.load(file)
-        except:
-            raise NoJuryStatesException('GameController in file ' + filename +
-                                        ' contains no jury states.')
+        with open(filename, "rb") as file:
+            return pickle.load(file)
 
     def _generate_game_images(self, jstates):
         '''Generates frames for video.'''

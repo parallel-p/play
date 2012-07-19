@@ -23,7 +23,7 @@ class GameSimulator:
         '''
         self._start_state = start_state
         self._game_controller = game_controller.GameController(players,
-          game_signature, start_state)
+          game_signature, start_state, self)
 
     def _create_bots(self):
         '''
