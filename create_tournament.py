@@ -1,6 +1,7 @@
 import bot_compiler
 import shutil
 
+
 def main():
     '''
     Creates tournament from all the bots that listed in players_config

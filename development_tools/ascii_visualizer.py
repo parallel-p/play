@@ -38,19 +38,19 @@ class AsciiVisualizer:
         self.frame_number = 0
         if name == 'nt':
             self.key_sets = {
-                'next':'DdNn.>]}+= ',
-                'prev':'BbAa|,<[{-_',
-                'jump':'0123456789SsJjFfRrGg',
-                'auto':'WwMmPp',
-                'quit':'QqXx'
+                'next': 'DdNn.>]}+= ',
+                'prev': 'BbAa|,<[{-_',
+                'jump': '0123456789SsJjFfRrGg',
+                'auto': 'WwMmPp',
+                'quit': 'QqXx'
                 }
         else:
             self.key_sets = {
-                'next':'Nn.>]}+= \r\n',
-                'prev':'Bb\|,<[{-_',
-                'jump':'0123456789JjFfRrGg',
-                'auto':'AaMmPp',
-                'quit':'QqEe'
+                'next': 'Nn.>]}+= \r\n',
+                'prev': 'Bb\|,<[{-_',
+                'jump': '0123456789JjFfRrGg',
+                'auto': 'AaMmPp',
+                'quit': 'QqEe'
                 }
 
     def _frame2string(self, new_frame_number):
@@ -122,7 +122,7 @@ class AsciiVisualizer:
         + Style.NORMAL + Fore.RESET)
 
     def _detect_arrow(self, key):
-        arrow=None
+        arrow = None
         if name == 'posix' and key == '\x1b':
             key = getch()
             if key == '[':
@@ -137,16 +137,16 @@ class AsciiVisualizer:
 
     def _read_key(self):
         key = getch()
-        arrow=self._detect_arrow()
+        arrow = self._detect_arrow()
         if arrow is not None:
-            key=None
+            key = None
             return (key, arrow)
 
         if name == 'nt':
             try:
-                key=key.decode()
+                key = key.decode()
             except UnicodeDecodeError:
-                key=None
+                key = None
                 self._error('I cannot recognise the key you just pressed')
 
         return (key, arrow)
@@ -157,24 +157,24 @@ class AsciiVisualizer:
         method. '''
         colorama.init()
         _clear()
-        key='any'
+        key = 'any'
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         getch()
         _clear()
         print(self._frame2string(0))
-        self.nextc=False
-        self.prevspec=False
+        self.nextc = False
+        self.prevspec = False
         while True:
-            (key,arrow) = self._read_key()
-            if arrow == 'C' or key in self.key_sets['next']:#next
+            (key, arrow) = self._read_key()
+            if arrow == 'C' or key in self.key_sets['next']:  # next
                 _clear()
                 if self.frame_number < self._jury_state_count() - 1:
                     print(self._frame2string(self.frame_number + 1))
                 else:
                     print(self._frame2string(self.frame_number))
                     self._error('this is the last frame.')
-            elif arrow == 'D' or key in self.key_sets['prev']:#prev
+            elif arrow == 'D' or key in self.key_sets['prev']:  # prev
                 _clear()
                 if self.frame_number > 0:
                     print(self._frame2string(self.frame_number - 1))
@@ -210,7 +210,7 @@ class AsciiVisualizer:
                                         self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
 
-                                    frame=self._frame2string(
+                                    frame = self._frame2string(
                                         self.frame_number + addv)
                                     _clear()
                                     print(frame)
