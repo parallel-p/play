@@ -248,31 +248,27 @@ class Bot:
         self._write(player_state, serialize)
         self._read(deserialize)
 
-    def _run_deserialize(self, deserialize):
-        '''
-        Invokes author's deserialization function and
-        stores received `move` into self._deserialize_result.
-
-        If deserialize function raised exception, this function stores
-        information about exception for re-raising.
-        '''
-        try:
-            self._deserialize_result = deserialize(self._process.stdout)
-        except (BaseException, Exception) as exc:
-            self._deserialize_exc = exc
-            return
-
     def _read(self, deserialize):
         '''
         Deserialize move with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
 
+        Invokes author's deserialization function and
+        stores received `move` into self._deserialize_result.
+
+        If deserialize function raised exception, this function stores
+        information about exception for re-raising.
+
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        if not self._is_running():
-            raise ProcessNotRunningException
-
-        self._run_deserialize(deserialize)
+        try:
+            if not self._is_running():
+                raise ProcessNotRunningException()
+            self._check_pipes()
+            self._deserialize_result = deserialize(self._process.stdout)
+        except (BaseException, Exception) as exc:
+            self._deserialize_exc = exc
+            return
 
     def _write(self, player_state, serialize):
         '''
@@ -288,17 +284,19 @@ class Bot:
         '''
         if not self._is_running():
             return
+
         try:
             self._process.kill()
         except psutil.NoSuchProcess:
             pass
+            
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
 
     def _check_pipes(self):
         if not self._process.stdin.writable() and self._process.stdout.readable():
-            raise BadPipesError
+            raise BadPipesError()
 
     def _is_running(self):
         '''
