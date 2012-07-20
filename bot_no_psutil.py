@@ -16,6 +16,7 @@ while process.is_running():
 # `y`, check limits and delete information
 '''
 
+
 class ExecuteError(OSError):
     '''
     This exception is raised when create_process
@@ -104,7 +105,8 @@ class Bot:
                     'deserialize thread, aborting'
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
-                raise self._deserialize_exc
+                del self._deserialize_exc
+                raise exc_copy
 
             if hasattr(self, '_deserialize_result'):
                 break
@@ -127,7 +129,7 @@ class Bot:
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        if not self._is_running:
+        if not self._is_running():
             raise ProcessNotRunningException
 
         real_time = self._get_real_time()

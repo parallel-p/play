@@ -96,6 +96,13 @@ class Bot:
 
         self._check_pipes()
 
+        if not self._is_running():
+            logger.critical(
+                'executing of \'%s\' failed: invalid command',
+                self._player_command
+            )
+            raise ExecuteError
+
         self._checker = threading.Thread(target=self._check_memory_limits)
         self._checker.start()
         logger.info('executing successful')

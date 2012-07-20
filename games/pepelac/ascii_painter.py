@@ -52,13 +52,12 @@ class Painter():
         self.chars = chars
         self.colors = colors
 
-
     def _generate_player_stats(self, players, bullets, scores, dead):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
-            headercolor = set_color((1, 8, 0)),
-            reset = set_color((None, None, 3)))
+            headercolor=set_color((1, 8, 0)),
+            reset=set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
-            (bgcolor, endmsg) = ((5, None, None), ' is dead, with score {numcolor}{score:4}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
+            (bgcolor, endmsg) = ((5, None, None), ' is dead, with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
             statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
                 score=scores.get(player),
                 bullets=bulletn,

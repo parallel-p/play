@@ -1,6 +1,5 @@
 import argparse
 import config_helpers
-import sys
 import pickle
 import copy
 
