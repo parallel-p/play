@@ -6,6 +6,13 @@ import config
 import copy
 
 
+class ExecuteError(OSError):
+    '''
+    This exception is raised when create_process
+    cannot start bot process (e.g. invalid command)
+    '''
+
+
 class ProcessNotRunningException(OSError):
     '''
     This exception is raised after trying to
@@ -48,12 +55,17 @@ class Bot:
         Starts bot's process.
         '''
         logger.info('executing "%s"', self._player_command)
-        self._process = subprocess.Popen(
-            self._player_command.split(),
-            stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+        try:
+            self._process = subprocess.Popen(
+                self._player_command.split(),
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+        except OSError:
+            logger.critical('executing of \'%s\' failed: invalid command',
+                            self._player_command)
+            raise ExecuteError
 
     def _get_real_time(self):
         '''
