@@ -33,8 +33,7 @@
                 <b>Системные требования:</b>
                 <ul>
                     <li>Любая из поддерживаемых операционных систем. Мы гарантируем работу на Windows (XP или новее), большинстве дистрибутив Linux (с версией ядра 2.6 или новее) и Mac OS X;</li>
-                    <li>Python 3.0 или новее (рекомендуется Python 3.3);</li>
-                    <li>Для визуализации процесса игры необходима библиотека colorama (включена в дистрибутив и устанавливается автоматически).</li>
+                    <li>Python 3.2 или новее;</li>
                 </ul>
                 <b>Установка</b>
                 <ol>
@@ -44,21 +43,23 @@
                 <ol>
                     <li>Перейдите в папку с распакованным SDK;</li>
                     <li>Скопируйте в папку bots ваши стратегии;</li>
-                    <li>Откройте файл <i>commands</i> и вставьте туда команды для запуска вашей стратегии;</li>
+                    <li>Откройте файл <i>commands</i> и замените его содержимое на команды для запуска ваших стратегий</li>
                     Примеры команд для запуска:<br>
                     <i>bots/game.exe # Для компилируемых языков</i><br> 
-                    <i>python3 bots/game.py # Только для Python3 в Linux</i> 
-                    <i>python bots/game.py # Только для Python3 в Windows</i> 
+                    <i>python3 bots/game.py # Только для Python3 в Linux</i> <br>
+                    <i>PYTHON_COMPILER bots/game.py # Только для Python3 в Windows,</i> <br><br>
+                    где PYTHON_COMPILER — путь до вашего интерпретатора python 3.
                 </ol>
                 <b>Использование</b>
                 <ol>
                     <li>Откройте терминал, перейдите в папку с распакованным SDK;</li>
                     <li>Для запуска <b>без</b> визуализации наберите:<br>
                         <i>python3 run_tools.py -c commands -d pepelac</i> (Linux)</li>
-                        <i>python run_tools.py -c commands -d pepelac</i> (Windows)</li>
+                        <i>PYTHON_COMPILER run_tools.py -c commands -d pepelac</i> (Windows)</li>
                     <li>Для запуска <b>с</b> визуализацией наберите:<br>
-                     <i>python run_tools.py -c commands -d pepelac -v</i> (Linux)
-                     <i>python3 run_tools.py -c commands -d pepelac -v</i> (Windows)
+                     <i>python3 run_tools.py -c commands -d pepelac -v</i> (Linux)<br>
+                     <i>PYTHON_COMPILER run_tools.py -c commands -d pepelac -v</i> (Windows)<br><br>
+                    Где PYTHON_COMPILER — путь до вашего интерпретатора python 3.
                  </li>
                 </ol>
             </td>
