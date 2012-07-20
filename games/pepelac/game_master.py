@@ -23,11 +23,14 @@ class GameMaster:
         self._scores = {}
         self._players_poses = {}
         for player in self._players:
-            move = self._simulator.get_move(
-                player, start_state.field_side,
-                serialize_field_side, deserialize_start
-            )
             self._scores[player] = 0
+            try:
+                move = self._simulator.get_move(
+                    player, start_state.field_side,
+                    serialize_field_side, deserialize_start
+                )
+            except OSError:
+                self._kill_player(cur_player, 'made wrong init move')
         self._state = start_state
         self._simulator.report_state(self._state)
 
