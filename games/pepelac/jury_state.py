@@ -1,6 +1,6 @@
 class JuryState:
     def __init__(self, field_side, field, bullets,
-                 explosion_time, dead_players, dead_reason,
+                 explosion_time, dead_players = [], dead_reason = {},
                  collision=None):
         '''
         field_side is side of field

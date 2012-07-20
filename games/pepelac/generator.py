@@ -56,5 +56,4 @@ class Generator:
             field = self.generate_players(field, self.players_count)
             self.bullets = [0] * self.players_count
             field = self.generate_bullets(field, self.bullets_count)
-            yield JuryState(_field_size, field, self.bullets,
-                            self.time, [], [], [])
+            yield JuryState(_field_size, field, self.bullets, self.time)
