@@ -15,6 +15,12 @@ class JuryState:
         bullets is list of quantities of bullets, which players have
 
         explosion_time is time before the explosion of the field
+
+        dead_reason is reason of death
+
+        if dead_reason[player] == -1 then player made wrong move
+        if dead_reason[player] == 0 then player killed by Armageddon
+        if dead_reason[player] == 1 then player killed with bullet
         '''
         self.scores = scores
         self.field_side = field_side

@@ -30,7 +30,7 @@ class GameMaster:
                     serialize_field_side, deserialize_start
                 )
             except OSError:
-                self._kill_player(cur_player, 'made wrong init move')
+                self._kill_player(cur_player, -1)
         self._state = start_state
         self._simulator.report_state(self._state)
 
@@ -73,7 +73,7 @@ class GameMaster:
                 if cell > 0 and turn != cell - 1:
                     raise IncorrectMoveException()
             except (OSError, DeserializeMoveException, IncorrectMoveException):
-                self._kill_player(cur_player, 'made wrong move')
+                self._kill_player(cur_player, -1)
                 continue
 
             if cell == BULLET:
@@ -129,8 +129,7 @@ class GameMaster:
 
         cell = self._state.field[new_pos[0]][new_pos[1]]
         if cell > 0:
-            self._kill_player(self._players[cell - 1],
-                              'destroyed by Armageddon')
+            self._kill_player(self._players[cell - 1], 0)
 
         self._state.field[new_pos[0]][new_pos[1]] = EXPLODED
         self._last_exploded_cell = new_pos
@@ -161,8 +160,7 @@ class GameMaster:
                 kill_player_id = player_id
 
         if kill == 1:
-            self._kill_player(self._players[kill_player_id],
-                              'killed with bullet')
+            self._kill_player(self._players[kill_player_id], 1)
 
     def _kill_player(self, player, reason):
         self._state.dead_players.append(player)

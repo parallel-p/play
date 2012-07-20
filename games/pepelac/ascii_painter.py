@@ -52,16 +52,24 @@ class Painter():
         self.chars = chars
         self.colors = colors
 
-    def _generate_player_stats(self, players, bullets, scores, dead):
+    def _generate_player_stats(self, players, bullets, scores, dead, dead_reason):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
             headercolor=set_color((1, 8, 0)),
             reset=set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
-            (bgcolor, endmsg) = ((5, None, None), ' is dead, with score {numcolor}{score:4}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
+            player_reason = ''
+            if player in dead:
+                if dead_reason[player] == -1:
+                    player_reason = 'made wrong move'
+                elif dead_reason[player] == 0:
+                    player_reason = 'destroyed by Armageddon'
+                else:
+                    player_reason = 'killed with bullet'
+            (bgcolor, endmsg) = ((5, None, None), ' is dead ({reason}), with score {numcolor}{score:4}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
             scor=scores.get(player)
             if scor is None:
                 scor = 0
-            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:23s}{textc}' + endmsg + '{reset}\n').format(
+            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:8s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
                 score=scor,
                 bullets=bulletn,
                 player=player,
@@ -72,6 +80,7 @@ class Painter():
                 textc=set_color((None, 8, 2)),
                 authorcolor=set_color((None, 2, None)),
                 numcolor=set_color((None, 4, None)),
+                reason = player_reason,
                 reset=set_color((None, None, 3))
             )
         return statstr
@@ -112,7 +121,11 @@ class Painter():
         return text_line
 
     def ascii_paint(self, jury_state):
-        player_stats = self._generate_player_stats(self.players, jury_state.bullets, jury_state.scores, jury_state.dead_players)
+        player_stats = self._generate_player_stats(self.players,
+                                                   jury_state.bullets,
+                                                   jury_state.scores,
+                                                   jury_state.dead_players,
+                                                   jury_state.dead_reason)
         text_field = ''
         
         if jury_state.collision is not None:
