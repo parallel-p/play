@@ -197,7 +197,7 @@ class Bot:
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        if not self._is_running:
+        if not self._is_running():
             raise ProcessNotRunningException
 
         real_time = self._get_real_time()
