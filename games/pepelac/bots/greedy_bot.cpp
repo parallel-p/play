@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool debug = 0, stupid = 1;
+bool debug = 0, stupid = 0;
 int big = 100000000;
 
 struct Player{
