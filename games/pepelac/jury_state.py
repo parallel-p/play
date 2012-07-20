@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 class JuryState:
     def __init__(self, field_side, field, bullets,
-                 explosion_time, dead_players = [], dead_reason = {},
-                 collision=None):
+                 explosion_time, dead_players=[], dead_reason={},
+                 collision=None, scores={}):
         '''
         field_side is side of field
         field is the current field:
@@ -15,6 +16,7 @@ class JuryState:
 
         explosion_time is time before the explosion of the field
         '''
+        self.scores = scores
         self.field_side = field_side
         self.field = field
         self.bullets = bullets

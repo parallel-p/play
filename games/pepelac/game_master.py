@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from player_state import *
 from move import *
 
@@ -93,6 +94,7 @@ class GameMaster:
             if not player in self._state.dead_players:
                 self._scores[player] += 1
 
+        self._state.scores = self._scores
         self._state.explosion_time -= 1
         if self._state.explosion_time < 0:
             self._explode_cell()
