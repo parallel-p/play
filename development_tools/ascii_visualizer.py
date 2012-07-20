@@ -78,7 +78,7 @@ class AsciiVisualizer:
     def _prompt(self, msg):
         '''prints a prompt in bright yellow color'''
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
-        + Style.NORMAL + Fore.RESET)
+              + Style.NORMAL + Fore.RESET)
 
     def _detect_arrow(self, key):
         arrow = None
@@ -250,7 +250,8 @@ class AsciiVisualizer:
                                         self._print_frame(self.frame_number + addv)
                                     sleep(time)
                             except KeyboardInterrupt:
-                                pass
+                                _clear()
+                                self._print_frame(self.frame_number)
                             break
                     self._error('The speed must be a real nonzero number')
             elif arrow is None and key in self.key_sets['quit']:

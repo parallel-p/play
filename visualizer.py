@@ -88,7 +88,7 @@ class VideoVisualizer:
         self.ext = None
         for ind, jstate in enumerate(jstates):
             if self.log:
-                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(jstates)),end='')
+                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(jstates)), end='')
             image = self.painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
