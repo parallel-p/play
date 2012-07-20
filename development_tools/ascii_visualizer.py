@@ -94,7 +94,7 @@ class AsciiVisualizer:
         jump to frame   : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
         jump to first   : {gr}HOME{bl}
         jump to last    : {gr}END{bl}
-        
+
         autoplay        : {gr}UP,A,M,P{bl}
         stop autoplay   : {gr}^C{bl}
 
@@ -120,34 +120,34 @@ class AsciiVisualizer:
         if name == 'posix' and key == '\x1b':
             if getch() == '[':
                 key = getch()
-                nixdict={
-                    'A':'A',
-                    'B':'B',
-                    'C':'C',
-                    'D':'D',
-                    'H':'H',
-                    'F':'E'
+                nixdict = {
+                    'A': 'A',
+                    'B': 'B',
+                    'C': 'C',
+                    'D': 'D',
+                    'H': 'H',
+                    'F': 'E'
                     }
                 arrow = nixdict.get(key)
                 if not arrow and key in '56':
                     if getch() == '~':
-                        arrow = {'5':'U', '6':'N'}.get(key)
+                        arrow = {'5': 'U', '6': 'N'}.get(key)
         elif name == 'nt' and key == b'\xe0':
-            windict={
-                b'H':'A',
-                b'P':'B',
-                b'M':'C',
-                b'K':'D',
-                b'G':'H',
-                b'O':'E',
-                b'I':'U',
-                b'Q':'N'}
-            key=getch()
+            windict = {
+                b'H': 'A',
+                b'P': 'B',
+                b'M': 'C',
+                b'K': 'D',
+                b'G': 'H',
+                b'O': 'E',
+                b'I': 'U',
+                b'Q': 'N'}
+            key = getch()
             arrow = windict.get(key)
 
         return arrow
 
-    def _print_frame(self,index):
+    def _print_frame(self, index):
         self.frame_number = index
         frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
@@ -194,18 +194,19 @@ class AsciiVisualizer:
             if arrow == 'H':
                 self._print_frame(0)
             elif arrow == 'E':
-                self._print_frame(len(self.game_controller.jury_states)-1)
+                self._print_frame(len(self.game_controller.jury_states) - 1)
             elif arrow == 'N':
                 self._print_frame(
                     min(
-                        len(self.game_controller.jury_states)-1,
+                        len(self.game_controller.jury_states) - 1,
                         self.frame_number +
-                            int(len(self.game_controller.jury_states)/20)
+                            int(len(self.game_controller.jury_states) / 20)
                     )
                 )
             elif arrow == 'U':
                 self._print_frame(
-                    max(0, self.frame_number-int(len(self.game_controller.jury_states)/20) )
+                    max(0, self.frame_number -
+                        int(len(self.game_controller.jury_states) / 20))
                 )
             elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 if self.frame_number < self._jury_state_count() - 1:

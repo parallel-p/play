@@ -1,6 +1,7 @@
 import bot_compiler
 import os
 
+
 def run_app():
     game_path = input("Enter path for your game: ")
     try:
@@ -17,9 +18,9 @@ def run_app():
     players = []
     for bot in bots:
         s = bot.split('\"')
-        players.append([s[1],s[3], s[5]])
+        players.append([s[1], s[3], s[5]])
     compiler.compile(players, game_path + 'players_config')
-    print("File with commands saved in " + game_path +"players_config.")
+    print("File with commands saved in " + game_path + "players_config.")
 
 if __name__ == '__main__':
     run_app()

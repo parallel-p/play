@@ -46,27 +46,27 @@ class Painter():
     The Player chars must be a valid format string with
     the player's number as its parameter and each of the
     colors must be a valid color tuple for the set_color function'''
-        self.players=players
+        self.players = players
         if len(chars) != 4 or len(colors) != 4:
             raise Exception('Invalid parameters')
         self.chars = chars
         self.colors = colors
 
     def _generate_player_stats(self, players, bullets, dead):
-        statstr = '{headercolor}Players in game:{reset}\n'.format( headercolor=set_color((1,8,0)), reset=set_color((None,None,3)) )
-        for pnum,(player,bulletn) in enumerate(zip(players,bullets)):
-            bg = (5,None,None) if player in dead else (0,None,None)
-            statstr+='{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets{reset}\n'.format(
+        statstr = '{headercolor}Players in game:{reset}\n'.format(headercolor=set_color((1, 8, 0)), reset=set_color((None, None, 3)))
+        for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
+            bg = (5, None, None) if player in dead else (0, None, None)
+            statstr += '{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets{reset}\n'.format(
                 bullets=bulletn,
                 player=player,
                 player_index=self.chars[3].format(pnum),
                 bkgnd=set_color(bg),
-                icolor=set_color((None,7,0)),
-                botcolor=set_color((None,3,2)),
-                textc=set_color((None,8,2)),
-                authorcolor=set_color((None,2,None)),
-                numcolor=set_color((None,4,None)),
-                reset=set_color((None,None,3))
+                icolor=set_color((None, 7, 0)),
+                botcolor=set_color((None, 3, 2)),
+                textc=set_color((None, 8, 2)),
+                authorcolor=set_color((None, 2, None)),
+                numcolor=set_color((None, 4, None)),
+                reset=set_color((None, None, 3))
             )
         return statstr
 
@@ -83,13 +83,13 @@ class Painter():
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
             else:
-                cell = self.Cell(self.chars[3].format(pos-1), self.colors[3])
+                cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
                 # default: bright white 'P{hex number of player}' on magenta
             out.append(cell)
         return out
 
     def _generate_line(self, cell_line):
-        prev_color = (None, None, 3) # total reset
+        prev_color = (None, None, 3)  # total reset
         text_line = ''
         for cell in cell_line:
             # if the color of this cell is the same as
@@ -108,4 +108,4 @@ class Painter():
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
             text_field += self._generate_line(line) + '\n'
-        return text_field+'\n'+player_stats
+        return text_field + '\n' + player_stats
