@@ -47,14 +47,19 @@
                     <li>Откройте файл <i>commands</i> и вставьте туда команды для запуска вашей стратегии;</li>
                     Примеры команд для запуска:<br>
                     <i>bots/game.exe # Для компилируемых языков</i><br> 
-                    <i>python3 bots/game.py # Только для Python</i> 
+                    <i>python3 bots/game.py # Только для Python3 в Linux</i> 
+                    <i>python bots/game.py # Только для Python3 в Windows</i> 
                 </ol>
                 <b>Использование</b>
                 <ol>
                     <li>Откройте терминал, перейдите в папку с распакованным SDK;</li>
-                    <li>Для запуска <b>без</b> визуализации наберите:
-                        <i>python3 run_tools.py -c commands -d pepelac</i></li>
-                    <li>Для запуска <b>с</b> визуализацией наберите <i>python3 run_tools.py -c commands -d pepelac -v</i></li>
+                    <li>Для запуска <b>без</b> визуализации наберите:<br>
+                        <i>python3 run_tools.py -c commands -d pepelac</i> (Linux)</li>
+                        <i>python run_tools.py -c commands -d pepelac</i> (Windows)</li>
+                    <li>Для запуска <b>с</b> визуализацией наберите:<br>
+                     <i>python run_tools.py -c commands -d pepelac -v</i> (Linux)
+                     <i>python3 run_tools.py -c commands -d pepelac -v</i> (Windows)
+                 </li>
                 </ol>
             </td>
         </tr>
