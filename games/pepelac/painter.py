@@ -36,18 +36,32 @@ class Painter:
         self._height = FRAME_SIDE
 
         self._fire_ico = image_resize(get_path(
-                                os.path.join('images', 'fire.png')),
-                                self._cell_side - 4)
+                                      os.path.join('images',
+                                                   'fire.png'
+                                                   )
+                                      ), self._cell_side - 4
+                                      )
         self._patron_ico = image_resize(get_path(
-                                  os.path.join('images', 'patron.png')),
-                                  self._cell_side - 4)
+                                        os.path.join('images',
+                                                     'patron.png'
+                                                     )
+                                        ), self._cell_side - 4
+                                        )
         self._player_ico = image_resize(get_path(
-                                  os.path.join('images', 'player.png')),
-                                  self._cell_side - 4)
+                                        os.path.join('images',
+                                                     'player.png'
+                                                     )
+                                        ), self._cell_side - 4
+                                        )
         self._player_ico_fight = image_resize(get_path(
-                                      os.path.join('images', 'player.png')),
-                                      self._width // 3)
-        self._patron_ico_fight = image_resize(get_path('images/patron-90.png'), 80)
+                                              os.path.join('images',
+                                                           'player.png'
+                                                           )
+                                              ), self._width // 3
+                                              )
+        self._patron_ico_fight = image_resize(get_path('images/patron-90.png'),
+                                              80
+                                              )
 
     def draw_on_the_left(self, x, players, text, color, draw):
         font = ImageFont.truetype(get_path('times.ttf'), 40)
@@ -113,18 +127,30 @@ class Painter:
                                  x + self._cell_side - 1)
                     if cell == -2:
                         draw.rectangle(rectangle, fill='black')
-                        image.paste(self._fire_ico, (y + 2, x + 2), self._fire_ico)
+                        image.paste(self._fire_ico,
+                                    (y + 2, x + 2),
+                                    self._fire_ico
+                                    )
                     elif cell == -1:
-                        image.paste(self._patron_ico, (y + 2, x + 2), self._patron_ico)
+                        image.paste(self._patron_ico,
+                                    (y + 2, x + 2),
+                                    self._patron_ico
+                                    )
                     elif cell == 0:
                         pass
                     else:
                         draw.rectangle(rectangle, fill=colors[cell])
-                        image.paste(self._player_ico, (y + 2, x + 2), self._player_ico)
+                        image.paste(self._player_ico,
+                                    (y + 2, x + 2),
+                                    self._player_ico
+                                    )
         else:
             size = self._player_ico_fight.size[0]
-            rectangle = (self._width // 8, int(self._height // 4.8),
-                         self._width // 8 + size - 5, self._height // 5 + size - 5)
+            rectangle = (self._width // 8,
+                         int(self._height // 4.8),
+                         self._width // 8 + size - 5,
+                         self._height // 5 + size - 5
+                         )
 
             player_one = jury_state.collision[0]
             player_one_id = self.players.index(player_one) + 1
@@ -132,9 +158,11 @@ class Painter:
             bullets_one = jury_state.bullets[player_one_id - 1]
 
             draw.rectangle(rectangle, fill=color_one)
-            rectangle = (self._width // 8 + self._width // 2, int(self._height // 4.8),
+            rectangle = (self._width // 8 + self._width // 2,
+                         int(self._height // 4.8),
                          self._width // 8 + self._width // 2 + size - 5,
-                         self._height // 5 + size - 5)
+                         self._height // 5 + size - 5
+                         )
 
             player_two = jury_state.collision[1]
             player_two_id = self.players.index(player_two) + 1
@@ -143,11 +171,15 @@ class Painter:
 
             draw.rectangle(rectangle, fill=color_two)
 
-            image.paste(self._player_ico_fight, (self._width // 8, int(self._height // 4.8)),
-                        self._player_ico_fight)
-            image.paste(self._player_ico_fight, (self._width // 8 + self._width // 2,
+            image.paste(self._player_ico_fight,
+                        (self._width // 8, int(self._height // 4.8)),
+                        self._player_ico_fight
+                        )
+            image.paste(self._player_ico_fight,
+                        (self._width // 8 + self._width // 2,
                         int(self._height // 4.8)),
-                        self._player_ico_fight)
+                        self._player_ico_fight
+                        )
 
             font = ImageFont.truetype(get_path('times.ttf'), 100)
             text = 'Gunplay!'
@@ -161,17 +193,23 @@ class Painter:
                       str(bullets_one), fill='black',
                       font=patron_font)
 
-            draw.text((self._width // 4 + self._width // 2, int(self._height // 4 * 2.8)),
+            draw.text((self._width // 4 + self._width // 2,
+                      int(self._height // 4 * 2.8)),
                       str(bullets_two), fill='black',
-                      font=patron_font)
+                      font=patron_font
+                      )
 
-            image.paste(self._patron_ico_fight, (int(self._width // 3.2),
+            image.paste(self._patron_ico_fight,
+                        (int(self._width // 3.2),
                         int(self._height // 4 * 2.8)),
-                        self._patron_ico_fight)
+                        self._patron_ico_fight
+                        )
 
-            image.paste(self._patron_ico_fight, (int(self._width // 3.2) + self._width // 2,
+            image.paste(self._patron_ico_fight,
+                        (int(self._width // 3.2) + self._width // 2,
                         int(self._height // 4 * 2.8)),
-                        self._patron_ico_fight)
+                        self._patron_ico_fight
+                        )
 
             if bullets_one == bullets_two:
                 text = 'Draw!'
