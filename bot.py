@@ -74,6 +74,7 @@ class Bot:
         '''
         self._player_command = player_command
         self._process = None
+        self._running = False
 
     def create_process(self):
         '''
@@ -106,6 +107,7 @@ class Bot:
         self._checker = threading.Thread(target=self._check_memory_limits)
         self._checker.start()
         logger.info('executing successful')
+        self._running = True
 
     def _check_memory_limits(self):
         '''
@@ -261,21 +263,23 @@ class Bot:
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        try:
-            if not self._is_running():
-                raise ProcessNotRunningException()
-            self._check_pipes()
-            self._deserialize_result = deserialize(self._process.stdout)
-        except (BaseException, Exception) as exc:
-            self._deserialize_exc = exc
-            return
+        if self._running:
+            try:
+                if not self._is_running():
+                    raise ProcessNotRunningException()
+                self._check_pipes()
+                self._deserialize_result = deserialize(self._process.stdout)
+            except (BaseException, Exception) as exc:
+                self._deserialize_exc = exc
+                return
 
     def _write(self, player_state, serialize):
         '''
         Serialize player_state with bot's `stdin`.
         `stdin` is a stream opened to write per *byte*.
         '''
-        serialize(player_state, self._process.stdin)
+        if self._running:
+            serialize(player_state, self._process.stdin)
 
     def kill_process(self):
         '''
@@ -293,6 +297,7 @@ class Bot:
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
+        self._running = False
 
     def _check_pipes(self):
         if not self._process.stdin.writable() and self._process.stdout.readable():
