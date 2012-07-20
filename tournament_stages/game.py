@@ -21,7 +21,8 @@ class Game:
         path = os.path.dirname(__file__)
         path = os.path.join(path,  '..', 'logs')
         path = os.path.normpath(path)
-        path = os.path.join(path, 'tournament' + str(self.game_info.tournament_id))
+        path = os.path.join(path, 'tournament' +
+                            str(self.game_info.tournament_id))
         if (os.path.exists(path) == 0):
             os.makedirs(path)
         filename = str(self.game_info.round_id) + '-' +\
@@ -29,7 +30,6 @@ class Game:
             str(self.game_info.game_id) + '.jstate'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
-        self.game_controller.simulator = None
         pickle.dump(self.game_controller, log_file)
         log_file.close()
 
