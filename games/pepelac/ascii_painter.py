@@ -58,10 +58,11 @@ class Painter():
             reset=set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
             (bgcolor, endmsg) = ((5, None, None), ' is dead, with score {numcolor}{score:4}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
-            scr=scores.get(player)
-            scr = 0 if scr is None
+            scor=scores.get(player)
+            if scor is None:
+                scor = 0
             statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
-                score=scr,
+                score=scor,
                 bullets=bulletn,
                 player=player,
                 player_index=self.chars[3].format(pnum),
