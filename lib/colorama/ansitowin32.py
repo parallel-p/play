@@ -70,7 +70,6 @@ class AnsiToWin32(object):
         # are we wrapping stderr?
         self.on_stderr = self.wrapped is sys.stderr
 
-
     def should_wrap(self):
         '''
         True if this class is actually needed. If false, then the output
@@ -80,7 +79,6 @@ class AnsiToWin32(object):
         autoreset has been requested using kwargs to init()
         '''
         return self.convert or self.strip or self.autoreset
-
 
     def get_win32_calls(self):
         if self.convert and winterm:
@@ -109,7 +107,6 @@ class AnsiToWin32(object):
                 AnsiBack.RESET: (winterm.back, ),
             }
 
-
     def write(self, text):
         if self.strip or self.convert:
             self.write_and_convert(text)
@@ -119,13 +116,11 @@ class AnsiToWin32(object):
         if self.autoreset:
             self.reset_all()
 
-
     def reset_all(self):
         if self.convert:
             self.call_win32('m', (0,))
         elif is_a_tty(self.wrapped):
             self.wrapped.write(Style.RESET_ALL)
-
 
     def write_and_convert(self, text):
         '''
@@ -141,18 +136,15 @@ class AnsiToWin32(object):
             cursor = end
         self.write_plain_text(text, cursor, len(text))
 
-
     def write_plain_text(self, text, start, end):
         if start < end:
             self.wrapped.write(text[start:end])
             self.wrapped.flush()
 
-
     def convert_ansi(self, paramstring, command):
         if self.convert:
             params = self.extract_params(paramstring)
             self.call_win32(command, params)
-
 
     def extract_params(self, paramstring):
         def split(paramstring):
@@ -160,7 +152,6 @@ class AnsiToWin32(object):
                 if p != '':
                     yield int(p)
         return tuple(split(paramstring))
-
 
     def call_win32(self, command, params):
         if params == []:
@@ -173,10 +164,9 @@ class AnsiToWin32(object):
                     args = func_args[1:]
                     kwargs = dict(on_stderr=self.on_stderr)
                     func(*args, **kwargs)
-        elif command in ('H', 'f'): # set cursor position
+        elif command in ('H', 'f'):  # set cursor position
             func = winterm.set_cursor_position
             func(params, on_stderr=self.on_stderr)
         elif command in ('J'):
             func = winterm.erase_data
             func(params, on_stderr=self.on_stderr)
-

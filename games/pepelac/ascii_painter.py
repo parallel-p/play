@@ -65,8 +65,8 @@ class Painter():
                     player_reason = 'destroyed by Armageddon'
                 else:
                     player_reason = 'killed with bullet'
-            (bgcolor, endmsg) = ((5, None, None), ' is dead ({reason}), with score {numcolor}{score:4}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
-            scor=scores.get(player)
+            (bgcolor, endmsg) = ((5, None, None), ' is dead ({reason}), with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
+            scor = scores.get(player)
             if scor is None:
                 scor = 0
             statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:8s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
@@ -80,7 +80,7 @@ class Painter():
                 textc=set_color((None, 8, 2)),
                 authorcolor=set_color((None, 2, None)),
                 numcolor=set_color((None, 4, None)),
-                reason = player_reason,
+                reason=player_reason,
                 reset=set_color((None, None, 3))
             )
         return statstr
@@ -127,7 +127,7 @@ class Painter():
                                                    jury_state.dead_players,
                                                    jury_state.dead_reason)
         text_field = ''
-        
+
         if jury_state.collision is not None:
             self.collision_ids = [self.players.index(player) for player in jury_state.collision]
         else:

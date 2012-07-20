@@ -5,8 +5,10 @@ See: http://en.wikipedia.org/wiki/ANSI_escape_code
 
 CSI = '\033['
 
+
 def code_to_chars(code):
     return CSI + str(code) + 'm'
+
 
 class AnsiCodes(object):
     def __init__(self, codes):
@@ -14,6 +16,7 @@ class AnsiCodes(object):
             if not name.startswith('_'):
                 value = getattr(codes, name)
                 setattr(self, name, code_to_chars(value))
+
 
 class AnsiFore:
     BLACK   = 30
@@ -26,6 +29,7 @@ class AnsiFore:
     WHITE   = 37
     RESET   = 39
 
+
 class AnsiBack:
     BLACK   = 40
     RED     = 41
@@ -37,13 +41,13 @@ class AnsiBack:
     WHITE   = 47
     RESET   = 49
 
+
 class AnsiStyle:
     BRIGHT    = 1
     DIM       = 2
     NORMAL    = 22
     RESET_ALL = 0
 
-Fore = AnsiCodes( AnsiFore )
-Back = AnsiCodes( AnsiBack )
-Style = AnsiCodes( AnsiStyle )
-
+Fore = AnsiCodes(AnsiFore)
+Back = AnsiCodes(AnsiBack)
+Style = AnsiCodes(AnsiStyle)

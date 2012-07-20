@@ -48,27 +48,26 @@ else:
             ("srWindow", SMALL_RECT),
             ("dwMaximumWindowSize", COORD),
         ]
+
         def __str__(self):
             return '(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)' % (
-                self.dwSize.Y, self.dwSize.X
-                , self.dwCursorPosition.Y, self.dwCursorPosition.X
-                , self.wAttributes
-                , self.srWindow.Top, self.srWindow.Left, self.srWindow.Bottom, self.srWindow.Right
-                , self.dwMaximumWindowSize.Y, self.dwMaximumWindowSize.X
+                self.dwSize.Y, self.dwSize.X,
+                 self.dwCursorPosition.Y, self.dwCursorPosition.X,
+                 self.wAttributes,
+                 self.srWindow.Top, self.srWindow.Left,
+                 self.srWindow.Bottom, self.srWindow.Right,
+                 self.dwMaximumWindowSize.Y, self.dwMaximumWindowSize.X
             )
 
     def GetConsoleScreenBufferInfo(stream_id=STDOUT):
         handle = handles[stream_id]
         csbi = CONSOLE_SCREEN_BUFFER_INFO()
-        success = windll.kernel32.GetConsoleScreenBufferInfo(
-            handle, byref(csbi))
+        windll.kernel32.GetConsoleScreenBufferInfo(handle, byref(csbi))
         return csbi
-
 
     def SetConsoleTextAttribute(stream_id, attrs):
         handle = handles[stream_id]
         return windll.kernel32.SetConsoleTextAttribute(handle, attrs)
-
 
     def SetConsoleCursorPosition(stream_id, position):
         position = COORD(*position)
@@ -93,8 +92,8 @@ else:
         length = DWORD(length)
         num_written = DWORD(0)
         # Note that this is hard-coded for ANSI (vs wide) bytes.
-        success = windll.kernel32.FillConsoleOutputCharacterA(
-            handle, char, length, start, byref(num_written))
+        windll.kernel32.FillConsoleOutputCharacterA(handle, char, length,
+            start, byref(num_written))
         return num_written.value
 
     def FillConsoleOutputAttribute(stream_id, attr, length, start):
@@ -106,4 +105,3 @@ else:
         # Note that this is hard-coded for ANSI (vs wide) bytes.
         return windll.kernel32.FillConsoleOutputAttribute(
             handle, attribute, length, start, byref(num_written))
-

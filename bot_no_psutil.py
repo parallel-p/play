@@ -37,6 +37,12 @@ class TimeLimitException(OSError):
     '''
 
 
+class BadPipesError(OSError):
+    '''
+    This exception is raised when bot's process pipes are broken.
+    '''
+
+
 class Bot:
     '''
     This class wraps bot's process and stores its information.
@@ -79,6 +85,15 @@ class Bot:
             )
             raise ExecuteError
 
+        self._check_pipes()
+
+        if not self._is_running():
+            logger.critical(
+                'executing of \'%s\' failed: invalid command',
+                self._player_command
+            )
+            raise ExecuteError
+
         logger.info('executing successful')
 
     def _get_real_time(self):
@@ -99,14 +114,14 @@ class Bot:
                              self._player_command)
                 raise TimeLimitException
 
-            if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
-                logger.critical(
-                    'unhandled exception has been raised in'
-                    'deserialize thread, aborting'
-                )
-                exc_copy = copy.deepcopy(self._deserialize_exc)
-                del self._deserialize_exc
-                raise exc_copy
+            # if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
+            #     logger.critical(
+            #         'unhandled exception has been raised in'
+            #         'deserialize thread, aborting'
+            #     )
+            #     exc_copy = copy.deepcopy(self._deserialize_exc)
+            #     del self._deserialize_exc
+            #     raise exc_copy
 
             if hasattr(self, '_deserialize_result'):
                 break

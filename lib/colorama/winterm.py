@@ -13,10 +13,11 @@ class WinColor(object):
     YELLOW  = 6
     GREY    = 7
 
+
 # from wincon.h
 class WinStyle(object):
-    NORMAL = 0x00 # dim text, dim background
-    BRIGHT = 0x08 # bright text, dim background
+    NORMAL = 0x00  # dim text, dim background
+    BRIGHT = 0x08  # bright text, dim background
 
 
 class WinTerm(object):
@@ -81,8 +82,8 @@ class WinTerm(object):
         # 1 should clear from the cursor to the beginning of the screen.
         # 2 should clear the entire screen. (And maybe move cursor to (1,1)?)
         #
-        # At the moment, I only support mode 2. From looking at the API, it 
-        #    should be possible to calculate a different number of bytes to clear, 
+        # At the moment, I only support mode 2. From looking at the API, it
+        #    should be possible to calculate a different number of bytes to clear,
         #    and to do so relative to the cursor position.
         if mode[0] not in (2,):
             return
@@ -90,13 +91,14 @@ class WinTerm(object):
         if on_stderr:
             handle = win32.STDERR
         # here's where we'll home the cursor
-        coord_screen = win32.COORD(0,0) 
+        coord_screen = win32.COORD(0, 0)
         csbi = win32.GetConsoleScreenBufferInfo(handle)
         # get the number of character cells in the current buffer
         dw_con_size = csbi.dwSize.X * csbi.dwSize.Y
         # fill the entire screen with blanks
         win32.FillConsoleOutputCharacter(handle, ord(' '), dw_con_size, coord_screen)
         # now set the buffer's attributes accordingly
-        win32.FillConsoleOutputAttribute(handle, self.get_attrs(), dw_con_size, coord_screen );
+        win32.FillConsoleOutputAttribute(handle, self.get_attrs(), dw_con_size,
+            coord_screen)
         # put the cursor at (0, 0)
         win32.SetConsoleCursorPosition(handle, (coord_screen.X, coord_screen.Y))

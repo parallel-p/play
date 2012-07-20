@@ -92,7 +92,7 @@ class Bot:
                 'executing of \'%s\' failed: invalid command',
                 self._player_command
             )
-            raise ExecuteError()
+            raise ExecuteError
 
         self._check_pipes()
 
@@ -132,7 +132,7 @@ class Bot:
                     self.kill_process()
                     logger.error('bot with cmd \'%s\' exceeded memory limit',
                                  self._player_command)
-                    raise MemoryLimitException()
+                    raise MemoryLimitException
 
     def _get_cpu_time(self):
         '''
@@ -170,28 +170,19 @@ class Bot:
             real_time = self._get_real_time()
             if cpu_time is None:
                 # psutil was raised NoSuchProcess
-                raise ProcessNotRunningException()
+                raise ProcessNotRunningException
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
                 logger.error('bot with cmd \'%s\' exceeded time limit',
                              self._player_command)
-                raise TimeLimitException()
+                raise TimeLimitException
 
             if cpu_time - cpu_time_start > config.cpu_time_limit_seconds:
                 self.kill_process()
                 logger.error('bot with cmd \'%s\' exceeded cpu time limit',
                              self._player_command)
-                raise TimeLimitException()
-
-            if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
-                logger.critical(
-                    'unhandled exception has been raised in '
-                    'deserialize thread, aborting'
-                )
-                exc_copy = copy.deepcopy(self._deserialize_exc)
-                del self._deserialize_exc
-                raise exc_copy
+                raise TimeLimitException
 
             if hasattr(self, '_deserialize_result'):
                 break
@@ -215,7 +206,7 @@ class Bot:
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
         if not self._is_running():
-            raise ProcessNotRunningException()
+            raise ProcessNotRunningException
 
         self._check_pipes()
 
@@ -270,7 +261,7 @@ class Bot:
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
         if not self._is_running():
-            raise ProcessNotRunningException()
+            raise ProcessNotRunningException
 
         self._run_deserialize(deserialize)
 
@@ -298,7 +289,7 @@ class Bot:
 
     def _check_pipes(self):
         if not self._process.stdin.writable() and self._process.stdout.readable():
-            raise BadPipesError()
+            raise BadPipesError
 
     def _is_running(self):
         '''
