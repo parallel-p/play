@@ -1,7 +1,7 @@
 import sys
 import os
 import argparse
-from exceptions import MainArgumentException, PlayersException
+from exceptions import PlayersException
 
 '''
 These strings add project_root to sys.path

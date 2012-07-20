@@ -1,11 +1,6 @@
 ﻿import os
-from jury_state import JuryState
-from player import Player
 from io import BytesIO
-from sys import stdout
 from PIL import Image, ImageDraw, ImageFont
-
-import datetime
 
 FRAME_SIDE = 1024
 FREE_SIDE = 512
@@ -54,7 +49,6 @@ class Painter:
                                       self._width // 3)
         self._patron_ico_fight = image_resize(get_path('images/patron-90.png'), 80)
 
-
     def draw_on_the_left(self, x, players, text, color, draw):
         font = ImageFont.truetype(get_path('times.ttf'), 40)
 
@@ -67,7 +61,7 @@ class Painter:
         x += 60
         draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
                        fill=color
-                       )                                                          
+                       )
 
     def paint(self, jury_state):
         '''
@@ -118,7 +112,7 @@ class Painter:
                                  y + self._cell_side - 1,
                                  x + self._cell_side - 1)
                     if cell == -2:
-                        draw.rectangle(rectagle, fill='black')
+                        draw.rectangle(rectangle, fill='black')
                         image.paste(self._fire_ico, (y + 2, x + 2), self._fire_ico)
                     elif cell == -1:
                         image.paste(self._patron_ico, (y + 2, x + 2), self._patron_ico)
@@ -160,21 +154,21 @@ class Painter:
 
             draw.text((int(self._width // 2.3), self._height // 3),
                       text, fill='black', font=font)
-  
+
             patron_font = ImageFont.truetype(get_path('times.ttf'), 70)
 
             draw.text((self._width // 4, int(self._height / 4 * 2.8)),
                       str(bullets_one), fill='black',
                       font=patron_font)
-            
+
             draw.text((self._width // 4 + self._width // 2, int(self._height // 4 * 2.8)),
                       str(bullets_two), fill='black',
                       font=patron_font)
-            
+
             image.paste(self._patron_ico_fight, (int(self._width // 3.2),
                         int(self._height // 4 * 2.8)),
                         self._patron_ico_fight)
-            
+
             image.paste(self._patron_ico_fight, (int(self._width // 3.2) + self._width // 2,
                         int(self._height // 4 * 2.8)),
                         self._patron_ico_fight)
