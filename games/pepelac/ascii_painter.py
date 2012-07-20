@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+alphabet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'
+'U', 'V', 'W', 'X', 'Y', 'Z']
 
 def set_color(color, print_result=False):
     '''takes a 3-tuple with codes for Background, Foreground and Style and
@@ -73,7 +77,7 @@ class Painter():
                 score=scor,
                 bullets=bulletn,
                 player=player,
-                player_index=self.chars[3].format(pnum),
+                player_index='P' + alphabet[int(self.chars[3].format(pnum)[1:])],
                 bkgnd=set_color(bgcolor),
                 icolor=set_color((None, 7, 0)),
                 botcolor=set_color((None, 3, 2)),
@@ -101,7 +105,8 @@ class Painter():
                  (pos - 1) in self.collision_ids):
                 cell = self.Cell(self.chars[3].format(pos - 1), self.colors[0])
             else:
-                cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
+                #cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
+                cell = self.Cell('P' + alphabet[int(self.chars[3].format(pos-1)[1:])], self.colors[3])
                 # default: bright white 'P{hex number of player}' on magenta
             out.append(cell)
         return out
