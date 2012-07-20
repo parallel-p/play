@@ -1,11 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
-<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0041)file:///workbench/play/documentation.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Документация к SDK для разработки стратегий</title>
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<meta name="generator" content="Geany 0.21" />
+	
+	<meta name="generator" content="Geany 0.21">
     <style type="text/css">
         div {
         border: 1px solid #434343;
@@ -25,14 +23,14 @@
     
     <div style="margin:0 auto;">
     <table>
-        <tr>
-            <td width = 100%>
+        <tbody><tr>
+            <td width="100%">
                 <b>Турнирная система поддерживает только языки программирования C++, Pascal, Python. SDK поддерживает любые языки, но рекомендуется использовать только доступные турнирной системе.</b>
                 <br>
                 <br>
                 <b>Системные требования:</b>
                 <ul>
-                    <li>Любая из поддерживаемых операционных систем. Мы гарантируем работу на Windows (XP или новее), большинстве дистрибутив Linux (с версией ядра 2.6 или новее) и Mac OS X;</li>
+                    <li>Любая из поддерживаемых операционных систем. Мы гарантируем работу на Windows (XP или новее), большинстве дистрибутивов Linux (с версией ядра 2.6 или новее) и Mac OS X;</li>
                     <li>Python 3.2 или новее;</li>
                 </ul>
                 <b>Установка</b>
@@ -42,32 +40,34 @@
                 <b>Конфигурация</b>
                 <ol>
                     <li>Перейдите в папку с распакованным SDK;</li>
-                    <li>Скопируйте в папку bots ваши стратегии;</li>
+                    <li>Скопируйте в подпапку bots папки с игрой ("pepelac" в Патрономании) ваши стратегии;</li>
                     <li>Откройте файл <i>commands</i> и замените его содержимое на команды для запуска ваших стратегий</li>
                     Примеры команд для запуска:<br>
                     <i>bots/game.exe # Для компилируемых языков</i><br> 
                     <i>python3 bots/game.py # Только для Python3 в Linux</i> <br>
-                    <i>PYTHON_COMPILER bots/game.py # Только для Python3 в Windows,</i> <br><br>
-                    где PYTHON_COMPILER — путь до вашего интерпретатора python 3.
+                    <i>PYTHON_INTERPRETER bots/game.py # Только для Python3 в Windows,</i> <br><br>
+                    где PYTHON_INTERPRETER — путь к вашему интерпретатору python 3.
                 </ol>
                 <b>Использование</b>
                 <ol>
                     <li>Откройте терминал, перейдите в папку с распакованным SDK;</li>
                     <li>Для запуска <b>без</b> визуализации наберите:<br>
-                        <i>python3 run_tools.py -c commands -d pepelac</i> (Linux)</li>
-                        <i>PYTHON_COMPILER run_tools.py -c commands -d pepelac</i> (Windows)</li>
+                        <i>python3 run_tools.py -c commands -d GAME_DIR</i> (Linux)</li>
+                        <i>PYTHON_INTERPRETER run_tools.py -c commands -d GAME_DIR</i> (Windows)
                     <li>Для запуска <b>с</b> визуализацией наберите:<br>
-                     <i>python3 run_tools.py -c commands -d pepelac -v</i> (Linux)<br>
-                     <i>PYTHON_COMPILER run_tools.py -c commands -d pepelac -v</i> (Windows)<br><br>
-                    Где PYTHON_COMPILER — путь до вашего интерпретатора python 3.
+                     <i>python3 run_tools.py -c commands -d GAME_DIR -v</i> (Linux)<br>
+                     <i>PYTHON_INTERPRETER run_tools.py -c commands -d GAME_DIR -v</i> (Windows)<br><br>
+                    Где PYTHON_INTERPRETER — путь до вашего интерпретатора python 3, а GAME_DIR - папка с игрой ("pepelac" в Патрономании).
                  </li>
                 </ol>
             </td>
         </tr>
-    </table>
+    </tbody></table>
     </div>
     <br>
-    <center>&copy; 2012 Параллель P. По всем вопросам обращайтесь в 4-й комповник</center>
-</body>
+    <center>© 2012 Параллель P. По всем вопросам обращайтесь в 4-й комповник</center>
 
-</html>
+
+
+
+</body></html>
