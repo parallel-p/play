@@ -61,7 +61,7 @@ class Painter():
             scor=scores.get(player)
             if scor is None:
                 scor = 0
-            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
+            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:23s}{textc}' + endmsg + '{reset}\n').format(
                 score=scor,
                 bullets=bulletn,
                 player=player,
@@ -88,6 +88,9 @@ class Painter():
             elif pos == -1:
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
+            elif(self.collision_ids is not None and
+                 (pos - 1) in self.collision_ids):
+                cell = self.Cell(self.chars[3].format(pos - 1), self.colors[0])
             else:
                 cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
                 # default: bright white 'P{hex number of player}' on magenta
@@ -111,6 +114,11 @@ class Painter():
     def ascii_paint(self, jury_state):
         player_stats = self._generate_player_stats(self.players, jury_state.bullets, jury_state.scores, jury_state.dead_players)
         text_field = ''
+        
+        if jury_state.collision is not None:
+            self.collision_ids = [self.players.index(player) for player in jury_state.collision]
+        else:
+            self.collision_ids = None
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
             text_field += self._generate_line(line) + '\n'

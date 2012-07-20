@@ -22,7 +22,7 @@ def parse_bots_file(filename):
 def create_players(filename):
     import player
     for number, cmd in enumerate(parse_bots_file(filename)):
-        yield player.Player(cmd, 'Developer', 'Bot #{}'.format(number))
+        yield player.Player(cmd, cmd.split()[-1].split('/')[-1], 'Bot #{}'.format(number))
 
 
 def play(args):
