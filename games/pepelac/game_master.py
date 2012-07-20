@@ -72,7 +72,7 @@ class GameMaster:
             if cell > 0 and turn != cell - 1:
                 raise IncorrectMoveException()
         except(OSError, DeserializeMoveException, IncorrectMoveException) as e:
-            self._kill_player(cur_player)
+            self._kill_player(cur_player, 'made wrong move')
             self._end_tick()
             return
 
@@ -129,7 +129,8 @@ class GameMaster:
 
         cell = self._state.field[new_pos[0]][new_pos[1]]
         if cell > 0:
-            self._kill_player(self._players[cell - 1])
+            self._kill_player(self._players[cell - 1],
+                              'destroyed by Armageddon')
 
         self._state.field[new_pos[0]][new_pos[1]] = EXPLODED
         self._last_exploded_cell = new_pos
@@ -160,10 +161,12 @@ class GameMaster:
         self._state.collision = None
 
         if kill == 1:
-            self._kill_player(self._players[kill_player_id])
+            self._kill_player(self._players[kill_player_id],
+                              'killed with bullet')
             self._simulator.report_state(self._state)
 
-    def _kill_player(self, player):
+    def _kill_player(self, player, reason):
         self._state.dead_players.append(player)
+        self._state.dead_reason.append(player)
         pos = self._players_poses[player]
         self._state.field[pos[0]][pos[1]] = EMPTY
