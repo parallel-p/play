@@ -1,2 +1,4 @@
 python3 ./games/pepelac/bots/stand.py
-python3 ./games/pepelac/bots/daniel_bot.py
+python3 ./games/pepelac/bots/stand.py
+python3 ./games/pepelac/bots/consequent_bot.py
+python3 ./games/pepelac/bots/consequent_bot.py
