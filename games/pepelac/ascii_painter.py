@@ -34,7 +34,7 @@ class Painter():
             self.value = val
             self.color = color
 
-    def __init__(self, players, chars=('@@', '[]', '**', 'P{:1x}'),
+    def __init__(self, players, chars=('@@', '[]', '**', 'P{}'),
     colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))):
         '''This is the class constructor which optionally takes
     custom characters or colors for in-game objects in
@@ -53,7 +53,9 @@ class Painter():
         self.colors = colors
 
     def _generate_player_stats(self, players, bullets, dead):
-        statstr = '{headercolor}Players in game:{reset}\n'.format(headercolor=set_color((1, 8, 0)), reset=set_color((None, None, 3)))
+        statstr = '{headercolor}Players in game:{reset}\n'.format(
+            headercolor = set_color((1, 8, 0)),
+            reset = set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
             bg = (5, None, None) if player in dead else (0, None, None)
             statstr += '{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets{reset}\n'.format(
