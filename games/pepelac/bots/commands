@@ -1,3 +1,2 @@
-python3 ./games/pepelac/bots/consequent_bot.py
-./games/pepelac/bots/greedy_bot
-./games/pepelac/bots/random_bot
+python3 ./games/pepelac/bots/stand.py
+python3 ./games/pepelac/bots/daniel_bot.py

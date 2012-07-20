@@ -30,7 +30,9 @@ jpeg, png, gif, tiff, SGI rgb, pbm, pgm, ppm, rast, xbm and bmp.''')
 def _resize(image):
     ''' Resizes image to fit in 800x600 area. '''
     ratio = min(800 / image.size[0], 600 / image.size[1])
-    return image.resize((int(image.size[0] * ratio), int(image.size[1] * ratio)), Image.ANTIALIAS)
+    return image.resize((int(image.size[0] * ratio), int(image.size[1] * ratio)),
+                        Image.ANTIALIAS)
+
 
 class FrameVisualizer(tk.Frame):
     ''' This class represents a ``FrameVisualizer`` - a GUI,

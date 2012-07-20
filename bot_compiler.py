@@ -1,4 +1,3 @@
-import psutil
 import subprocess
 import sys
 
@@ -62,7 +61,7 @@ class BotCompiler():
             try:
                 return_code = subprocess.call(compiler_string)
             except FileNotFoundError:
-                raise Exception("Compiler for file " + filename + 
+                raise Exception("Compiler for file " + filename +
                     " not found. Play required g++, fpc and python.")
         else:
             return_code = 0

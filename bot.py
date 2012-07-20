@@ -19,6 +19,7 @@ while process.is_running():
 # `y`, check limits and delete information
 '''
 
+
 class ExecuteError(OSError):
     '''
     This exception is raised when create_process
@@ -224,6 +225,7 @@ class Bot:
             self._get_cpu_time() - cpu_time,
             memory
         )
+
         return move
 
     def _get_move(self, player_state, serialize, deserialize):
