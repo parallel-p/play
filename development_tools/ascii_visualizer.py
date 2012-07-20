@@ -123,6 +123,31 @@ class AsciiVisualizer:
             nocolor=Fore.RESET + Style.NORMAL)
         _clear()
         print(frame_text)
+        self.prev_frame = frame_text.split('\n')
+
+    def _print_frame_diff(self, index):
+        '''
+        Paints new frame using old and repaints only elements that changed
+        '''
+        self.frame_number = index
+        frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
+            self.frame_number + 1, self._jury_state_count(),
+            self.painter_factory(self.game_controller.get_players())\
+                .ascii_paint(
+                    self.game_controller.jury_states[index]),
+            color=Fore.YELLOW + Style.BRIGHT,
+            nocolor=Fore.RESET + Style.NORMAL)
+        # Here we find diff between two frames
+        frame_text = frame_text.split('\n')
+        pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
+
+        for line in range(len(frame_text)):
+            if line >= len(self.prev_frame) or frame_text[line] !=\
+                                                self.prev_frame[line]:
+                print(pos(line + 1, 0), frame_text[line], sep='')
+
+        # Here we save current frame as previous
+        self.prev_frame = frame_text
 
     def _read_key(self):
         key = getch()
@@ -175,7 +200,7 @@ class AsciiVisualizer:
                 )
             elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 if self.frame_number < self._jury_state_count() - 1:
-                    self._print_frame(self.frame_number + 1)
+                    self._print_frame_diff(self.frame_number + 1)
                 else:
                     self._print_frame(self.frame_number)
                     self._error('this is the last frame.')
@@ -213,7 +238,7 @@ class AsciiVisualizer:
                                     (self.frame_number + addv) < jscount) and (
                                         self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
-                                    self._print_frame(self.frame_number + addv)
+                                    self._print_frame_diff(self.frame_number + addv)
                                     sleep(time)
                             except KeyboardInterrupt:
                                 pass
