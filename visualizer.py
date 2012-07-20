@@ -87,7 +87,8 @@ class VideoVisualizer:
         file_list = []
         self.ext = None
         for ind, jstate in enumerate(jstates):
-            print('Generating {}/{} images'.format(ind, len(jstates)))
+            if self.log:
+                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(jstates)),end='')
             image = self.painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
@@ -170,11 +171,10 @@ class VideoVisualizer:
                       controller.signature.round_id,
                       controller.signature.series_id,
                       controller.signature.game_id, ind + 1, len(controllers)))
-                print('    Generating game images...')
             t = self._generate_game_images(controller.jury_states)
             self.generate_tournament_status(controller)
             if self.log:
-                print('    Creating frames...')
+                print('\n    Creating frames...')
             for fname in t:
                 self._create_frame(fname, 1)
 

@@ -39,8 +39,8 @@ class GameController:
         self.__dict__ = d
 
     def __getattr__(self, key):
-        if key not in self.__dict__.keys():
-            return self.simulator.__dict__[key]
+        if key not in dir(self):
+            return eval('self.simulator.' + key)
         else:
             return self.__dict__[key]
 

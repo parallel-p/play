@@ -36,18 +36,21 @@ class BotCompiler():
         ''' Determines execution command for compiled file.
         Supports c++, Pascal and Python. '''
         operating_system = sys.platform
-        if extension == "cpp" or extension == "c++" or (
-                extension == "cxx"):
-            execfile_string = "./" + filename
-        elif extension == "pas":
-            execfile_string = "./" + filename
-        elif extension == "py":
-            if operating_system == 'win32':
-                execfile_string = "python " + filename
+        if extension == "py":
+            if operating_system.startswith('win'):
+                execfile_string = "python " + filename + '.py'
             else:
-                execfile_string = "python3 " + filename
+                execfile_string = "python3 " + filename + '.py'
         else:
-            raise Exception("Language of this file is not supported")
+            if extension == "cpp" or extension == "c++" or (
+                    extension == "cxx"):
+                execfile_string = "./" + filename
+            elif extension == "pas":
+                execfile_string = "./" + filename
+            else:
+                raise Exception("Language of this file is not supported")
+            if operating_system.startswith('win'):
+                execfile_string += '.exe'
         return execfile_string
 
     def _compile_file(self, file_name):

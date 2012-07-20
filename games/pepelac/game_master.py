@@ -13,9 +13,9 @@ class IncorrectMoveException(Exception):
 
 
 class GameMaster:
-    def __init__(self, simulator, start_state):
-        self._simulator = simulator
-        self._players = simulator.get_players()
+    def __init__(self, controller, start_state):
+        self._controller = controller
+        self._players = controller.get_players()
         side = start_state.field_side
         self._number_of_correct_cells = side ** 2
         self._last_exploded_cell = (-1, -1)
@@ -25,21 +25,21 @@ class GameMaster:
         for player in self._players:
             self._scores[player] = 0
             try:
-                move = self._simulator.get_move(
+                move = self._controller.get_move(
                     player, start_state.field_side,
                     serialize_field_side, deserialize_start
                 )
             except OSError:
                 self._kill_player(cur_player, -1)
         self._state = start_state
-        self._simulator.report_state(self._state)
+        self._controller.report_state(self._state)
 
     def tick(self, state):
         self._state = state
         for turn, cur_player in enumerate(self._players):
             if(self._number_of_correct_cells == 0 or
                set(self._state.dead_players) == set(self._players)):
-                self._simulator.finish_game(self._scores)
+                self._controller.finish_game(self._scores)
                 return
 
             if cur_player in self._state.dead_players:
@@ -62,7 +62,7 @@ class GameMaster:
 
             old_row, old_col = old_pos = self._players_poses[cur_player]
             try:
-                move = self._simulator.get_move(
+                move = self._controller.get_move(
                     cur_player, ps, serialize_pstate, deserialize_move
                 )
 
@@ -91,7 +91,7 @@ class GameMaster:
                         if cur_player in self._state.dead_players:
                             break
 
-            self._simulator.report_state(self._state)
+            self._controller.report_state(self._state)
 
         for player in self._players:
             if not player in self._state.dead_players:
@@ -102,7 +102,7 @@ class GameMaster:
         if self._state.explosion_time < 0:
             self._explode_cell()
 
-        self._simulator.report_state(self._state)
+        self._controller.report_state(self._state)
 
     def _make_move(self, position, move):
         return tuple(x + dx for x, dx in zip(position, move))
@@ -149,7 +149,7 @@ class GameMaster:
         self._state.collision = [
             self._players[player_id] for player_id in players
         ]
-        self._simulator.report_state(self._state)
+        self._controller.report_state(self._state)
         self._state.collision = None
 
         kill = 0
