@@ -53,9 +53,11 @@ def visualize(game_controller):
 
 def dump_game_controller(gc, filename=None):
     if not filename:
-        answer = input('Would you like to save game log? (y/n): ')
+        print('Would you like to save game log? (y/n)')
+        answer = input()
         if answer == 'y':
-            filename = input('Enter name of file: ')
+            print('Enter name of the file')
+            filename = input()
         else:
             return
     with open(filename, 'wb') as f:
