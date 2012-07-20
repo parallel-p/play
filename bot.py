@@ -20,6 +20,12 @@ while process.is_running():
 '''
 
 
+class BadPipesError(OSError):
+    '''
+    This exception is raised when bot's process pipes are broken.
+    '''
+
+
 class ExecuteError(OSError):
     '''
     This exception is raised when create_process
@@ -86,7 +92,9 @@ class Bot:
                 'executing of \'%s\' failed: invalid command',
                 self._player_command
             )
-            raise ExecuteError
+            raise ExecuteError()
+
+        self._check_pipes()
 
         self._checker = threading.Thread(target=self._check_memory_limits)
         self._checker.start()
@@ -117,7 +125,7 @@ class Bot:
                     self.kill_process()
                     logger.error('bot with cmd \'%s\' exceeded memory limit',
                                  self._player_command)
-                    raise MemoryLimitException
+                    raise MemoryLimitException()
 
     def _get_cpu_time(self):
         '''
@@ -155,24 +163,29 @@ class Bot:
             real_time = self._get_real_time()
             if cpu_time is None:
                 # psutil was raised NoSuchProcess
-                raise ProcessNotRunningException
+                raise ProcessNotRunningException()
 
             if real_time - real_time_start > config.real_time_limit_seconds:
                 self.kill_process()
                 logger.error('bot with cmd \'%s\' exceeded time limit',
                              self._player_command)
-                raise TimeLimitException
+                raise TimeLimitException()
 
             if cpu_time - cpu_time_start > config.cpu_time_limit_seconds:
                 self.kill_process()
                 logger.error('bot with cmd \'%s\' exceeded cpu time limit',
                              self._player_command)
-                raise TimeLimitException
+                raise TimeLimitException()
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
                 logger.critical(
+<<<<<<< HEAD
                     'unhandled exception has been raised in'
                     ' deserialize thread, aborting'
+=======
+                    'unhandled exception has been raised in '
+                    'deserialize thread, aborting'
+>>>>>>> prettify bot.py, checking for bad pipes
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
                 del self._deserialize_exc
@@ -200,7 +213,9 @@ class Bot:
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
         if not self._is_running():
-            raise ProcessNotRunningException
+            raise ProcessNotRunningException()
+
+        self._check_pipes()
 
         real_time = self._get_real_time()
         cpu_time = self._get_cpu_time()
@@ -215,7 +230,6 @@ class Bot:
 
         res = copy.deepcopy(self._deserialize_result)
         del self._deserialize_result
-        return res
 
         memory = self._get_memory()
 
@@ -226,8 +240,12 @@ class Bot:
             self._get_cpu_time() - cpu_time,
             memory
         )
+<<<<<<< HEAD
 
         return move
+=======
+        return res
+>>>>>>> prettify bot.py, checking for bad pipes
 
     def _get_move(self, player_state, serialize, deserialize):
         self._write(player_state, serialize)
@@ -255,7 +273,7 @@ class Bot:
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
         if not self._is_running():
-            raise ProcessNotRunningException
+            raise ProcessNotRunningException()
 
         self._run_deserialize(deserialize)
 
@@ -280,6 +298,10 @@ class Bot:
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
+
+    def _check_pipes(self):
+        if not self._process.stdin.writable() and self._process.stdout.readable():
+            raise BadPipesError()
 
     def _is_running(self):
         '''
