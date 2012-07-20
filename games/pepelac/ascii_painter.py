@@ -52,21 +52,19 @@ class Painter():
         self.chars = chars
         self.colors = colors
 
-    def _generate_player_stats(self, players, bullets, dead, dead_reason):
+
+    def _generate_player_stats(self, players, bullets, scores, dead):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
             headercolor = set_color((1, 8, 0)),
             reset = set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
-            bg = (5, None, None) if player in dead else (0, None, None)
-            player_stat = '{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets'
-            if player in dead:
-                player_stat += ' - ' + dead_reason[player]
-            player_stat += '{reset}\n'
-            statstr += player_stat.format(
+            (bgcolor, endmsg) = ((5, None, None), ' is dead, with score{numcolor}{score:4d}{textc}' ) if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets       ')
+            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
+                score=scores[player],
                 bullets=bulletn,
                 player=player,
                 player_index=self.chars[3].format(pnum),
-                bkgnd=set_color(bg),
+                bkgnd=set_color(bgcolor),
                 icolor=set_color((None, 7, 0)),
                 botcolor=set_color((None, 3, 2)),
                 textc=set_color((None, 8, 2)),
@@ -109,10 +107,7 @@ class Painter():
         return text_line
 
     def ascii_paint(self, jury_state):
-        player_stats = self._generate_player_stats(self.players,
-                                                   jury_state.bullets,
-                                                   jury_state.dead_players,
-                                                   jury_state.dead_reason)
+        player_stats = self._generate_player_stats(self.players, jury_state.bullets, jury_state.scores, jury_state.dead_players)
         text_field = ''
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
