@@ -26,7 +26,6 @@ def create_players(filename):
 
 
 def play(args):
-    import config
     from game_simulator import GameSimulator
     from tournament_stages.game_signature import GameSignature
     import bot

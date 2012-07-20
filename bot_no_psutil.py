@@ -114,14 +114,14 @@ class Bot:
                              self._player_command)
                 raise TimeLimitException
 
-            # if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
-            #     logger.critical(
-            #         'unhandled exception has been raised in'
-            #         'deserialize thread, aborting'
-            #     )
-            #     exc_copy = copy.deepcopy(self._deserialize_exc)
-            #     del self._deserialize_exc
-            #     raise exc_copy
+            if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
+                logger.critical(
+                    'unhandled exception has been raised in'
+                    'deserialize thread, aborting'
+                )
+                exc_copy = copy.deepcopy(self._deserialize_exc)
+                del self._deserialize_exc
+                raise exc_copy
 
             if hasattr(self, '_deserialize_result'):
                 break

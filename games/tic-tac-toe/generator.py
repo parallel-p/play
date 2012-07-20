@@ -1,9 +1,7 @@
-import random
 from jury_state import JuryState
 
 
 class Generator:
-    
     _games_count = 1
 
     def generate_start_positions(self, game_signature, players_count):
