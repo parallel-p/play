@@ -85,9 +85,8 @@ class GameSimulator:
             end_time = time.time()
             logger.info('time spent on the game: %f sec',
                         end_time - start_time)
-            self._kill_bots()
             return self._game_controller
-        except bot.ExecuteError:
+        finally:
             self._kill_bots()
 
     def get_players(self):

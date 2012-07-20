@@ -90,8 +90,12 @@ class Main:
 
     def main(self):
         self._load_players()
-        self._run_tournament()
-        self._print_tournament_results(self.tournament.tournament_system)
+        import bot
+        try:
+            self._run_tournament()
+            self._print_tournament_results(self.tournament.tournament_system)
+        except bot.ExecuteError:
+            pass
 
 if __name__ == '__main__':
     main = Main(game_path, args.tournament_id)

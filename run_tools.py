@@ -36,8 +36,11 @@ def play(args):
     jury_state = next(get_js(len(players)))
     copied_js = copy.deepcopy(jury_state)
     game = GameSimulator(players, copied_js, signature)
-    game_controller = game.play()
-    return game_controller
+    try:
+        game_controller = game.play()
+        return game_controller
+    except bot.ExecuteError:
+        pass
 
 
 def visualize(game_controller):
