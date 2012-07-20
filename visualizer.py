@@ -99,7 +99,7 @@ class VideoVisualizer:
                 im = Image.open(file_list[-1][1])
                 self.size = im.size
                 self.mode = im.mode
-        print('All images were generated')
+        print('All images were generated!')
         return file_list
 
     def generate_tournament_status(self, contr):
