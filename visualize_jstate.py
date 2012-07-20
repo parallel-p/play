@@ -3,23 +3,21 @@ import os
 import subprocess
 import argparse
 
-arg_parser = argparse.ArgumentParser(description='')
+arg_parser = argparse.ArgumentParser(description='''
+Visualize_jstate visualizate one game with jstate(GameController) file.
+                                                 ''')
 arg_parser.add_argument(
-    '-gp', '--game_path', required=True,
-    help='Directory containing game'
-    )
+    'game_path',
+    help='Directory containing game')
 arg_parser.add_argument(
     '-f', '--framerate', type=int, default='24',
-    help='Framerate of output video'
-    )
+    help='Framerate of output video (default 24)')
 arg_parser.add_argument(
-    '-d', '--game_controller_directory', required=True,
-    help='Directory with GameController files'
-    )
+    'game_controller_directory',
+    help='Directory with GameController files')
 arg_parser.add_argument(
-    '-fm', '--game_controller_filemask', required=True,
-    help='File mask of GameController files (regular expression)'
-    )
+    'game_controller_filemask',
+    help='File mask of GameController files (regular expression)')
 args = arg_parser.parse_args()
 
 from visualizer import VideoVisualizer
@@ -33,13 +31,14 @@ output_name = 'output.mpg'
 '''
 Run Visualizer
 '''
-print('I\'m started')
-vjs = VideoVisualizer(25, config.Painter(), '0-0-0\.jstate', 'logs/tournament1')
-vjs = VideoVisualizer(args.framerate, config.Painter(), args.game_controller_filemask, args.game_controller_directory)
+vjs = VideoVisualizer(args.framerate, config.Painter(),
+                      args.game_controller_filemask,
+                      args.game_controller_directory)
 vjs.compile(output_name)
 
 output_name = output_name[:output_name.rfind('.')] + '1.mpg'
-output_place = os.path.join(os.path.dirname(__file__), args.game_controller_directory, output_name)
+output_place = os.path.join(os.path.dirname(__file__),
+                            args.game_controller_directory, output_name)
 
 '''
 Play results
