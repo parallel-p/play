@@ -1,3 +1,3 @@
 Run 
-	python3 -c commands -d pepelac
+	python3 run_tools.py -c commands -d pepelac
 to watch example battle between standing and consequent bots.
