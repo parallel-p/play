@@ -19,6 +19,12 @@ while process.is_running():
 # `y`, check limits and delete information
 '''
 
+class ExecuteError(OSError):
+    '''
+    This exception is raised when create_process
+    cannot start bot process (e.g. invalid command)
+    '''
+
 
 class ProcessNotRunningException(OSError):
     '''
@@ -67,15 +73,23 @@ class Bot:
         Starts bot's process.
         '''
         logger.info('executing \'%s\'', self._player_command)
-        self._process = psutil.Popen(
-            self._player_command.split(),
-            stdout=PIPE,
-            stdin=PIPE,
-            stderr=PIPE
-        )
+        try:
+            self._process = psutil.Popen(
+                self._player_command.split(),
+                stdout=PIPE,
+                stdin=PIPE,
+                stderr=PIPE
+            )
+        except OSError:
+            logger.critical(
+                'executing of \'%s\' failed: invalid command',
+                self._player_command
+            )
+            raise ExecuteError
 
         self._checker = threading.Thread(target=self._check_memory_limits)
         self._checker.start()
+        logger.info('executing successful')
 
     def _check_memory_limits(self):
         '''

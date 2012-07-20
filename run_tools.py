@@ -30,13 +30,18 @@ def play(args):
     import config
     from game_simulator import GameSimulator
     from tournament_stages.game_signature import GameSignature
+    import bot
 
     players = list(create_players(args.bot_commands_file))
     signature = GameSignature(1, 1, 1, 1)
     jury_state = next(get_js(len(players)))
     copied_js = copy.deepcopy(jury_state)
     game = GameSimulator(players, copied_js, signature)
-    game_controller = game.play()
+    try:
+        game_controller = game.play()
+    except bot.ExecuteError:
+        game._kill_bots()
+        return
     return game_controller
 
 
@@ -65,7 +70,7 @@ def load_game_controller(filename):
 
 def new_game(args):
     game_controller = play(args)
-    if not args.only_run:
+    if not args.only_run and game_controller:
         if args.visualize:
             visualize(game_controller)
         if not args.save_to:
