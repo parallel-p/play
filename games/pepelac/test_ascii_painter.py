@@ -21,6 +21,7 @@ class ascii_painter_test(unittest.TestCase):
         mock_js = Mock()
         mock_js.bullets = [6, 3, 0]
         mock_js.dead_players = [p3]
+        mock_js.scores = {}
         for test in ascii_painter_test_data.tests:
             mock_js.field = test[0]
             picture = test_subject.ascii_paint(mock_js)
