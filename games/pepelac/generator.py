@@ -2,8 +2,8 @@ import random
 import copy
 from jury_state import JuryState
 
-_field_size = 15
-
+random.seed()
+_field_size = random.randint(10, 50)
 
 class Generator:
     def _collect_around(self, field, x, y):
@@ -48,7 +48,6 @@ class Generator:
         '''Generates a list of start positions'''
         random.seed()
         self.time = random.randint(100, 140)
-        _field_size = random.randint(10, 50)
         self.bullets_count = self.players_count * 5
         for game in range(self._games_count):
             field = [[0 for i in range(_field_size)]
