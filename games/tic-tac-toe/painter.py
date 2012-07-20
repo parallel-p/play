@@ -8,7 +8,6 @@ MARGIN = 10
 
 
 class Painter:
-    _is_initialized = False
 
     def __init__(self, players):
         pass

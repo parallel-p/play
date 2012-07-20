@@ -34,9 +34,9 @@ class GameMaster:
             else:
                 js.field[move[0] * 3 + move[1] - 4] = 'O'
             self._simulator.report_state(js)
-            if self._eq3(((0, 1, 2), (3, 4, 5), (6, 7, 8),
-                          (0, 3, 6), (1, 4, 7), (2, 5, 8),
-                          (0, 4, 8), (2, 4, 6)), js.field):
+            if self._eq3([[0, 1, 2], [3, 4, 5], [6, 7, 8],
+                          [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                          [0, 4, 8], [2, 4, 6]], js.field):
                 break
             turn ^= 1
         scores[self._players[turn]] = 1
@@ -49,7 +49,6 @@ class GameMaster:
 
     def _eq3(self, lst, field):
         for row in lst:
-            if field[row[0]] == field[row[1]] == field[row[2]] != '.':
+            if field[row[0]] == field[row[1]] and field[row[1]] == field[row[2]] and  field[row[2]] != '.':
                 return True
-            else:
-                return False
+        return False
