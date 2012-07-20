@@ -36,65 +36,30 @@ class AsciiVisualizer:
         self.painter_factory = config.AsciiPainter
         self.game_controller = game_controller
         self.frame_number = 0
-        if name == 'nt':
-            self.key_sets = {
-                'next': 'DdNn.>]}+= ',
-                'prev': 'BbAa|,<[{-_',
-                'jump': '0123456789SsJjFfRrGg',
-                'auto': 'WwMmPp',
-                'quit': 'QqXx'
-                }
-        else:
-            self.key_sets = {
-                'next': 'Nn.>]}+= \r\n',
-                'prev': 'Bb\|,<[{-_',
-                'jump': '0123456789JjFfRrGg',
-                'auto': 'AaMmPp',
-                'quit': 'QqEe'
-                }
+        self.key_sets = {
+            'next': 'Nn.>]}+= \r\n',
+            'prev': 'Bb\|,<[{-_',
+            'jump': '0123456789JjFfRrGg',
+            'auto': 'AaMmPp',
+            'quit': 'QqEe'
+            }
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
 
     def _help(self):
         '''prints a help screen for the visualizer'''
-        if name == 'nt':
-            msg = '''{brt}{bl}Navigation help:
-                ____
-               |{gr} W  {bl}|
-               |{mg}auto{bl}|
-          ____  ____  ____
-         |{gr} A  {bl}||{gr} S  {bl}||{gr} D  {bl}|
-         |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
-
-        forward       : {gr}D,N,SPACE{bl}             (Alt: {gr}>,],+{bl})
-        back          : {gr}A,B{bl}              (Alt: {gr}<,[,-{bl})
-        jump to frame : {gr}S,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
-
-        autoplay      : {gr}W,M,P{bl}
-        stop autoplay : {gr}Ctrl-Z{bl}
-
-        quit          : {gr}Q,''X{bl}
-
-        display this message : {gr}any other key{norm}
-        '''
-        else:
-            msg = '''{brt}{bl}Navigation help:
-          ____  ____ ____
-         |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
-         |{mg}Bk5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
-          ____  ____  ____
-         |{gr}Left{bl}||{gr}Down{bl}||{gr}Righ{bl}|{gr}t{bl}
-         |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
+        msg = '''{brt}{bl}Navigation help:
+          ____     ____  ____  ____
+         |{gr}HOME{bl}|   |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
+         |{mg}1st {bl}|  |{mg}RW5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
+          ____     ____  ____  ____
+         |{gr}END {bl}|   |{gr}Left{bl}||{gr}Down{bl}||{gr}Rght{bl}|
+         |{mg}last{bl}|   |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
 
         forward         : {gr}RIGHT,N,SPACE,ENTER{bl}   (Alt: {gr}>,],+{bl})
         back            : {gr}LEFT,B,\{bl}              (Alt: {gr}<,[,-{bl})
-        fast-forward 5% : {gr}PgDn{bl}
-        rewind 5%       : {gr}PgUp{bl}
         jump to frame   : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
-        jump to first   : {gr}HOME{bl}
-        jump to last    : {gr}END{bl}
-
         autoplay        : {gr}UP,A,M,P{bl}
         stop autoplay   : {gr}^C{bl}
 
