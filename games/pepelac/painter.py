@@ -187,13 +187,13 @@ class Painter:
         '''
         del draw
 
-        #image.save("test-1.png", "PNG")
+        image.save("test-1.png", "PNG")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-'''one = Player(None, 'Dima')
-two = Player(None, 'Vasya')
+one = Player(None, 'Dima')
+two = Player(None, 'VasyaVasyaVasya')
 painter = Painter([one, two])
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
@@ -201,5 +201,4 @@ field[7][3] = 1
 field[7][4] = 2
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
 jury_state = JuryState(side, field, [30, 17], None, None, None, None)
-for i in range(10):
-    painter.paint(jury_state)'''
+painter.paint(jury_state)'''
