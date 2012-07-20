@@ -9,7 +9,7 @@ arg_parser.add_argument(
     help='Directory containing game'
     )
 arg_parser.add_argument(
-    '-f', '--framerate', type=int, required=True,
+    '-f', '--framerate', type=int, default='24',
     help='Framerate of output video'
     )
 arg_parser.add_argument(
@@ -33,8 +33,9 @@ output_name = 'output.mpg'
 '''
 Run Visualizer
 '''
+print('I\'m started')
+vjs = VideoVisualizer(25, config.Painter(), '0-0-0\.jstate', 'logs/tournament1')
 vjs = VideoVisualizer(args.framerate, config.Painter(), args.game_controller_filemask, args.game_controller_directory)
-#vjs = VideoVisualizer(25, config.Painter(), '0-0-0\.jstate', 'logs/tournament1')
 vjs.compile(output_name)
 
 output_name = output_name[:output_name.rfind('.')] + '1.mpg'

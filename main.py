@@ -10,8 +10,15 @@ project_root = os.path.normpath(os.path.join(os.path.dirname(__file__)))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
+
+def get_free_dirname(path, filename_begin):
+    for i in range(1, 1024):
+        if not os.path.exists(os.path.normpath(os.path.join(path, filename_begin + str(i)))):
+            return i
+
+
 '''
-This horrible code import config and config_helpers,
+This horrible code parse arguments and import config and config_helpers,
 with function initialize_game_environment it add game_path to sys.path
 '''
 import config_helpers
@@ -28,8 +35,14 @@ in file "config.py", placed in "game_directory" path.
         '-d', '--game-path', required=True,
         help='Directory containing game'
     )
+    arg_parser.add_argument(
+        '-tid', '--tournament-id', type=int,
+        help='Tournament id which is used for save logs'
+    )
     args = arg_parser.parse_args()
     game_path = args.game_path
+    if not args.tournament_id:
+        args.tournament_id = get_free_dirname(path='logs/', filename_begin='tournament')
     config_helpers.initialize_game_environment(game_path)
 import config
 
@@ -76,5 +89,5 @@ class Main:
         self._print_tournament_results(self.tournament.tournament_system)
 
 if __name__ == '__main__':
-    main = Main(game_path, 1)
+    main = Main(game_path, args.tournament_id)
     main.main()
