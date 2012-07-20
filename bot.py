@@ -179,13 +179,8 @@ class Bot:
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
                 logger.critical(
-<<<<<<< HEAD
-                    'unhandled exception has been raised in'
-                    ' deserialize thread, aborting'
-=======
                     'unhandled exception has been raised in '
                     'deserialize thread, aborting'
->>>>>>> prettify bot.py, checking for bad pipes
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
                 del self._deserialize_exc
@@ -240,12 +235,7 @@ class Bot:
             self._get_cpu_time() - cpu_time,
             memory
         )
-<<<<<<< HEAD
-
-        return move
-=======
         return res
->>>>>>> prettify bot.py, checking for bad pipes
 
     def _get_move(self, player_state, serialize, deserialize):
         self._write(player_state, serialize)
