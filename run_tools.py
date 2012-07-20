@@ -37,11 +37,7 @@ def play(args):
     jury_state = next(get_js(len(players)))
     copied_js = copy.deepcopy(jury_state)
     game = GameSimulator(players, copied_js, signature)
-    try:
-        game_controller = game.play()
-    except bot.ExecuteError:
-        game._kill_bots()
-        return
+    game_controller = game.play()
     return game_controller
 
 

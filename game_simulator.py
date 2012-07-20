@@ -67,22 +67,28 @@ class GameSimulator:
         game_controller, then finishes the game and kills
         all the bots.
         '''
-        self._create_bots()
-        start_time = time.time()
-        game_master = config.GameMaster(self, self._start_state)
-        while not self._game_controller.is_finished:
-            copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
-            try:
-                game_master.tick(copied_js)
-            except:
-                logger.critical('game master was raised an unhandled exception, aborting')
-                self._kill_bots()
-                logger.critical('re-raising game master\'s exception')
-                raise
-        end_time = time.time()
-        logger.info('time spent on the game: %f sec', end_time - start_time)
-        self._kill_bots()
-        return self._game_controller
+        try:
+            self._create_bots()
+            start_time = time.time()
+            game_master = config.GameMaster(self, self._start_state)
+            while not self._game_controller.is_finished:
+                copied_js = copy.deepcopy(
+                  self._game_controller.jury_states[-1])
+                try:
+                    game_master.tick(copied_js)
+                except:
+                    logger.critical('game master was raised an '
+                                    'unhandled exception, aborting')
+                    self._kill_bots()
+                    logger.critical('re-raising game master\'s exception')
+                    raise
+            end_time = time.time()
+            logger.info('time spent on the game: %f sec',
+                        end_time - start_time)
+            self._kill_bots()
+            return self._game_controller
+        except bot.ExecuteError:
+            self._kill_bots()
 
     def get_players(self):
         '''
