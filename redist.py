@@ -12,13 +12,13 @@ except:
     compression = zipfile.ZIP_STORED
 
 file_list = {
-    'lib/colorama/': 'colorama/',
-    'lib/colorama/__init__.py': 'colorama/__init__.py',
-    'lib/colorama/ansi.py': 'colorama/ansi.py',
-    'lib/colorama/initialise.py': 'colorama/initialise.py',
-    'lib/colorama/win32.py': 'colorama/win32.py',
-    'lib/colorama/winterm.py': 'colorama/winterm.py',
-    'lib/colorama/ansitowin32.py': 'colorama/ansitowin32.py',
+    'lib/colorama/': 'lib/colorama/',
+    'lib/colorama/__init__.py': 'lib/colorama/__init__.py',
+    'lib/colorama/ansi.py': 'lib/colorama/ansi.py',
+    'lib/colorama/initialise.py': 'lib/colorama/initialise.py',
+    'lib/colorama/win32.py': 'lib/colorama/win32.py',
+    'lib/colorama/winterm.py': 'lib/colorama/winterm.py',
+    'lib/colorama/ansitowin32.py': 'lib/colorama/ansitowin32.py',
     'run_tools.py': 'run_tools.py',
     'config_helpers.py': 'config_helpers.py',
     'player.py': 'player.py',
