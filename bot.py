@@ -186,7 +186,7 @@ class Bot:
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
                 logger.critical(
-                    'unhandled exception has been raised in'
+                    'unhandled exception has been raised in '
                     'deserialize thread, aborting'
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
@@ -289,7 +289,7 @@ class Bot:
             self._process.kill()
         except psutil.NoSuchProcess:
             pass
-            
+
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
