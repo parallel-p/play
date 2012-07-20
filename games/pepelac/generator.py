@@ -4,6 +4,7 @@ from jury_state import JuryState
 
 random.seed()
 _field_size = random.randint(10, 50)
+#_field_size = 25
 
 class Generator:
     def _collect_around(self, field, x, y):
