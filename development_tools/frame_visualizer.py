@@ -27,6 +27,11 @@ I can only read bytestreams with file-like headers of such formats:
 jpeg, png, gif, tiff, SGI rgb, pbm, pgm, ppm, rast, xbm and bmp.''')
 
 
+def _resize(image):
+    ''' Resizes image to fit in 800x600 area. '''
+    ratio = min(800 / image.size[0], 600 / image.size[1])
+    return image.resize((int(image.size[0] * ratio), int(image.size[1] * ratio)), Image.ANTIALIAS)
+
 class FrameVisualizer(tk.Frame):
     ''' This class represents a ``FrameVisualizer`` - a GUI,
     which allows to view frames of an already played game. '''
@@ -85,9 +90,9 @@ class FrameVisualizer(tk.Frame):
             ``game_controller.jury_states`` enumeration of ``JuryState``
         to be used to draw the image.'''
         self.frame_number = new_frame_number
-        self.img = ImageTk.PhotoImage(image=_bytes2image(
+        self.img = ImageTk.PhotoImage(image=_resize(_bytes2image(
             self.painter_factory(self.game_controller.get_players()).paint(
-                self.game_controller.jury_states[self.frame_number])))
+                self.game_controller.jury_states[self.frame_number]))))
         self.frame_label['image'] = self.img
         self.control_panel._set_frame_number(self.frame_number)
 
