@@ -200,13 +200,19 @@ class AsciiVisualizer:
                 )
             elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                 if self.frame_number < self._jury_state_count() - 1:
-                    self._print_frame_diff(self.frame_number + 1)
+                    if name == 'posix':
+                        self._print_frame_diff(self.frame_number + 1)
+                    else:
+                        self._print_frame(self.frame_number + 1)
                 else:
                     self._print_frame(self.frame_number)
                     self._error('this is the last frame.')
             elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
                 if self.frame_number > 0:
-                    self._print_frame(self.frame_number - 1)
+                    if name == 'posix':
+                        self._print_frame_diff(self.frame_number - 1)
+                    else:
+                        self._print_frame(self.frame_number - 1)
                 else:
                     self._print_frame(self.frame_number)
                     self._error('this is the first frame.')
@@ -238,7 +244,10 @@ class AsciiVisualizer:
                                     (self.frame_number + addv) < jscount) and (
                                         self.frame_number + addv) >= 0 and (
                                             self.frame_number != endframe):
-                                    self._print_frame_diff(self.frame_number + addv)
+                                    if name == 'posix':
+                                        self._print_frame_diff(self.frame_number + addv)
+                                    else:
+                                        self._print_frame(self.frame_number + addv)
                                     sleep(time)
                             except KeyboardInterrupt:
                                 pass
