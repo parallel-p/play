@@ -192,7 +192,7 @@ class Painter:
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-one = Player(None, 'Dima')
+'''one = Player(None, 'Dima')
 two = Player(None, 'VasyaVasyaVasya')
 painter = Painter([one, two])
 side = 10
