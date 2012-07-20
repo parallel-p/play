@@ -52,13 +52,17 @@ class Painter():
         self.chars = chars
         self.colors = colors
 
-    def _generate_player_stats(self, players, bullets, dead):
+    def _generate_player_stats(self, players, bullets, dead, dead_reason):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
             headercolor = set_color((1, 8, 0)),
             reset = set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
             bg = (5, None, None) if player in dead else (0, None, None)
-            statstr += '{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets{reset}\n'.format(
+            player_stat = '{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:10s}{textc} by {authorcolor}{player.author_name:15s}{textc}: {numcolor}{bullets:2d} {textc}bullets'
+            if player in dead:
+                player_stat += ' - ' + dead_reason[player]
+            player_stat += '{reset}\n'
+            statstr += player_stat.format(
                 bullets=bulletn,
                 player=player,
                 player_index=self.chars[3].format(pnum),
@@ -105,7 +109,10 @@ class Painter():
         return text_line
 
     def ascii_paint(self, jury_state):
-        player_stats = self._generate_player_stats(self.players, jury_state.bullets, jury_state.dead_players)
+        player_stats = self._generate_player_stats(self.players,
+                                                   jury_state.bullets,
+                                                   jury_state.dead_players,
+                                                   jury_state.dead_reason)
         text_field = ''
         cell_field = [list(self._cell_line(fc)) for fc in jury_state.field]
         for line in cell_field:
