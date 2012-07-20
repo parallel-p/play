@@ -4,9 +4,9 @@
 
 DEBUG = False
 
-import colorama
-from colorama import Fore, Back, Style
-import colorama.ansitowin32 as ansi2w32
+import lib.colorama as colorama
+from lib.colorama import Fore, Back, Style
+import lib.colorama.ansitowin32 as ansi2w32
 import config
 from lib.keyboard_capture import getch
 from time import sleep
