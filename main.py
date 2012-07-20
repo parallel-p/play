@@ -13,7 +13,8 @@ if project_root not in sys.path:
 
 def get_free_dirname(path, filename_begin):
     for i in range(1, 1024):
-        if not os.path.exists(os.path.normpath(os.path.join(path, filename_begin + str(i)))):
+        name = os.path.normpath(os.path.join(path, filename_begin + str(i)))
+        if not os.path.exists(name):
             return i
 
 
@@ -24,25 +25,29 @@ with function initialize_game_environment it add game_path to sys.path
 import config_helpers
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description='''
-Usage: main.py game_directory
-Framework runs game, placed in "game_directory
-path. Players in this tournament read from file
-"players_config" file, placed in "game_directory"
-path. Other settings of torunament should be written
-in file "config.py", placed in "game_directory" path.
-                                                 ''')
+Framework runs game, placed in "game_path".
+Players in this tournament read from file
+"players_config" file, placed in "game_path"
+path. Other settings of tournament should be written
+in file "config.py", placed in "game_path".''')
     arg_parser.add_argument(
-        '-d', '--game-path', required=True,
+        'game_path',
         help='Directory containing game'
     )
     arg_parser.add_argument(
         '-tid', '--tournament-id', type=int,
-        help='Tournament id which is used for save logs'
+        help='''
+Tournament id which is used for saving logs,
+if you don't set tournament id it will be least non-used one'''
     )
     args = arg_parser.parse_args()
     game_path = args.game_path
+    '''
+    If tournament id isn't setted it will be least non-used one
+    '''
     if not args.tournament_id:
-        args.tournament_id = get_free_dirname(path='logs/', filename_begin='tournament')
+        args.tournament_id = get_free_dirname(path='logs/',
+                                              filename_begin='tournament')
     config_helpers.initialize_game_environment(game_path)
 import config
 
