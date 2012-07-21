@@ -39,6 +39,7 @@ class AsciiVisualizer:
         self.game_controller = game_controller
         self.frame_number = 0
         self.stop = False
+        self.lock = Lock()
         self.key_sets = {
             'next': 'Nn.>]}+= \r\n',
             'prev': 'Bb\|,<[{-_',
@@ -82,9 +83,11 @@ class AsciiVisualizer:
         '''prints a prompt in bright yellow color'''
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
               + Style.NORMAL + Fore.RESET)
+        self.lock.acquire()
         reply = input()
         _clear()
         self._print_frame(self.frame_number)
+        self.lock.release()
         return reply
 
     def _detect_arrow(self, key):
@@ -266,7 +269,6 @@ class AsciiVisualizer:
                                 try:
                                     if not thread or not thread.is_alive():
                                         self.stop = False
-                                        self.lock = Lock()
                                         thread = Thread(target=self.auto,
                                                         args=(addv, time, jscount, endframe, name))
                                         thread.start()
