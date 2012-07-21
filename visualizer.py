@@ -33,7 +33,7 @@ class VideoVisualizer:
         '''
         Constructor. Parameters:
             * _framerate - framerate of video (max=24)
-            * _painter_obj - painter object
+            * _painter_obj - painter class
             * _file_mask - file mask of GameController files (regular
             expression)
             * _working_dir - directory with GameController files
@@ -80,16 +80,17 @@ class VideoVisualizer:
         with open(filename, 'rb') as file:
             return pickle.load(file)
 
-    def _generate_game_images(self, jstates):
+    def _generate_game_images(self, controller):
         '''Generates frames for video.'''
         # We need filenames with leading zeroes for ffmpeg
-        zero_count = int(log10(len(jstates)) + 1)
+        zero_count = int(log10(len(controller.jury_states)) + 1)
         file_list = []
         self.ext = None
-        for ind, jstate in enumerate(jstates):
+        painter = self.painter(controller._players)
+        for ind, jstate in enumerate(controller.jury_states):
             if self.log:
-                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(jstates)), end='')
-            image = self.painter.paint(jstate)
+                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(controller.jury_states)), end='')
+            image = painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
             # lower than 24 fps. So we have to clone images:
@@ -172,7 +173,7 @@ class VideoVisualizer:
                       controller.signature.round_id,
                       controller.signature.series_id,
                       controller.signature.game_id, ind + 1, len(controllers)))
-            t = self._generate_game_images(controller.jury_states)
+            t = self._generate_game_images(controller)
             self.generate_tournament_status(controller)
             if self.log:
                 print('\n    Creating frames...')
