@@ -50,6 +50,7 @@ class GameController:
         '''
         self.is_finished = True
         self._scores = scores
+        print('\n')
         logger.info('game finished')
 
     def get_scores(self):
