@@ -198,13 +198,13 @@ Point center2(Field &field, int P, Player *players, int B, Point *patrons){
     return bd;
 }*/
 
-
+const lld s_fit = 1000000000ll;
 lld fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point D){
     Point &I = players[0].pos;
     I = I + D;
     long long fitness = 0;
-    long long mindist = 10000, min2dist = 10000, mindist2;
-    if (field(I) == -1 || armpos == I || I == players[1].pos){
+    long long mindist = 10000, min2dist = 10000;
+    if (field(I) == -1 || armpos == I || (I == players[1].pos && P == 2)){
         fitness = -inf;
         goto END_of_fitness;
     }
@@ -234,16 +234,16 @@ lld fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point 
                 }
 
     if (mindist == 0ll)
-        fitness = 20000000000ll;
+        fitness = s_fit * 2;
     else
-        fitness = 1000000000ll / sqr(mindist);
+        fitness = s_fit / sqr(mindist);
     for (int i = 0; i < B; i++){
         if (dist(patrons[i], I) == 0ll)
             continue;
         if (dist(patrons[i], I) < dist(patrons[i], players[1].pos))
-            fitness += 10000000ll / dist(patrons[i], I);
+            fitness += s_fit / 7ll / dist(patrons[i], I);
         else
-            fitness += 100000ll - dist(patrons[i], I);
+            fitness += s_fit / 49ll - dist(patrons[i], I);
     }
 
 
