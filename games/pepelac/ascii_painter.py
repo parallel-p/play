@@ -57,19 +57,19 @@ class Painter():
             headercolor=set_color((1, 8, 0)),
             reset=set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
-            player_reason = ''
+            why_dead = ''
             if player in dead:
                 if dead_reason[player] == -1:
-                    player_reason = 'made wrong move'
+                    why_dead = 'made invalid move'
                 elif dead_reason[player] == 0:
-                    player_reason = 'destroyed by Armageddon'
+                    why_dead = 'burnt in Armageddon'
                 else:
-                    player_reason = 'killed with bullet'
-            (bgcolor, endmsg) = ((5, None, None), ' is dead ({reason}), with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets        ')
+                    why_dead = 'killed in fight'
+            (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:20}{textc}), with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets  '+' '*30)
             scor = scores.get(player)
             if scor is None:
                 scor = 0
-            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:8s}{textc} by {authorcolor}{player.author_name:23s}{textc}' + endmsg + '{reset}\n').format(
+            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:15s}{textc} by {authorcolor}{player.author_name:20s}{textc}' + endmsg + '{reset}\n').format(
                 score=scor,
                 bullets=bulletn,
                 player=player,
@@ -80,7 +80,7 @@ class Painter():
                 textc=set_color((None, 8, 2)),
                 authorcolor=set_color((None, 2, None)),
                 numcolor=set_color((None, 4, None)),
-                reason=player_reason,
+                reason=why_dead,
                 reset=set_color((None, None, 3))
             )
         return statstr
