@@ -41,6 +41,8 @@ class TournamentSystemOlympic(TournamentSystem):
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
         count_of_all_rounds = round(log(count_of_players, 2))
+        if log(count_of_players, 2) != count_of_all_rounds:
+            raise Exception("Count of players have to be equal 2^N. Can not create Olympic system.")
         for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
             next_round = self.get_round(count_of_players, list_of_players)
