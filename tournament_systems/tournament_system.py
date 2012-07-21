@@ -42,7 +42,7 @@ class TournamentSystem:
         '''
         return self.get_round_results(self._current_round_id)
 
-    def filter_results(tournament_id=None, round_id=None, series_id=None,
+    def filter_results(self, tournament_id=None, round_id=None, series_id=None,
                        game_id=None):
         results = {}
         for game in self._results:

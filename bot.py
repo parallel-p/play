@@ -1,5 +1,4 @@
 import threading
-import time
 from subprocess import PIPE
 from log import logger
 import config
@@ -50,6 +49,7 @@ class MemoryLimitException(OSError):
     '''
     This exception is raised when bot's process exceeded memory limit.
     '''
+
 
 class Bot(bot_no_psutil.Bot):
     '''

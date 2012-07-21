@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# This class is responsible for visualizing a game in ascii art,
-# if the game's painter supports this feature
+''' This class is responsible for visualizing a game in ascii art,
+    if the game's painter supports this feature.
+'''
 
 DEBUG = False
 
@@ -122,7 +123,7 @@ class AsciiVisualizer:
         self.frame_number = index
         frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
-            self.painter_factory(self.game_controller.get_players())\
+            self.painter_factory(self.game_controller.get_players())
                 .ascii_paint(
                     self.game_controller.jury_states[index]),
             color=Fore.YELLOW + Style.BRIGHT,
