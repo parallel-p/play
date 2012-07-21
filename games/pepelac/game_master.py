@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from player_state import *
 from move import *
 
