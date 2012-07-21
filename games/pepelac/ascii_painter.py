@@ -69,7 +69,7 @@ class Painter():
             scor = scores.get(player)
             if scor is None:
                 scor = 0
-            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:8s}{textc} by {authorcolor}{player.author_name:15s}{textc}' + endmsg + '{reset}\n').format(
+            statstr += ('{bkgnd}{icolor}[{player_index}]{botcolor}{player.bot_name:8s}{textc} by {authorcolor}{player.author_name:23s}{textc}' + endmsg + '{reset}\n').format(
                 score=scor,
                 bullets=bulletn,
                 player=player,
