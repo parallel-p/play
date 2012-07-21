@@ -1,2 +1,2 @@
-python3 ./pepelac/bots/stand.py
-python3 ./pepelac/bots/consequent_bot.py
+python ./pepelac/bots/stand.py
+python ./pepelac/bots/consequent_bot.py
