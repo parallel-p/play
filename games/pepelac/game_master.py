@@ -21,6 +21,7 @@ class GameMaster:
         self._direction = 0
         self._scores = {}
         self._players_poses = {}
+        self._state = start_state
         for player in self._players:
             self._scores[player] = 0
             try:
@@ -30,7 +31,6 @@ class GameMaster:
                 )
             except OSError:
                 self._kill_player(player, -1)
-        self._state = start_state
         self._controller.report_state(self._state)
 
     def tick(self, state):
