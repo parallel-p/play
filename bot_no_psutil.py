@@ -176,19 +176,13 @@ class Bot:
         self._write(player_state, serialize)
         self._read(deserialize)
 
-    def _run_deserialize(self, deserialize):
+    def _write(self, player_state, serialize):
         '''
-        Invokes author's deserialization function and
-        stores received `move` into self._deserialize_result.
-
-        If deserialize function raised exception, this function stores
-        information about exception for re-raising.
+        Serialize player_state with bot's `stdin`.
+        `stdin` is a stream opened to write per *byte*.
         '''
-        try:
-            self._deserialize_result = deserialize(self._process.stdout)
-        except (BaseException, Exception) as exc:
-            self._deserialize_exc = exc
-            return
+        if self._running:
+            serialize(player_state, self._process.stdin)
 
     def _read(self, deserialize):
         '''
