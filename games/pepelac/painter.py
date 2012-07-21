@@ -66,20 +66,34 @@ class Painter:
         self._patron_ico_fight = image_resize(get_path('images/patron-90.png'),
                                               80
                                               )
+        self._patron_ico_left = image_resize(get_path('images/patron-90.png'),
+                                             SMALL_SIDE
+                                             )
 
-    def draw_on_the_left(self, x, players, text, color, draw):
+    def draw_on_the_left(self, x, players, text, bullets_count, color, draw, image):
         font = ImageFont.truetype(get_path('times.ttf'), 40)
 
-        y = players * (SMALL_SIDE + MARGIN) - 50
+        y = players * (SMALL_SIDE + MARGIN)
         draw.text((45, y + SMALL_SIDE // 5),
                   text,
                   fill='black',
                   font=font
                   )
+
         x += 60
         draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
                        fill=color
                        )
+
+        x += SMALL_SIDE + 20
+        patron_font = ImageFont.truetype(get_path('times.ttf'), 30)
+        draw.text((x, y + SMALL_SIDE // 4), str(bullets_count), fill='black',
+                  font=patron_font
+                  )
+        image.paste(self._patron_ico_left,
+                    (x + 20, y),
+                    self._patron_ico_left
+                    )
 
     def cut_all_names(self, jury_state):
         for player in self.players:
@@ -95,7 +109,7 @@ class Painter:
         '''
         if not self._is_initialized:
             self._initialize(jury_state)
-        self.cut_all_names(jury_state)
+        #self.cut_all_names(jury_state)
 
         image = Image.new('RGBA',
                           (self._width, self._height),
@@ -118,9 +132,10 @@ class Painter:
         Drawing Names, colors on the left of picture
         '''
         for num, player in enumerate(self.players):
-            self.draw_on_the_left(x, num + 1,
+            self.draw_on_the_left(x, num,
                                   player.author_name,
-                                  colors[num + 1], draw
+                                  jury_state.bullets[self.players.index(player)],
+                                  colors[num + 1], draw, image
                                   )
 
         if not jury_state.collision:
@@ -250,13 +265,17 @@ class Painter:
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-'''one = Player(None, 'Dmitry Philippov')
+'''one = Player(None, 'Dima Philippov')
 two = Player(None, 'Petr Smirnov')
-painter = Painter([one, two])
+third = Player(None, 'Arthur Khashaev')
+fourth = Player(None, 'Pavel Dubov')
+painter = Painter([one, two, third, fourth])
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
 field[7][3] = 1
 field[7][4] = 2
+field[3][3] = 3
+field[4][5] = 4
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17], None, None, None, None)
+jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, None, None)
 painter.paint(jury_state)'''
