@@ -1,3 +1,10 @@
+GAME_PATH = 'games/pepelac'
+BOTS = ['python3 games/nim/bots/random_bot.py',
+        'python3 games/nim/bots/wrong_bot.py']
+
+import config_helpers
+config_helpers.initialize_game_environment(GAME_PATH)
+import config
 import bot
 import unittest
 import time
