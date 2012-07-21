@@ -98,6 +98,10 @@ class Bot:
         logger.info('executing successful')
         self._running = True
 
+    def _check_pipes(self):
+        if not self._process.stdin.writable() and self._process.stdout.readable():
+            raise BadPipesError()
+
     def _get_real_time(self):
         '''
         Returns real time used by bot's process.
