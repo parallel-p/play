@@ -130,8 +130,8 @@ class AsciiVisualizer:
                     self.game_controller.jury_states[index]),
             color=Fore.YELLOW + Style.BRIGHT,
             nocolor=Fore.RESET + Style.NORMAL)
-        _clear()
         self.lock.acquire()
+        _clear()
         print(frame_text)
         self.lock.release()
         self.prev_frame = frame_text.split('\n')
@@ -197,9 +197,7 @@ class AsciiVisualizer:
         colorama.init()
         _clear()
         self._help()
-        self.lock.acquire()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
-        self.lock.release()
         self._detect_arrow(getch())
         self._print_frame(0)
         self.nextc = False
