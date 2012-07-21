@@ -4,7 +4,7 @@ import sys
 from time import clock
 import os
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 4:
     print('Usage: create_video.py <path to game env> <log filename>'
           ' <output name> [-f <framerate>] [--silent]')
     print('Example: create_video.py pepelac log.gc -f 2')
