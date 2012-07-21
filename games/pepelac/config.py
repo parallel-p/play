@@ -19,8 +19,21 @@ def AsciiPainter(*args, **kwargs):
     return ascii_painter.Painter(*args, **kwargs)
 
 
+def default_pchars(player_num):
+    return 'P{0:1x}'.format(player_num)
+
+def alpha_pchars(num):
+    if num < 10:
+        c = chr(ord('0') + num)
+    elif num <= 36:
+        c = chr(ord('a') - 10 + num)
+    else:
+        c = chr(num)
+    return 'P' + c
+
+
 players_config = 'players_config'
-apainter_chars = ('@@', '[]', '**', 'P{0:1x}')
+apainter_chars = ('@@', '[]', '**', alpha_pchars)
 apainter_colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
 
 real_time_limit_seconds = 5.0

@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-
-def alphabet(num):
-    if num < 10:
-        return chr(ord('0') + num)
-    elif num <= 36:
-        return chr(ord('A') - 1 + num - 9)
-    else:
-        return chr(num)
-
 def set_color(color, print_result=False):
     '''takes a 3-tuple with codes for Background, Foreground and Style and
     returns a string with ANSI escape codes for each of them.
@@ -35,6 +26,9 @@ def set_color(color, print_result=False):
 
 class Painter():
 
+    def _dpc(self,n):
+        return 'P{0:1x}'.format(n)
+
     class Cell():
 
         def __init__(self, val, color):
@@ -49,19 +43,19 @@ class Painter():
     1: Normal Ground
     2: Shells
     3: Players
-    The Player chars must be a valid format string with
-    the player's number as its parameter and each of the
-    colors must be a valid color tuple for the set_color function.
-    Note that if apainter_chars or apainter_colors values are set in the config file, the class
-    will use them instead of the default ones.
+    The chars[3] must be a callable which takes the player's number as
+    its parameter and returns the string which the player will be marked with.
+    Each of the colors must be a valid color tuple for the set_color function.
+    Note that if apainter_chars and/or apainter_colors values are set in the
+    config file, the class will use them instead of the default ones.
     the defaults are:
     charred earth: yellow `@@`      on red;
     normal earth : cyan   `[]`      on green;
     bullets      : black  `**`      on yellow;
-    players      : white  `P{0:1x}` on magenta.'''
+    players      : white  `P{0:1x}`.format(number-of-player) on magenta.'''
         import config
-        default_chars = ('@@', '[]', '**', 'P{}'),
-        default_colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
+        default_chars=('@@', '[]', '**', self._dpc),
+        default_colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
         if chars is None:
             try:
                 chars = config.apainter_chars
@@ -77,6 +71,10 @@ class Painter():
         self.players = players
         if len(chars) != 4 or len(colors) != 4:
             raise Exception('Invalid parameters')
+        try:
+            x=chars[3](0)
+        except TypeError:
+            raise Exception('chars[3] must be callable')
         self.chars = chars
         self.colors = colors
 
@@ -101,7 +99,7 @@ class Painter():
                 score=scor,
                 bullets=bulletn,
                 player=player,
-                player_index='P' + alphabet(int(self.chars[3].format(pnum)[1:])),
+                player_index=self.chars[3](pnum),
                 bkgnd=set_color(bgcolor),
                 icolor=set_color((None, 7, 0)),
                 botcolor=set_color((None, 3, 2)),
@@ -126,9 +124,13 @@ class Painter():
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
             else:
-                #cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
-                cell = self.Cell('P' + alphabet(int(self.chars[3].format(pos-1)[1:])), self.colors[3])
-                # default: bright white 'P{hex number of player}' on magenta
+                if(self.collision_ids is not None and
+                (pos - 1) in self.collision_ids):
+                    pcolor = self.colors[0]
+                else:
+                    pcolor = self.colors[3]
+                cell = self.Cell(self.chars[3](pos - 1), pcolor)
+
             out.append(cell)
         return out
 
