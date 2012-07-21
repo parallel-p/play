@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-
+#include <ctime>
 
 using namespace std;
 
@@ -153,23 +153,24 @@ void go(int x, int y){
 
   if (!f && x == players[0].x && y == players[0].y)
     f = stay();
-
-  if (players[0].x < x && !f && isbul[players[0].x + 1][players[0].y] == 0)
+  while (!f && rand() % 16 != 0){
+  if (rand() % 4 == 0 && players[0].x < x && !f && isbul[players[0].x + 1][players[0].y] == 0)
     f = right();
-  if (players[0].x > x && !f && isbul[players[0].x - 1][players[0].y] == 0)
+  if (rand() % 4 == 0 && players[0].x > x && !f && isbul[players[0].x - 1][players[0].y] == 0)
     f = left();
-  if (players[0].y < y && !f && isbul[players[0].x][players[0].y + 1] == 0)
+  if (rand() % 4 == 0 && players[0].y < y && !f && isbul[players[0].x][players[0].y + 1] == 0)
     f = down();
-  if (players[0].y > y && !f && isbul[players[0].x][players[0].y - 1] == 0)
+  if (rand() % 4 == 0 && players[0].y > y && !f && isbul[players[0].x][players[0].y - 1] == 0)
     f = up();
-  if (!f && isbul[players[0].x + 1][players[0].y] == 0)
+  if (rand() % 4 == 0 && !f && isbul[players[0].x + 1][players[0].y] == 0)
     f = right();
-  if (!f && isbul[players[0].x - 1][players[0].y] == 0)
+  if (rand() % 4 == 0 && !f && isbul[players[0].x - 1][players[0].y] == 0)
     f = left();
-  if (!f && isbul[players[0].x][players[0].y + 1] == 0)
+  if (rand() % 4 == 0 && !f && isbul[players[0].x][players[0].y + 1] == 0)
     f = down();
-  if (!f && isbul[players[0].x][players[0].y - 1] == 0)
+  if (rand() % 4 == 0 && !f && isbul[players[0].x][players[0].y - 1] == 0)
     f = up();
+  }
   if (!f)
     stay();
 }
@@ -178,6 +179,7 @@ int main(){
   //freopen("input.txt", "r", stdin);
   //freopen("outputtxt", "w", stdout);
   int i, j;
+  srandom(1654);
   cin >> n;
   while (1){
     read();
