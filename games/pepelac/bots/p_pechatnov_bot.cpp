@@ -225,6 +225,14 @@ lld fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point 
         fitness = inf / 2;
         goto END_of_fitness;
     }
+    if (players[0].pc <= players[1].pc && dist(players[0].pos, players[1].pos) == 2)
+        for (int i = 0; i < B; i++)
+            if (dist(players[0].pos, patrons[i]) == 1 &&
+                dist(players[1].pos, patrons[i]) == 1){
+                    fitness = -inf / 2;
+                    goto END_of_fitness;
+                }
+
     if (mindist == 0ll)
         fitness = 20000000000ll;
     else
