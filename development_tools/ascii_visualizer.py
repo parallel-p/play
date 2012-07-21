@@ -12,7 +12,7 @@ import config
 from lib.keyboard_capture import getch
 from time import sleep
 from os import name, system
-from threading import Thread
+from threading import Thread, Lock
 
 
 def _clear():
@@ -176,10 +176,12 @@ class AsciiVisualizer:
         while (self.frame_number + addv < jscount and
                 self.frame_number + addv >= 0 and 
                     self.frame_number != endframe):
+            self.lock.acquire()
             if name == 'posix':
                 self._print_frame_diff(self.frame_number + addv)
             else:
                 self._print_frame(self.frame_number + addv)
+            self.lock.release()
             sleep(time)
             if self.stop:
                 self.stop = False
@@ -264,6 +266,7 @@ class AsciiVisualizer:
                                 try:
                                     if not thread or not thread.is_alive():
                                         self.stop = False
+                                        self.lock = Lock()
                                         thread = Thread(target=self.auto,
                                                         args=(addv, time, jscount, endframe, name))
                                         thread.start()
