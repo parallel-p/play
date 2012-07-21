@@ -20,8 +20,10 @@ class GameMaster:
         self._last_exploded_cell = (-1, -1)
         self._direction = 0
         self._scores = {}
-        self._players_poses = {}
         self._state = start_state
+        self._players_poses = {}
+        self._calc_players_poses()
+
         for player in self._players:
             self._scores[player] = 0
             try:
@@ -35,6 +37,8 @@ class GameMaster:
 
     def tick(self, state):
         self._state = state
+        self._calc_players_poses()
+
         for turn, cur_player in enumerate(self._players):
             if(self._number_of_correct_cells == 0 or
                set(self._state.dead_players) == set(self._players)):
@@ -46,13 +50,13 @@ class GameMaster:
 
             ps = PlayerState()
             ps.explosion_time = self._state.explosion_time
+
             for i, row in enumerate(self._state.field):
                 for j, cell in enumerate(row):
                     if cell == BULLET:
                         ps.bullets.append((i + 1, j + 1))
                     elif cell > 0:
                         player_id = cell - 1
-                        self._players_poses[self._players[player_id]] = (i, j)
                         player = (i + 1, j + 1, self._state.bullets[player_id])
                         if player_id == turn:
                             ps.current_player = player
@@ -102,6 +106,12 @@ class GameMaster:
             self._explode_cell()
 
         self._controller.report_state(self._state)
+
+    def _calc_players_poses(self):
+        for i, row in enumerate(self._state.field):
+            for j, cell in enumerate(row):
+                if cell > 0:
+                    self._players_poses[self._players[cell - 1]] = (i, j)
 
     def _make_move(self, position, move):
         return tuple(x + dx for x, dx in zip(position, move))
