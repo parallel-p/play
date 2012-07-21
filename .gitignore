@@ -27,6 +27,6 @@ nosetests.xml
 
 # Logs
 logs
-games/*/players_config
+games/pepelac/players_config
 commands
 
