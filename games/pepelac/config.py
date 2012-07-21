@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 def Generator(*args, **kwargs):
     import generator
     return generator.Generator(*args, **kwargs)
@@ -22,6 +24,7 @@ def AsciiPainter(*args, **kwargs):
 def default_pchars(player_num):
     return 'P{0:1x}'.format(player_num)
 
+
 def alpha_pchars(num):
     if num < 10:
         c = chr(ord('0') + num)
@@ -40,4 +43,4 @@ real_time_limit_seconds = 5.0
 cpu_time_limit_seconds = 10.0
 memory_limit_mb = 15.0
 
-tournament_system = 'round-robin'
+tournament_system = 'olympic'

@@ -182,7 +182,7 @@ class AsciiVisualizer:
 
     def auto(self, addv, time, jscount, endframe, name):
         while (self.frame_number + addv < jscount and
-                self.frame_number + addv >= 0 and 
+                self.frame_number + addv >= 0 and
                     self.frame_number != endframe):
             if name == 'posix':
                 self._print_frame_diff(self.frame_number + addv)

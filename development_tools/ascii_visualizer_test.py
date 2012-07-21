@@ -3,10 +3,10 @@ from unittest.mock import Mock
 import config_helpers
 config_helpers.initialize_game_environment('games/nim')
 from development_tools.ascii_visualizer import AsciiVisualizer
-import config
 
 
 class AsciiVisualizerTestCase(ut.TestCase):
+    @ut.mock.patch('print')
     def test_with_nim_ascii_painter(self):
         ''' Test with nim painter (we added it to nim). '''
         game_controller = Mock()

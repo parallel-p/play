@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 def set_color(color, print_result=False):
     '''takes a 3-tuple with codes for Background, Foreground and Style and
     returns a string with ANSI escape codes for each of them.
@@ -25,8 +27,7 @@ def set_color(color, print_result=False):
 
 
 class Painter():
-
-    def _dpc(self,n):
+    def _dpc(self, n):
         return 'P{0:1x}'.format(n)
 
     class Cell():
@@ -54,8 +55,8 @@ class Painter():
     bullets      : black  `**`      on yellow;
     players      : white  `P{0:1x}`.format(number-of-player) on magenta.'''
         import config
-        default_chars=('@@', '[]', '**', self._dpc),
-        default_colors=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
+        default_chars = ('@@', '[]', '**', self._dpc),
+        default_colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
         if chars is None:
             try:
                 chars = config.apainter_chars
@@ -72,7 +73,7 @@ class Painter():
         if len(chars) != 4 or len(colors) != 4:
             raise Exception('Invalid parameters')
         try:
-            x=chars[3](0)
+            chars[3](0)
         except TypeError:
             raise Exception('chars[3] must be callable')
         self.chars = chars
@@ -164,5 +165,3 @@ class Painter():
         for line in cell_field:
             text_field += self._generate_line(line) + '\n'
         return text_field + '\n' + player_stats
-        #rs=((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
-        #if chars is None

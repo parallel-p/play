@@ -2,8 +2,6 @@ import config
 import tournament_stages.series as series
 from log import logger
 
-from inspect import getframeinfo, currentframe
-
 
 class Round:
     '''Manages and starts round'''
@@ -17,8 +15,8 @@ class Round:
     def _generate_series(self):
         '''Generates series for one round'''
         self._jurystates_list = list(
-          config.Generator().generate_start_positions(self._game_info,
-            len(self._players_list[0])))
+            config.Generator().generate_start_positions(self._game_info,
+                len(self._players_list[0])))
 
     def run(self):
         '''Starts series of round'''

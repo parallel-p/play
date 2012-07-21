@@ -25,7 +25,7 @@ class MainTest(unittest.TestCase):
         self.main._print_tournament_results(MagicMock())
         #assertNotEqual(self.main.show_result(), 'First player won')
         if self.main.show_result() != 'First player won':
-            raise Exception('main.py doesn't work')
+            raise Exception("main.py doesn't work")
     '''
     def test_main(self):
         self.main = main.Main('Ata dir', 1)
