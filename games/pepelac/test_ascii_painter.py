@@ -6,30 +6,20 @@ from unittest.mock import Mock
 
 
 class ascii_painter_test(unittest.TestCase):
-    def test_output(self):
-        p1 = Mock()
-        p1.bot_name = 'GoodBot'
-        p1.author_name = 'Longcat'
-        p2 = Mock()
-        p2.bot_name = 'BadBot'
-        p2.author_name = 'Tacgnol'
-        p3 = Mock()
-        p3.bot_name = 'DeadBot'
-        p3.author_name = 'Tima'
-
-        test_subject = Painter([p1, p2, p3])
+    def test_default_output(self):
         mock_js = Mock()
-        mock_js.bullets = [6, 3, 0]
-        mock_js.dead_players = [p3]
-        mock_js.scores = {p1: 42, p2: 42, p3: 3}
-        mock_js.dead_reason = {p3: 0}
-        mock_js.collision = None
         for test in ascii_painter_test_data.tests:
-            mock_js.field = test[0]
+            test_subject = Painter(test['players'])
+            mock_js.bullets = test['bullets']
+            mock_js.dead_players = test['dead']
+            mock_js.scores = test['scores']
+            mock_js.dead_reason = test['why_dead']
+            mock_js.collision = test['collisions']
+            mock_js.field = test['field']
             picture = test_subject.ascii_paint(mock_js)
             print(picture)
             print(repr(picture))
-            self.assertEqual(test[1], picture)
+            self.assertEqual(test['result'], picture)
 
 if __name__ == '__main__':
     unittest.main()
