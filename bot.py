@@ -5,6 +5,7 @@ from subprocess import PIPE
 from log import logger
 import config
 import copy
+import bot_no_psutil
 
 
 MEGABYTE = 1 << 20
@@ -52,7 +53,7 @@ class MemoryLimitException(OSError):
     '''
 
 
-class Bot:
+class Bot(bot_no_psutil.Bot):
     '''
     This class wraps bot's process and stores its information.
 
@@ -67,14 +68,6 @@ class Bot:
         <move.Move object at ...>
         >>> p.kill_process()
     '''
-    def __init__(self, player_command):
-        '''
-        Constructor for class Bot.
-        `player_command` is a string which is used to invoke bot program.
-        '''
-        self._player_command = player_command
-        self._process = None
-        self._running = False
 
     def create_process(self):
         '''
@@ -146,12 +139,6 @@ class Bot:
             return times.system + times.user
         except psutil.NoSuchProcess:
             return None
-
-    def _get_real_time(self):
-        '''
-        Returns real time used by bot's process.
-        '''
-        return time.time()
 
     def _get_memory(self):
         '''
@@ -246,10 +233,6 @@ class Bot:
         )
         return res
 
-    def _get_move(self, player_state, serialize, deserialize):
-        self._write(player_state, serialize)
-        self._read(deserialize)
-
     def _read(self, deserialize):
         '''
         Deserialize move with bot's `stdout`.
@@ -272,14 +255,6 @@ class Bot:
             except (BaseException, Exception) as exc:
                 self._deserialize_exc = exc
                 return
-
-    def _write(self, player_state, serialize):
-        '''
-        Serialize player_state with bot's `stdin`.
-        `stdin` is a stream opened to write per *byte*.
-        '''
-        if self._running:
-            serialize(player_state, self._process.stdin)
 
     def kill_process(self):
         '''
@@ -308,10 +283,3 @@ class Bot:
         Returns true if the process exists and is running and false otherwise.
         '''
         return self._process and self._process.is_running()
-
-    def __del__(self):
-        '''
-        Destructor for class bot.
-        It automatically kills bot's process on delete.
-        '''
-        self.kill_process()
