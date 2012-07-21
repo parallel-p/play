@@ -195,21 +195,21 @@ class Bot:
         Deserialize move with bot's `stdout`.
         `stdout` is a stream opened to read per *byte*.
 
+        Invokes author's deserialization function and
+        stores received `move` into self._deserialize_result.
+
+        If deserialize function raised exception, this function stores
+        information about exception for re-raising.
+
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        if self._running:
+        try:
             if not self._is_running():
-                raise ProcessNotRunningException
-
-            self._run_deserialize(deserialize)
-
-    def _write(self, player_state, serialize):
-        '''
-        Serialize player_state with bot's `stdin`.
-        `stdin` is a stream opened to write per *byte*.
-        '''
-        if self._running:
-            serialize(player_state, self._process.stdin)
+                raise ProcessNotRunningException()
+            self._check_pipes()
+            self._deserialize_result = deserialize(self._process.stdout)
+        except (BaseException, Exception) as exc:
+            self._deserialize_exc = exc
 
     def kill_process(self):
         '''
