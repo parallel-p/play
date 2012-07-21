@@ -101,11 +101,7 @@ class Painter():
                 score=scor,
                 bullets=bulletn,
                 player=player,
-<<<<<<< HEAD
-                player_index=self.chars[3].format(pnum),
-=======
                 player_index='P' + alphabet(int(self.chars[3].format(pnum)[1:])),
->>>>>>> Fixed some bugs in ascii_painter
                 bkgnd=set_color(bgcolor),
                 icolor=set_color((None, 7, 0)),
                 botcolor=set_color((None, 3, 2)),
