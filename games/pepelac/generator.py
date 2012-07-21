@@ -4,7 +4,7 @@ from jury_state import JuryState
 from math import sqrt
 from math import ceil
 
-_field_size = random.randint(20, 30)
+_field_size = random.randint(10, 20)
 
 
 class Generator:
