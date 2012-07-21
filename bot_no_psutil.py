@@ -65,6 +65,7 @@ class Bot:
         '''
         self._player_command = player_command
         self._process = None
+        self._running = False
 
     def create_process(self):
         '''
@@ -95,6 +96,7 @@ class Bot:
             raise ExecuteError
 
         logger.info('executing successful')
+        self._running = True
 
     def _get_real_time(self):
         '''
@@ -191,17 +193,19 @@ class Bot:
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        if not self._is_running():
-            raise ProcessNotRunningException
+        if self._running:
+            if not self._is_running():
+                raise ProcessNotRunningException
 
-        self._run_deserialize(deserialize)
+            self._run_deserialize(deserialize)
 
     def _write(self, player_state, serialize):
         '''
         Serialize player_state with bot's `stdin`.
         `stdin` is a stream opened to write per *byte*.
         '''
-        serialize(player_state, self._process.stdin)
+        if self._running:
+            serialize(player_state, self._process.stdin)
 
     def kill_process(self):
         '''
@@ -217,6 +221,7 @@ class Bot:
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
+        self._running = False
 
     def _is_running(self):
         '''
