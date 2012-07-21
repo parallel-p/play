@@ -65,12 +65,13 @@ class AsciiVisualizer:
         back            : {gr}LEFT,B,\{bl}              (Alt: {gr}<,[,-{bl})
         jump to frame   : {gr}DOWN,J,G,all numerals{bl} (Alt: {gr}F,R{bl}  )
         autoplay        : {gr}UP,A,M,P{bl}
-        stop autoplay   : {gr}^C{bl}
+        stop            : {gr}^C{bl}
 
         quit            : {gr}Q,E{bl}
 
         display this message : {gr}any other key{norm}
         '''
+        _clear()
         print(msg.format(
             gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
@@ -151,17 +152,22 @@ class AsciiVisualizer:
             nocolor=Fore.RESET + Style.NORMAL)
         # Here we find diff between two frames
         frame_text = frame_text.split('\n')
-        pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
+        pos = lambda y, x: '\x1b[{};{}H'.format(y, x)
         self.lock.acquire()
-        #print(self.game_controller.get_players())
-        height = len(frame_text) + len(self.game_controller.get_players())
+        height = len(frame_text)
         for line in range(len(frame_text)):
             if (line >= len(self.prev_frame) or frame_text[line] !=
                                                 self.prev_frame[line]):
-                print(pos(line + 1, 0), frame_text[line], sep='')
-        print(pos(height, 0), sep='', end='')
+                if name == 'nt':
+                    print(pos(line + 1, 1), frame_text[line], sep='')
+                else:
+                    print(pos(line + 1, 0), frame_text[line], sep='')
+        if name == 'nt':
+            print(pos(height + 1, 1), sep='', end='')
+        else:
+            print(pos(height, 0), sep='', end='')
         self.lock.release()
-        # Here we save current frame as previous
+        # Here we save current frame as previouss
         self.prev_frame = frame_text
 
     def _read_key(self):
@@ -187,7 +193,7 @@ class AsciiVisualizer:
             if name == 'posix':
                 self._print_frame_diff(self.frame_number + addv)
             else:
-                self._print_frame(self.frame_number + addv)
+                self._print_frame_diff(self.frame_number + addv)
             sleep(time)
             if self.stop:
                 self.stop = False
@@ -234,7 +240,7 @@ class AsciiVisualizer:
                         if name == 'posix':
                             self._print_frame_diff(self.frame_number + 1)
                         else:
-                            self._print_frame(self.frame_number + 1)
+                            self._print_frame_diff(self.frame_number + 1)
                     else:
                         self._print_frame(self.frame_number)
                         self._error('this is the last frame.')
