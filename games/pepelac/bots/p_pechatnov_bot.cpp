@@ -5,9 +5,13 @@
 #include <vector>
 #include <algorithm>
 
+#define ll(i)  ((long long)(i))
+
 using namespace std;
 
-const int inf = (1 << 30);
+typedef long long lld;
+const lld inf = (1ll << 60);
+
 
 class Point{
 public:
@@ -84,12 +88,14 @@ bool comp_points_by_dist_to_me(Point A, Point B){
            dist(for_comp_points_by_dist_to_me, B);
 }
 
-int fitness1(Field &field, int P, Player *players, int B, Point *patrons, Point D){
+inline lld sqr(lld a){return a * a;}
+
+lld fitness1(Field &field, int P, Player *players, int B, Point *patrons, Point D){
     Point &I = players[0].pos;
     I = I + D;
-    int fitness = 0;
-    int min_dist_to_patron = inf;
-    int min_dist_to_player = inf;
+    lld fitness = 0;
+    lld min_dist_to_patron = inf;
+    lld min_dist_to_player = inf;
     vector <Point> bpl, gpl;
     if (field(I) == -1 || armpos == I){
         fitness = -inf;
@@ -125,7 +131,7 @@ int fitness1(Field &field, int P, Player *players, int B, Point *patrons, Point 
 
 
 Point center1(Field &field, int P, Player *players, int B, Point *patrons){
-    int best = -inf - 1, fit;
+    lld best = -inf - 1, fit;
     Point bd;
     if ((fit = fitness1(field, P, players, B, patrons, STAND)) > best)
         best = fit, bd = STAND;
@@ -140,12 +146,12 @@ Point center1(Field &field, int P, Player *players, int B, Point *patrons){
     return bd;
 }
 
-
+/*
 int fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point D){
     Point &I = players[0].pos;
     I = I + D;
     int fitness = 0;
-    int mindist = 10000, min2dist = 10000;
+    int mindist = 10000, min2dist = 10000, mindist2;
     if (field(I) == -1 || armpos == I || I == players[1].pos){
         fitness = -inf;
         goto END_of_fitness;
@@ -159,7 +165,10 @@ int fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point 
     for (int i = 0; i < B; i++){
         if (dist(I, patrons[i]) < dist(players[1].pos, patrons[i]))
             mindist = min(mindist, dist(I, patrons[i])), min2dist = min(min2dist, dist(players[1].pos, patrons[i]));
+        mindist2 = min(mindist2, dist(I, patrons[i]));
     }
+    if (mindist == 10000)
+        mindist = mindist2;
     fitness = -(mindist * 2 + min2dist);
     if (mindist == 0)
         players[0].pc++;
@@ -187,8 +196,70 @@ Point center2(Field &field, int P, Player *players, int B, Point *patrons){
     if ((fit = fitness2(field, P, players, B, patrons, DOWN)) > best)
         best = fit, bd = DOWN;
     return bd;
+}*/
+
+
+lld fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point D){
+    Point &I = players[0].pos;
+    I = I + D;
+    long long fitness = 0;
+    long long mindist = 10000, min2dist = 10000, mindist2;
+    if (field(I) == -1 || armpos == I || I == players[1].pos){
+        fitness = -inf;
+        goto END_of_fitness;
+    }
+    if (P == 1 || players[0].pc >= players[1].pc + B){
+        fitness = -dist(I, fc);
+        goto END_of_fitness;
+    }
+    for (int i = 0; i < B; i++){
+        mindist = min(mindist, ll(dist(I, patrons[i])));
+    }
+    if (mindist == 0)
+        players[0].pc++;
+    if (players[0].pc < players[1].pc && dist(I, players[1].pos) < 3){
+        fitness = -inf / 2;
+        goto END_of_fitness;
+    }
+    if (players[0].pc > players[1].pc && dist(I, players[1].pos) < 2){
+        fitness = inf / 2;
+        goto END_of_fitness;
+    }
+    if (mindist == 0ll)
+        fitness = 20000000000ll;
+    else
+        fitness = 1000000000ll / sqr(mindist);
+    for (int i = 0; i < B; i++){
+        if (dist(patrons[i], I) == 0ll)
+            continue;
+        if (dist(patrons[i], I) < dist(patrons[i], players[1].pos))
+            fitness += 10000000ll / dist(patrons[i], I);
+        else
+            fitness += 100000ll - dist(patrons[i], I);
+    }
+
+
+    END_of_fitness:
+    I = I - D;
+    return fitness;
 }
 
+
+Point center2(Field &field, int P, Player *players, int B, Point *patrons){
+    lld best = -inf - 1, fit;
+    Point bd;
+    if ((fit = fitness2(field, P, players, B, patrons, STAND)) > best)
+        best = fit, bd = STAND;
+    if ((fit = fitness2(field, P, players, B, patrons, LEFT)) > best)
+        best = fit, bd = LEFT;
+    if ((fit = fitness2(field, P, players, B, patrons, RIGHT)) > best)
+        best = fit, bd = RIGHT;
+    if ((fit = fitness2(field, P, players, B, patrons, UP)) > best)
+        best = fit, bd = UP;
+    if ((fit = fitness2(field, P, players, B, patrons, DOWN)) > best)
+        best = fit, bd = DOWN;
+    return bd;
+}
 
 int main()
 {
@@ -199,7 +270,7 @@ int main()
     scanf("%d", &N);
     Field field(N);
     fc = Point((N + 2) / 2, (N + 1) / 2);
-    int t = 1;
+    int t = 0;
     bool fl = 1;
     Point CC;
     while (true){
