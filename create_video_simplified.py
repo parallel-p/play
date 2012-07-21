@@ -5,20 +5,20 @@ from time import clock
 import os
 
 if len(sys.argv) < 5:
-    print('Usage: create_video.py <path to game env> <folder with game logs> '
-          '<filemask of logs (regular expression)> <resw_name> '
-          '[-f <framerate>] [--silent]')
+    print('Usage: create_video.py <path to game env> <log filename>'
+          ' <output name> [-f <framerate>] [--silent]')
+    print('Example: create_video.py pepelac log.gc -f 2')
     exit()
 
 if __name__ == '__main__':
-    game_path, log_path, log_mask, res_name = sys.argv[1:5]
+    game_path, log_name, res_name = sys.argv[1:4]
     framerate = 3 if '-f' not in sys.argv else int(sys.argv[sys.argv.index('-f') + 1])
     silent = '--silent' in sys.argv
     initialize_game_environment(game_path)
     import config
     beg = clock()
-    visualizer = VideoVisualizer(framerate, config.Painter, log_mask,
-                                 log_path, silent)
+    visualizer = VideoVisualizer(framerate, config.Painter, log_name,
+                                 '.', silent)
     visualizer.compile(res_name)
     if not silent:
-        print('Compiled in', clock() - beg, 'sec.')
+        print('Created in', clock() - beg, 'sec.')
