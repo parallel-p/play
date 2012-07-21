@@ -2,6 +2,7 @@ from config_helpers import initialize_game_environment, players_parse
 from visualizer import VideoVisualizer
 import sys
 from time import clock
+import os
 
 if len(sys.argv) < 5:
     print('Usage: create_video.py <path to game env> <folder with game logs> '
@@ -22,7 +23,7 @@ if __name__ == '__main__':
     initialize_game_environment(game_path)
     import config
     beg = clock()
-    players = players_parse(config.players_config)
+    players = players_parse(os.path.join(game_path, config.players_config))
     visualizer = VideoVisualizer(framerate, config.Painter(players), log_mask,
                                  log_path, silent)
     visualizer.compile(res_name)
