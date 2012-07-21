@@ -70,7 +70,9 @@ def load_game_controller(filename):
 def print_final_scores(gc):
     print ('\n\nFinal scores:')
     for name, score in gc.get_scores().items():
-        print (str(name) + '\t' + str(score))
+        print ('{player.bot_name:8s} by '
+               '{player.author_name:23s} \t {score}'.format(player=name,
+                                                            score=score))
     print('\n\n')
 
 
