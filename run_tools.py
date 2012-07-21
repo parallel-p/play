@@ -28,7 +28,7 @@ def create_players(filename):
 def play(args):
     from game_simulator import GameSimulator
     from tournament_stages.game_signature import GameSignature
-    import bot
+    from bot import ExecuteError
 
     players = list(create_players(args.bot_commands_file))
     signature = GameSignature(1, 1, 1, 1)
@@ -38,7 +38,7 @@ def play(args):
     try:
         game_controller = game.play()
         return game_controller
-    except bot.ExecuteError:
+    except ExecuteError:
         pass
 
 
