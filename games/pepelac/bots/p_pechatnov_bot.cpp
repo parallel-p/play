@@ -1,236 +1,160 @@
-#include <iostream>
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <vector>
+#include <stdio.h>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
-const int inf = (1 << 30);
-
-class Point{
-public:
-    int x, y;
-    friend Point operator+(Point A, Point B){return Point(A.x + B.x, A.y + B.y);}
-    friend Point operator-(Point A, Point B){return Point(A.x - B.x, A.y - B.y);}
-    friend bool operator==(Point A, Point B){return A.x == B.x && A.y == B.y;}
-    friend int dist(Point A, Point B){return abs(A.x - B.x) + abs(A.y - B.y);}
-
-    Point(){}
-    Point(int _x, int _y):x(_x), y(_y){}
+struct player
+{
+    int x, y, p;
 };
 
-class Player{
-public:
-    Point pos;
-    int pc;
+struct bullet
+{
+    int x, y, dist[50], g, mn;
 };
 
-class Field{
-private:
-    int t[52][52];
-public:
-    int n;
-    inline int& operator()(int x, int y){
-        return t[x][y];
-    }
-    inline int& operator()(Point A){
-        return t[A.x][A.y];
-    }
-    Field(){};
-    Field(int N){
-        n = N;
-        memset(t, 0, sizeof t);
-        for (int i = 0; i < N + 2; i++)
-            t[i][0] = t[i][N + 1] = t[0][i] = t[N + 1][i] = -1;
-    }
-};
+const int dx[4] = {1, 0, -1, 0};
+const int dy[4] = {0, 1, 0, -1};
 
-int N, P, B, T;
-const Point LEFT(0, -1), RIGHT(0, +1), UP(-1, 0), DOWN(+1, 0), STAND(0, 0);
-const Point ad[4] = {RIGHT, DOWN, LEFT, UP};
-int armdir = 0;
-Point armpos(1, 0), fc;
+int n, p, b, k, x = 1, y = 1, bx, by, t;
+int c[100][100];
+bool used[100][100], made_move;
+player players[50];
+bullet bullets[100000];
 
-Player players[12000];
-Point patrons[12000];
-
-char *dirtostr(Point A){
-    if (A == LEFT)
-        return "LEFT";
-    else if (A == RIGHT)
-        return "RIGHT";
-    else if (A == UP)
-        return "UP";
-    else if (A == DOWN)
-        return "DOWN";
-    else if (A == STAND)
-        return "STAND";
+bool comp_bullets(bullet a, bullet b)
+{
+    return a.g > b.g;
 }
 
-void view_field(Field &field){
-   fprintf(stderr, "View field:\n");
-    for (int i = 1; i <= field.n; i++){
-        for (int j = 1; j <= field.n; j++)
-            fprintf(stderr, "% .1d ", field(i, j));
-        fprintf(stderr, "\n");
-    }
+bool good_move(int x, int y)
+{
+    return (x >= 1 && x <= n && y >= 1 && y <= n && c[y][x] < k - 1 && !used[y][x]);
 }
 
-Point for_comp_points_by_dist_to_me;
-bool comp_points_by_dist_to_me(Point A, Point B){
-    return dist(for_comp_points_by_dist_to_me, A) <
-           dist(for_comp_points_by_dist_to_me, B);
+int sign(int x)
+{
+    if (x < 0)
+        return -1;
+    return (x > 0);
 }
-
-int fitness1(Field &field, int P, Player *players, int B, Point *patrons, Point D){
-    Point &I = players[0].pos;
-    I = I + D;
-    int fitness = 0;
-    int min_dist_to_patron = inf;
-    int min_dist_to_player = inf;
-    vector <Point> bpl, gpl;
-    if (field(I) == -1 || armpos == I){
-        fitness = -inf;
-        goto END_of_fitness;
-    }
-    for (int i = 1; i < P; i++)
-        if (I == players[i].pos){
-            fitness = -inf;
-            goto END_of_fitness;
-        }
-
-    for (int i = 1; i < P; i++)
-        if (players[i].pc > players[0].pc)
-            bpl.push_back(players[i].pos);
-        else
-            gpl.push_back(players[i].pos);
-    for_comp_points_by_dist_to_me = I;
-    sort(bpl.begin(), bpl.end(), comp_points_by_dist_to_me);
-    sort(gpl.begin(), gpl.end(), comp_points_by_dist_to_me);
-    sort(patrons, patrons + B, comp_points_by_dist_to_me);
-    for (int i = 0; i < B && i < 5; i++)
-        fitness -= 2 * dist(patrons[i], I);
-    fitness -= dist(patrons[0], I) * 3;
-    for (int i = 0; i < gpl.size() && i < 5; i++)
-        fitness += dist(gpl[i], I) / 2;
-    for (int i = 0; i < bpl.size() && i < 5; i++)
-        fitness += dist(bpl[i], I);
-
-    END_of_fitness:
-    I = I - D;
-    return fitness;
-}
-
-
-Point center1(Field &field, int P, Player *players, int B, Point *patrons){
-    int best = -inf - 1, fit;
-    Point bd;
-    if ((fit = fitness1(field, P, players, B, patrons, STAND)) > best)
-        best = fit, bd = STAND;
-    if ((fit = fitness1(field, P, players, B, patrons, LEFT)) > best)
-        best = fit, bd = LEFT;
-    if ((fit = fitness1(field, P, players, B, patrons, RIGHT)) > best)
-        best = fit, bd = RIGHT;
-    if ((fit = fitness1(field, P, players, B, patrons, UP)) > best)
-        best = fit, bd = UP;
-    if ((fit = fitness1(field, P, players, B, patrons, DOWN)) > best)
-        best = fit, bd = DOWN;
-    return bd;
-}
-
-
-int fitness2(Field &field, int P, Player *players, int B, Point *patrons, Point D){
-    Point &I = players[0].pos;
-    I = I + D;
-    int fitness = 0;
-    int mindist = 10000, min2dist = 10000;
-    if (field(I) == -1 || armpos == I || I == players[1].pos){
-        fitness = -inf;
-        goto END_of_fitness;
-    }
-    if (P == 1)
-        goto END_of_fitness;
-    if (P == 1 || players[0].pc > players[1].pc + B){
-        fitness = -dist(I, fc);
-        goto END_of_fitness;
-    }
-    for (int i = 0; i < B; i++){
-        if (dist(I, patrons[i]) < dist(players[1].pos, patrons[i]))
-            mindist = min(mindist, dist(I, patrons[i])), min2dist = min(min2dist, dist(players[1].pos, patrons[i]));
-    }
-    fitness = -(mindist * 3 + min2dist);
-    if (mindist == 0)
-        players[0].pc++;
-    if (players[0].pc < players[1].pc && dist(I, players[1].pos) < 3)
-        fitness = -inf / 2;
-    if (players[0].pc > players[1].pc && dist(I, players[1].pos) < 2)
-        fitness = inf / 2;
-    END_of_fitness:
-    I = I - D;
-    return fitness;
-}
-
-
-Point center2(Field &field, int P, Player *players, int B, Point *patrons){
-    int best = -inf - 1, fit;
-    Point bd;
-    if ((fit = fitness2(field, P, players, B, patrons, STAND)) > best)
-        best = fit, bd = STAND;
-    if ((fit = fitness2(field, P, players, B, patrons, LEFT)) > best)
-        best = fit, bd = LEFT;
-    if ((fit = fitness2(field, P, players, B, patrons, RIGHT)) > best)
-        best = fit, bd = RIGHT;
-    if ((fit = fitness2(field, P, players, B, patrons, UP)) > best)
-        best = fit, bd = UP;
-    if ((fit = fitness2(field, P, players, B, patrons, DOWN)) > best)
-        best = fit, bd = DOWN;
-    return bd;
-}
-
 
 int main()
 {
-    //char str[100];
-    //while (gets(str))
-    //    cerr << str << endl;
-    //return 0;
-    scanf("%d", &N);
-    Field field(N);
-    fc = Point((N + 2) / 2, (N + 1) / 2);
-    int t = 1;
-    bool fl = 1;
-    Point CC;
-    while (true){
-        scanf("%d%d%d", &P, &B, &T);
-        while (t >= T){
-            field(armpos) = -1;
-            if (field(armpos + ad[armdir]) == -1)
-                armdir = (armdir + 1) & 3;
-            armpos = armpos + ad[armdir];
-            t--;
-            if (field(armpos) == -1){
-                break;
+    scanf("%d", &n);
+    for (int i = 1; i <= n * n; i++)
+    {
+        c[y][x] = -i;
+        used[y][x] = true;
+        if (x + dx[t] <= 0 || x + dx[t] > n ||
+                y + dy[t] <= 0 || y + dy[t] > n ||
+                used[y + dy[t]][x + dx[t]])
+            t = (t + 1) % 4;
+        if (i == n * n)
+        {
+            bx = x;
+            by = y;
+        }
+        x += dx[t];
+        y += dy[t];
+    }
+    while (true)
+    {
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= n; j++)
+                used[i][j] = false;
+        scanf("%d%d%d", &p, &b, &k);
+        for (int i = 0; i < p; i++)
+        {
+            scanf("%d%d%d", &players[i].y, &players[i].x, &players[i].p);
+            used[players[i].y][players[i].x] = true;
+        }
+        for (int i = 0; i < b; i++)
+            scanf("%d%d", &bullets[i].y, &bullets[i].x);
+        x = players[0].x;
+        y = players[0].y;
+        if (p == 1)
+        {
+            if (good_move(x + 1, y))
+                printf("RIGHT\n");
+            else
+                if (good_move(x - 1, y))
+                    printf("LEFT\n");
+                else
+                    if (good_move(x, y + 1))
+                        printf("DOWN\n");
+                    else
+                        if (good_move(x, y - 1))
+                            printf("UP\n");
+                        else
+                            printf("STAND\n");
+            fflush(stdout);
+            continue;
+        }
+        for (int i = 0; i < b; i++)
+            for (int j = 0; j < p; j++)
+                bullets[i].dist[j] = abs(bullets[i].x - players[j].x) + abs(bullets[i].y - players[j].y);
+        for (int i = 0; i < b; i++)
+        {
+            int mn = (1 << 30);
+            for (int j = 1; j < p; j++)
+                if (bullets[i].dist[j] < mn)
+                    mn = bullets[i].dist[j];
+            bullets[i].g = mn - bullets[i].dist[0];
+            bullets[i].mn = mn;
+        }
+        sort(bullets, bullets + b, comp_bullets);
+        made_move = false;
+        for (int i = 0; i < b && !made_move; i++)
+        {
+            if (bullets[i].g >= 0 && c[bullets[i].x][bullets[i].y] < t - bullets[i].dist[0])
+            {
+                if (c[y][x + sign(bullets[i].x - x)] < t - 1 && bullets[i].x - x != 0 && !used[y][x + sign(bullets[i].x - x)])
+                {
+                    if (bullets[i].x - x > 0)
+                        printf("RIGHT\n");
+                    else
+                        printf("LEFT\n");
+                    fflush(stdout);
+                    made_move = true;
+                    break;
+                }
+                if (c[y + sign(bullets[i].y - y)][x] < t - 1 && bullets[i].y - y != 0 && !used[y + sign(bullets[i].y - y)][x])
+                {
+                    if (bullets[i].y - y > 0)
+                        printf("DOWN\n");
+                    else
+                        printf("UP\n");
+                    fflush(stdout);
+                    made_move = true;
+                    break;
+                }
             }
         }
-        for (int i = 0; i < P; i++)
-            scanf("%d%d%d", &players[i].pos.x, &players[i].pos.y, &players[i].pc);//, players[i].pos.x++, players[i].pos.y++;
-        for (int i = 0; i < B; i++)
-            scanf("%d%d", &patrons[i].x, &patrons[i].y);//, patrons[i].x++, patrons[i].y++;
-        if (fl)
-            fl = 0, CC = players[0].pos;
-        /*cerr << "SP:" << CC.x << " " << CC.y << endl;
-        Point &I = players[0].pos;
-        int tm = field(I);
-        field(I) = 1;
-        view_field(field);
-        field(I) = tm;*/
-        if (P > 2)
-            printf("%s\n", dirtostr(center1(field, P, players, B, patrons)));
-        else
-            printf("%s\n", dirtostr(center2(field, P, players, B, patrons)));
-        fflush(stdout);
+        if (!made_move)
+        {
+            if (bx - x != 0 && !used[y][x + sign(bx - x)])
+            {
+                if (bx - x > 0)
+                    printf("RIGHT\n");
+                else
+                    printf("LEFT\n");
+                fflush(stdout);
+                continue;
+            }
+            if (by - y != 0 && !used[y + sign(by - y)][x])
+            {
+                if (by - y > 0)
+                    printf("DOWN\n");
+                else
+                    printf("UP\n");
+                fflush(stdout);
+                continue;
+            }
+            printf("STAND\n");
+            fflush(stdout);
+        }
     }
     return 0;
 }
