@@ -237,7 +237,7 @@ void armageddon(){
 }
 
 void go(int x, int y){
-  bool f;
+  bool f = 0;
 
 
   /*if (!f && isbul[x - 1][y] && dan[x - 1][y] < big){
@@ -265,17 +265,26 @@ void go(int x, int y){
     f = right();
   if (players[0].y > y && !f && dan[players[0].x][players[0].y - 1] < big)
     f = left();
+
+  if (players[0].x < x && !f && dan[players[0].x + 1][players[0].y] < big)
+    f = left() || right();
+  if (players[0].x > x && !f && dan[players[0].x - 1][players[0].y] < big)
+    f = left() || right();
+  if (players[0].y < y && !f && dan[players[0].x][players[0].y + 1] < big)
+    f = up() || down();
+  if (players[0].y > y && !f && dan[players[0].x][players[0].y - 1] < big)
+    f = up() || down();
   if (!f)
     stay();
 }
 
 void safe(){
 
-  stay();
-  return;
+  //stay();
+  //return;
 
   int x = players[0].x, y = players[0].y, gx = x, gy = y;
-  /*if (x > 1 && dan[gx][gy] > dan[x - 1][y]){
+  if (x > 1 && dan[gx][gy] > dan[x - 1][y]){
     gx = x - 1;
     gy = y;
   }
@@ -290,8 +299,8 @@ void safe(){
   if (y < n && dan[gx][gy] > dan[x][y + 1]){
     gx = x;
     gy = y + 1;
-  }*/
-  go(x, y);
+  }
+  go(gx, gy);
 }
 
 
