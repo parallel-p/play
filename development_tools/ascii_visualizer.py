@@ -152,10 +152,13 @@ class AsciiVisualizer:
         frame_text = frame_text.split('\n')
         pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
         self.lock.acquire()
+        #print(self.game_controller.get_players())
+        height = len(frame_text) + len(self.game_controller.get_players()) - 1
         for line in range(len(frame_text)):
             if line >= len(self.prev_frame) or frame_text[line] !=\
                                                 self.prev_frame[line]:
                 print(pos(line + 1, 0), frame_text[line], sep='')
+        print(pos(height, 0), sep='', end='')
         self.lock.release()
         # Here we save current frame as previous
         self.prev_frame = frame_text
