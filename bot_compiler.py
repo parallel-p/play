@@ -88,3 +88,4 @@ class BotCompiler():
             if compile_string is not None:
                 config_file.writelines(['\'{}\' \'{}\' \'{}\'\n'.format(
                     author_name, bot_name, compile_string)])
+        config_file.close()
