@@ -4,6 +4,8 @@ from log import logger
 import config
 import copy
 import bot_no_psutil
+from bot_no_psutil import BadPipesError, ExecuteError,\
+                   ProcessNotRunningException, TimeLimitException
 
 
 MEGABYTE = 1 << 20
@@ -17,33 +19,6 @@ while process.is_running():
 # then count of steps became equal to
 # `y`, check limits and delete information
 '''
-
-
-class BadPipesError(OSError):
-    '''
-    This exception is raised when bot's process pipes are broken.
-    '''
-
-
-class ExecuteError(OSError):
-    '''
-    This exception is raised when create_process
-    cannot start bot process (e.g. invalid command)
-    '''
-
-
-class ProcessNotRunningException(OSError):
-    '''
-    This exception is raised after trying to
-    send command to process that is not running.
-    '''
-
-
-class TimeLimitException(OSError):
-    '''
-    This exception is raised when bot's process exceeded time limit.
-    '''
-
 
 class MemoryLimitException(OSError):
     '''
