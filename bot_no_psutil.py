@@ -122,7 +122,7 @@ class Bot:
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
                 logger.critical(
-                    'unhandled exception has been raised in'
+                    'unhandled exception has been raised in '
                     'deserialize thread, aborting'
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
