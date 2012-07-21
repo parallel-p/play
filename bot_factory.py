@@ -9,6 +9,7 @@ def is_psutil():
     else:
         return True
 
+
 def create():
     '''
     Returns the constructor of the bot if psutil is installed and bot_no_psutil

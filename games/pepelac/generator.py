@@ -2,9 +2,9 @@ import random
 import copy
 from jury_state import JuryState
 from math import sqrt
+from math import ceil
 
-
-_field_size = random.randint(10, 20)
+_field_size = random.randint(20, 30)
 
 
 class Generator:
@@ -23,15 +23,15 @@ class Generator:
 
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
+        sells_side = int(ceil(sqrt(players_count)))
+        sell_size = _field_size / sells_side
 
-        for player in range(players_count):
-            player_x = random.randint(0, _field_size - 1)
-            player_y = random.randint(0, _field_size - 1)
-            while (new_field[player_x][player_y] != 0 or
-                   self._collect_around(field, player_x, player_y)):
-                player_x = random.randint(0, _field_size - 1)
-                player_y = random.randint(0, _field_size - 1)
-            new_field[player_x][player_y] = player + 1
+        for ind, sell in enumerate(random.sample(range(sells_side ** 2),
+                                  players_count)):
+            sell_x, sell_y = sell // sells_side, sell % sells_side
+            player_x = int(sell_x * sell_size + random.random() * sell_size)
+            player_y = int(sell_y * sell_size + random.random() * sell_size)
+            new_field[player_x][player_y] = ind + 1
         return new_field
 
     def generate_bullets(self, field, bullets_count):

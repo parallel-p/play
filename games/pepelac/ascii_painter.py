@@ -69,7 +69,7 @@ class Painter():
                     why_dead = 'burnt in Armageddon'
                 else:
                     why_dead = 'killed in fight'
-            (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:20}{textc}), with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets  '+' '*30)
+            (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:20}{textc}), with score {numcolor}{score:4}{textc}') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets  ' + ' ' * 30)
             scor = scores.get(player)
             if scor is None:
                 scor = 0
