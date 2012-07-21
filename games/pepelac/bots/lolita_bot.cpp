@@ -131,9 +131,9 @@ int main()
         {
             if (((p == 2 && players[1].p < players[0].p && bullets[i].g >= -2) ||
                  (p == 2 && players[1].p == players[0].p && bullets[i].g >= 0) ||
-                 bullets[i].g >= 2) && c[bullets[i].y][bullets[i].x] < t - bullets[i].dist[0])
+                 bullets[i].g >= 2) && c[bullets[i].y][bullets[i].x] < k - bullets[i].dist[0])
             {
-                if (c[y][x + sign(bullets[i].x - x)] < t - 1 && bullets[i].x - x != 0 && !used[y][x + sign(bullets[i].x - x)] && (!buls[y + sign(bullets[i].y - y)][x] || !(c[y + sign(bullets[i].y - y)][x] < t - 1 && bullets[i].y - y != 0 && !used[y + sign(bullets[i].y - y)][x])))
+                if (c[y][x + sign(bullets[i].x - x)] < k - 1 && bullets[i].x - x != 0 && !used[y][x + sign(bullets[i].x - x)] && (!buls[y + sign(bullets[i].y - y)][x] || !(c[y + sign(bullets[i].y - y)][x] < k - 1 && bullets[i].y - y != 0 && !used[y + sign(bullets[i].y - y)][x])))
                 {
                     if (bullets[i].x - x > 0)
                         printf("RIGHT\n");
@@ -143,7 +143,7 @@ int main()
                     made_move = true;
                     break;
                 }
-                if (c[y + sign(bullets[i].y - y)][x] < t - 1 && bullets[i].y - y != 0 && !used[y + sign(bullets[i].y - y)][x])
+                if (c[y + sign(bullets[i].y - y)][x] < k - 1 && bullets[i].y - y != 0 && !used[y + sign(bullets[i].y - y)][x])
                 {
                     if (bullets[i].y - y > 0)
                         printf("DOWN\n");
@@ -175,13 +175,14 @@ int main()
                 fflush(stdout);
                 continue;
             }
-            if (x == bx && y == by && p >= 2 && players[1].p > players[0].p)
-                random_move();
-            else
+            if (x == bx && y == by && p == 2 && players[1].p <= players[0].p)
             {
                 printf("STAND\n");
                 fflush(stdout);
             }
+            else
+                random_move();
+
         }
     }
     return 0;
