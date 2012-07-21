@@ -109,8 +109,9 @@ class VideoVisualizer:
         # Text displayed on the frame:
         info = (wrap('Tournament: ' + str(contr.signature.tournament_id),
                      width=40) +
-                wrap('Round:      ' + str(contr.signature.round_id),
-                     width=40) +
+                wrap('Round:      ' + str(contr.signature.round_id) + (
+                    '' if contr.signature.round_name is None else (
+                        '(' + contr.signature.round_name + ')')), width=40) +
                 wrap('Series:     ' + str(contr.signature.series_id),
                      width=40) +
                 wrap('Game:       ' + str(contr.signature.game_id), width=40) +
