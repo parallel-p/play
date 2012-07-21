@@ -82,8 +82,9 @@ class AsciiVisualizer:
     def _prompt(self, msg):
         '''prints a prompt in bright yellow color'''
         self.lock.acquire()
-        reply = input(Fore.YELLOW + Style.BRIGHT + msg + ' : '
-                      + Style.NORMAL + Fore.RESET)
+        print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
+              + Style.NORMAL + Fore.RESET)
+        reply = input()
         self.lock.release()
         _clear()
         self._print_frame(self.frame_number)
@@ -153,7 +154,7 @@ class AsciiVisualizer:
         pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
         self.lock.acquire()
         #print(self.game_controller.get_players())
-        height = len(frame_text) + len(self.game_controller.get_players()) - 1
+        height = len(frame_text) + len(self.game_controller.get_players())
         for line in range(len(frame_text)):
             if line >= len(self.prev_frame) or frame_text[line] !=\
                                                 self.prev_frame[line]:
