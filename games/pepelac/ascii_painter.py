@@ -126,19 +126,9 @@ class Painter():
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
             else:
-<<<<<<< HEAD
-                if(self.collision_ids is not None and
-                (pos - 1) in self.collision_ids):
-                    pcolor = self.colors[0]
-                else:
-                    pcolor = self.colors[3]
-                cell = self.Cell(self.chars[3].format(pos - 1), pcolor)
-
-=======
                 #cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
                 cell = self.Cell('P' + alphabet(int(self.chars[3].format(pos-1)[1:])), self.colors[3])
                 # default: bright white 'P{hex number of player}' on magenta
->>>>>>> Fixed some bugs in ascii_painter
             out.append(cell)
         return out
 
