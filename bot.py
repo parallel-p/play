@@ -1,10 +1,10 @@
+import psutil
 import threading
 import time
 from subprocess import PIPE
 from log import logger
 import config
 import copy
-import bot_no_psutil
 
 
 MEGABYTE = 1 << 20
@@ -51,7 +51,8 @@ class MemoryLimitException(OSError):
     This exception is raised when bot's process exceeded memory limit.
     '''
 
-class Bot(bot_no_psutil.Bot):
+
+class Bot:
     '''
     This class wraps bot's process and stores its information.
 
@@ -66,12 +67,18 @@ class Bot(bot_no_psutil.Bot):
         <move.Move object at ...>
         >>> p.kill_process()
     '''
+    def __init__(self, player_command):
+        '''
+        Constructor for class Bot.
+        `player_command` is a string which is used to invoke bot program.
+        '''
+        self._player_command = player_command
+        self._process = None
 
     def create_process(self):
         '''
         Starts bot's process.
         '''
-        import psutil
         logger.info('executing \'%s\'', self._player_command)
         try:
             self._process = psutil.Popen(
@@ -99,7 +106,6 @@ class Bot(bot_no_psutil.Bot):
         self._checker = threading.Thread(target=self._check_memory_limits)
         self._checker.start()
         logger.info('executing successful')
-        self._running = True
 
     def _check_memory_limits(self):
         '''
@@ -107,7 +113,6 @@ class Bot(bot_no_psutil.Bot):
         and check process exceed memory limit every `CHECK_TIME_SECONDS`
         seconds.
         '''
-        import psutil
         CHECK_TIME_SECONDS = 0.15
         memory_limit_mb = config.memory_limit_mb
 
@@ -134,26 +139,29 @@ class Bot(bot_no_psutil.Bot):
         Returns CPU time used by bot's process.
         If psutil.NoSuchProcess exception has been raised, returns None.
         '''
-        import psutil
         try:
             times = self._process.get_cpu_times()
             return times.system + times.user
         except psutil.NoSuchProcess:
             return None
 
+    def _get_real_time(self):
+        '''
+        Returns real time used by bot's process.
+        '''
+        return time.time()
+
     def _get_memory(self):
         '''
         Returns memory used by process in *megabytes*.
         If psutil.NoSuchProcess exception has been raised, returns None.
         '''
-        import psutil
         try:
             return self._process.get_memory_info().rss / MEGABYTE
         except psutil.NoSuchProcess:
             return None
 
     def _check_time_limits(self):
-        import psutil
         real_time_start = self._get_real_time()
         cpu_time_start = self._get_cpu_time()
 
@@ -178,7 +186,7 @@ class Bot(bot_no_psutil.Bot):
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
                 logger.critical(
-                    'unhandled exception has been raised in '
+                    'unhandled exception has been raised in'
                     'deserialize thread, aborting'
                 )
                 exc_copy = copy.deepcopy(self._deserialize_exc)
@@ -206,7 +214,6 @@ class Bot(bot_no_psutil.Bot):
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        import psutil
         if not self._is_running():
             raise ProcessNotRunningException
 
@@ -237,6 +244,10 @@ class Bot(bot_no_psutil.Bot):
         )
         return res
 
+    def _get_move(self, player_state, serialize, deserialize):
+        self._write(player_state, serialize)
+        self._read(deserialize)
+
     def _read(self, deserialize):
         '''
         Deserialize move with bot's `stdout`.
@@ -250,23 +261,27 @@ class Bot(bot_no_psutil.Bot):
 
         If bot's process isn't running, raise ProcessNotRunningException.
         '''
-        import psutil
-        if self._running:
-            try:
-                if not self._is_running():
-                    raise ProcessNotRunningException()
-                self._check_pipes()
-                self._deserialize_result = deserialize(self._process.stdout)
-            except (BaseException, Exception) as exc:
-                self._deserialize_exc = exc
-                return
+        try:
+            if not self._is_running():
+                raise ProcessNotRunningException()
+            self._check_pipes()
+            self._deserialize_result = deserialize(self._process.stdout)
+        except (BaseException, Exception) as exc:
+            self._deserialize_exc = exc
+            return
+
+    def _write(self, player_state, serialize):
+        '''
+        Serialize player_state with bot's `stdin`.
+        `stdin` is a stream opened to write per *byte*.
+        '''
+        serialize(player_state, self._process.stdin)
 
     def kill_process(self):
         '''
         Kills bot's process if it is running or does nothing
         if the process was already killed.
         '''
-        import psutil
         if not self._is_running():
             return
 
@@ -274,14 +289,24 @@ class Bot(bot_no_psutil.Bot):
             self._process.kill()
         except psutil.NoSuchProcess:
             pass
-
+            
         self._process.communicate()
         logger.info('process with cmd line \'%s\' was killed',
                     self._player_command)
-        self._running = False
+
+    def _check_pipes(self):
+        if not self._process.stdin.writable() and self._process.stdout.readable():
+            raise BadPipesError()
 
     def _is_running(self):
         '''
         Returns true if the process exists and is running and false otherwise.
         '''
         return self._process and self._process.is_running()
+
+    def __del__(self):
+        '''
+        Destructor for class bot.
+        It automatically kills bot's process on delete.
+        '''
+        self.kill_process()
