@@ -79,6 +79,10 @@ class AsciiVisualizer:
         '''prints a prompt in bright yellow color'''
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
               + Style.NORMAL + Fore.RESET)
+        reply = input()
+        _clear()
+        self._print_frame(self.frame_number)
+        return reply
 
     def _detect_arrow(self, key):
         arrow = None
@@ -177,104 +181,105 @@ class AsciiVisualizer:
         self._print_frame(0)
         self.nextc = False
         self.prevspec = False
-        while True:
-            (key, arrow) = self._read_key()
-            if arrow is None and key is None:
-                continue
-            if arrow == 'H':
-                self._print_frame(0)
-            elif arrow == 'E':
-                self._print_frame(len(self.game_controller.jury_states) - 1)
-            elif arrow == 'N':
-                self._print_frame(
-                    min(
-                        len(self.game_controller.jury_states) - 1,
-                        self.frame_number +
-                            int(len(self.game_controller.jury_states) / 20)
+        try:
+            while True:
+                (key, arrow) = self._read_key()
+                if arrow is None and key is None:
+                    continue
+                if arrow == 'H':
+                    self._print_frame(0)
+                elif arrow == 'E':
+                    self._print_frame(len(self.game_controller.jury_states) - 1)
+                elif arrow == 'N':
+                    self._print_frame(
+                        min(
+                            len(self.game_controller.jury_states) - 1,
+                            self.frame_number +
+                                int(len(self.game_controller.jury_states) / 20)
+                        )
                     )
-                )
-            elif arrow == 'U':
-                self._print_frame(
-                    max(0, self.frame_number -
-                        int(len(self.game_controller.jury_states) / 20))
-                )
-            elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
-                if self.frame_number < self._jury_state_count() - 1:
-                    if name == 'posix':
-                        self._print_frame_diff(self.frame_number + 1)
-                    else:
-                        self._print_frame(self.frame_number + 1)
-                else:
-                    self._print_frame(self.frame_number)
-                    self._error('this is the last frame.')
-            elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
-                if self.frame_number > 0:
-                    if name == 'posix':
-                        self._print_frame_diff(self.frame_number - 1)
-                    else:
-                        self._print_frame(self.frame_number - 1)
-                else:
-                    self._print_frame(self.frame_number)
-                    self._error('this is the first frame.')
-            elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
-                while True:
-                    self._prompt(
-                        'Enter FPS and, optionally, the frame to stop on (separated by a space)')
-                    reply = input()
-                    if reply:
-                        cmd = reply.split()
-                        try:
-                            speed = float(cmd[0])
-                        except ValueError:
-                            speed = 0
-                        if speed:
-                            jscount = self._jury_state_count()
-                            if speed >= 0:
-                                addv = 1
-                                time = 1 / speed
-                            else:
-                                addv = -1
-                                time = -1 / speed
-                            if len(cmd) > 1 and cmd[1].isnumeric():
-                                endframe = int(cmd[1]) - 1
-                            else:
-                                endframe = jscount
-                            try:
-                                while (
-                                    (self.frame_number + addv) < jscount) and (
-                                        self.frame_number + addv) >= 0 and (
-                                            self.frame_number != endframe):
-                                    if name == 'posix':
-                                        self._print_frame_diff(self.frame_number + addv)
-                                    else:
-                                        self._print_frame(self.frame_number + addv)
-                                    sleep(time)
-                            except KeyboardInterrupt:
-                                _clear()
-                                self._print_frame(self.frame_number)
-                            break
-                    self._error('The speed must be a real nonzero number')
-            elif arrow is None and key in self.key_sets['quit']:
-                print('Quit')
-                return None
-            elif arrow == 'B' or arrow is None and key in self.key_sets['jump']:
-                while True:
-                    self._prompt('Enter frame number')
-                    frame = input()
-                    # Add some fool-protection...
-                    if frame.isnumeric():
-                        number = int(frame) - 1
-                        if number >= 0 and number < self._jury_state_count():
-                            self._print_frame(number)
-                            break
+                elif arrow == 'U':
+                    self._print_frame(
+                        max(0, self.frame_number -
+                            int(len(self.game_controller.jury_states) / 20))
+                    )
+                elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
+                    if self.frame_number < self._jury_state_count() - 1:
+                        if name == 'posix':
+                            self._print_frame_diff(self.frame_number + 1)
                         else:
-                            self._error('No such frame.')
+                            self._print_frame(self.frame_number + 1)
                     else:
-                        self._error('enter a NUMBER.')
-            else:
-                self._print_frame(self.frame_number)
-                self._help()
-        colorama.deinit()
+                        self._print_frame(self.frame_number)
+                        self._error('this is the last frame.')
+                elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
+                    if self.frame_number > 0:
+                        if name == 'posix':
+                            self._print_frame_diff(self.frame_number - 1)
+                        else:
+                            self._print_frame(self.frame_number - 1)
+                    else:
+                        self._print_frame(self.frame_number)
+                        self._error('this is the first frame.')
+                elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
+                    while True:
+                        reply = self._prompt(
+                            'Enter FPS and, optionally, the frame to stop on (separated by a space)')
+                        if reply:
+                            cmd = reply.split()
+                            try:
+                                speed = float(cmd[0])
+                            except ValueError:
+                                speed = 0
+                            if speed:
+                                jscount = self._jury_state_count()
+                                if speed >= 0:
+                                    addv = 1
+                                    time = 1 / speed
+                                else:
+                                    addv = -1
+                                    time = -1 / speed
+                                if len(cmd) > 1 and cmd[1].isnumeric():
+                                    endframe = int(cmd[1]) - 1
+                                else:
+                                    endframe = jscount
+                                try:
+                                    while (
+                                        (self.frame_number + addv) < jscount) and (
+                                            self.frame_number + addv) >= 0 and (
+                                                self.frame_number != endframe):
+                                        if name == 'posix':
+                                            self._print_frame_diff(self.frame_number + addv)
+                                        else:
+                                            self._print_frame(self.frame_number + addv)
+                                        sleep(time)
+                                except KeyboardInterrupt:
+                                    _clear()
+                                    self._print_frame(self.frame_number)
+                                break
+                        self._error('The speed must be a real nonzero number')
+                elif arrow is None and key in self.key_sets['quit']:
+                    print('Quit')
+                    return None
+                elif arrow == 'B' or arrow is None and key in self.key_sets['jump']:
+                    while True:
+                        frame = self._prompt('Enter frame number')
+                        # Add some fool-protection...
+                        if frame.isnumeric():
+                            number = int(frame) - 1
+                            if number >= 0 and number < self._jury_state_count():
+                                self._print_frame(number)
+                                break
+                            else:
+                                self._error('No such frame.')
+                        else:
+                            self._error('enter a NUMBER.')
+                else:
+                    self._print_frame(self.frame_number)
+                    self._help()
+        finally:
+            _clear()
+            colorama.deinit()
 
     def dump(self, writable):
         ''' Dumps full game into something writable. '''

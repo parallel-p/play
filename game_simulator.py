@@ -72,8 +72,7 @@ class GameSimulator:
             start_time = time.time()
             game_master = config.GameMaster(self._game_controller, self._start_state)
             while not self._game_controller.is_finished:
-                copied_js = copy.deepcopy(
-                  self._game_controller.jury_states[-1])
+                copied_js = copy.deepcopy(self._game_controller.jury_states[-1])
                 try:
                     game_master.tick(copied_js)
                 except:

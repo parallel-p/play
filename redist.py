@@ -55,6 +55,6 @@ file_list = {
 
 for name, archname in file_list.items():
     print("  {} -> {}/{}".format(name, ARCHIVE_NAME, archname))
-    result.write(name, archname, compression)
+    result.write(name, 'play/' + archname, compression)
 
 result.close()

@@ -67,11 +67,19 @@ def load_game_controller(filename):
     return obj
 
 
+def print_final_scores(gc):
+    print ('\n\nFinal scores:')
+    for name, score in gc.get_scores().items():
+        print (str(name) + '\t' + str(score))
+    print('\n\n')
+
+
 def new_game(args):
     game_controller = play(args)
     if not args.only_run and game_controller:
         if args.visualize:
             visualize(game_controller)
+        print_final_scores(game_controller)
         if not args.save_to:
             dump_game_controller(game_controller)
         else:
