@@ -81,13 +81,12 @@ class AsciiVisualizer:
 
     def _prompt(self, msg):
         '''prints a prompt in bright yellow color'''
-        print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
-              + Style.NORMAL + Fore.RESET)
         self.lock.acquire()
-        reply = input()
+        reply = input(Fore.YELLOW + Style.BRIGHT + msg + ' : '
+                      + Style.NORMAL + Fore.RESET)
+        self.lock.release()
         _clear()
         self._print_frame(self.frame_number)
-        self.lock.release()
         return reply
 
     def _detect_arrow(self, key):
@@ -132,7 +131,9 @@ class AsciiVisualizer:
             color=Fore.YELLOW + Style.BRIGHT,
             nocolor=Fore.RESET + Style.NORMAL)
         _clear()
+        self.lock.acquire()
         print(frame_text)
+        self.lock.release()
         self.prev_frame = frame_text.split('\n')
 
     def _print_frame_diff(self, index):
@@ -150,12 +151,12 @@ class AsciiVisualizer:
         # Here we find diff between two frames
         frame_text = frame_text.split('\n')
         pos = lambda y, x: '\x1b[%d;%dH' % (y, x)
-
+        self.lock.acquire()
         for line in range(len(frame_text)):
             if line >= len(self.prev_frame) or frame_text[line] !=\
                                                 self.prev_frame[line]:
                 print(pos(line + 1, 0), frame_text[line], sep='')
-
+        self.lock.release()
         # Here we save current frame as previous
         self.prev_frame = frame_text
 
@@ -179,12 +180,10 @@ class AsciiVisualizer:
         while (self.frame_number + addv < jscount and
                 self.frame_number + addv >= 0 and 
                     self.frame_number != endframe):
-            self.lock.acquire()
             if name == 'posix':
                 self._print_frame_diff(self.frame_number + addv)
             else:
                 self._print_frame(self.frame_number + addv)
-            self.lock.release()
             sleep(time)
             if self.stop:
                 self.stop = False
@@ -198,7 +197,9 @@ class AsciiVisualizer:
         colorama.init()
         _clear()
         self._help()
+        self.lock.acquire()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
+        self.lock.release()
         self._detect_arrow(getch())
         self._print_frame(0)
         self.nextc = False
