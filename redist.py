@@ -46,15 +46,17 @@ file_list = {
     'tournament_stages/tournament.py': 'tournament_stages/tournament.py',
     'README': 'README',
     'log.py': 'log.py',
-    'bot_no_psutil.py': 'bot.py',
+    'bot.py': 'bot.py',
+    'bot_no_psutil.py': 'bot_no_psutil.py',
     'commands': 'commands',
     'lib/__init__.py': 'lib/__init__.py',
     'lib/keyboard_capture.py': 'lib/keyboard_capture.py',
-    'game_simulator.py': 'game_simulator.py'
+    'game_simulator.py': 'game_simulator.py',
+    'bot_factory.py': 'bot_factory.py'
 }
 
 for name, archname in file_list.items():
-    print("  {} -> {}/{}".format(name, ARCHIVE_NAME, archname))
+    print('  {} -> {}/play/{}'.format(name, ARCHIVE_NAME, archname))
     result.write(name, 'play/' + archname, compression)
 
 result.close()
