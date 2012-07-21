@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+def alphabet(num):
+    if num < 10:
+        return chr(ord('0') + num)
+    elif num <= 36:
+        return chr(ord('A') - 1 + num - 9)
+    else:
+        return chr(num)
 
 def set_color(color, print_result=False):
     '''takes a 3-tuple with codes for Background, Foreground and Style and
@@ -94,7 +101,11 @@ class Painter():
                 score=scor,
                 bullets=bulletn,
                 player=player,
+<<<<<<< HEAD
                 player_index=self.chars[3].format(pnum),
+=======
+                player_index='P' + alphabet(int(self.chars[3].format(pnum)[1:])),
+>>>>>>> Fixed some bugs in ascii_painter
                 bkgnd=set_color(bgcolor),
                 icolor=set_color((None, 7, 0)),
                 botcolor=set_color((None, 3, 2)),
@@ -119,6 +130,7 @@ class Painter():
                 cell = self.Cell(self.chars[2], self.colors[2])
                 # default: black '**' on yellow
             else:
+<<<<<<< HEAD
                 if(self.collision_ids is not None and
                 (pos - 1) in self.collision_ids):
                     pcolor = self.colors[0]
@@ -126,6 +138,11 @@ class Painter():
                     pcolor = self.colors[3]
                 cell = self.Cell(self.chars[3].format(pos - 1), pcolor)
 
+=======
+                #cell = self.Cell(self.chars[3].format(pos - 1), self.colors[3])
+                cell = self.Cell('P' + alphabet(int(self.chars[3].format(pos-1)[1:])), self.colors[3])
+                # default: bright white 'P{hex number of player}' on magenta
+>>>>>>> Fixed some bugs in ascii_painter
             out.append(cell)
         return out
 
