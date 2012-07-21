@@ -4,6 +4,7 @@ import config
 from bot_factory import create, is_psutil
 import copy
 import time
+import sys
 
 
 class GameSimulator:
@@ -44,6 +45,8 @@ class GameSimulator:
         new_move = self.bots[player].get_move(player_state,
                                               serialaizer, deserializer)
         logger.debug('bot \'%s\' made a move', player.bot_name)
+        print('.', end = '')
+        sys.stdout.flush()
         return new_move
 
     def _kill_bots(self):
