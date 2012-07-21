@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import argparse
 import config_helpers
 import pickle
@@ -50,13 +51,15 @@ def visualize(game_controller):
 
 def dump_game_controller(gc, filename=None):
     if not filename:
-        print('Would you like to save game log? (y/n)')
-        answer = input()
-        if answer == 'y':
-            print('Enter name of the file')
-            filename = input()
-        else:
-            return
+        print('Would you like to save game log? (y/n)', end = ' : ')
+        while True:
+            answer = input()
+            if answer in 'yY':
+                print('Enter name of the file')
+                filename = input()
+                break
+            elif answer in 'nN':
+                return
     with open(filename, 'wb') as f:
         f.write(pickle.dumps(gc))
 
@@ -107,7 +110,7 @@ def main():
     )
 
     arg_parser.add_argument('-s', '--save-to', help='save game log to file')
-    arg_parser.add_argument('-f', '--from-file', help='visualize log')
+    arg_parser.add_argument('-f', '--from-file', help='visualize log from file')
     arg_parser.add_argument(
         '-r', '--only-run', action='store_true',
         help='don\'t visualize and save logs, only run game'
