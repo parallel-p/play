@@ -40,6 +40,7 @@ class AsciiVisualizer:
         self.frame_number = 0
         self.stop = False
         self.lock = Lock()
+        self.prev_frame = None
         self.key_sets = {
             'next': 'Nn.>]}+= \r\n',
             'prev': 'Bb\|,<[{-_',
@@ -142,6 +143,9 @@ class AsciiVisualizer:
         '''
         Paints new frame using old and repaints only elements that changed
         '''
+        if not self.prev_frame:
+            self._print_frame(index)
+            return
         self.frame_number = index
         frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
@@ -154,7 +158,7 @@ class AsciiVisualizer:
         frame_text = frame_text.split('\n')
         pos = lambda y, x: '\x1b[{};{}H'.format(y, x)
         self.lock.acquire()
-        height = len(frame_text)
+        height = len(frame_text) + 2
         for line in range(len(frame_text)):
             if (line >= len(self.prev_frame) or frame_text[line] !=
                                                 self.prev_frame[line]):
@@ -190,10 +194,7 @@ class AsciiVisualizer:
         while (self.frame_number + addv < jscount and
                 self.frame_number + addv >= 0 and
                     self.frame_number != endframe):
-            if name == 'posix':
-                self._print_frame_diff(self.frame_number + addv)
-            else:
-                self._print_frame_diff(self.frame_number + addv)
+            self._print_frame_diff(self.frame_number + addv)
             sleep(time)
             if self.stop:
                 self.stop = False
@@ -209,7 +210,7 @@ class AsciiVisualizer:
         self._help()
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         self._detect_arrow(getch())
-        self._print_frame(0)
+        self._print_frame_diff(0)
         self.nextc = False
         self.prevspec = False
         try:
@@ -219,11 +220,11 @@ class AsciiVisualizer:
                 if arrow is None and key is None:
                     continue
                 if arrow == 'H':
-                    self._print_frame(0)
+                    self._print_frame_diff(0)
                 elif arrow == 'E':
-                    self._print_frame(len(self.game_controller.jury_states) - 1)
+                    self._print_frame_diff(len(self.game_controller.jury_states) - 1)
                 elif arrow == 'N':
-                    self._print_frame(
+                    self._print_frame_diff(
                         min(
                             len(self.game_controller.jury_states) - 1,
                             self.frame_number +
@@ -231,7 +232,7 @@ class AsciiVisualizer:
                         )
                     )
                 elif arrow == 'U':
-                    self._print_frame(
+                    self._print_frame_diff(
                         max(0, self.frame_number -
                             int(len(self.game_controller.jury_states) / 20))
                     )
@@ -242,16 +243,13 @@ class AsciiVisualizer:
                         else:
                             self._print_frame_diff(self.frame_number + 1)
                     else:
-                        self._print_frame(self.frame_number)
+                        self._print_frame_diff(self.frame_number)
                         self._error('this is the last frame.')
                 elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
                     if self.frame_number > 0:
-                        if name == 'posix':
-                            self._print_frame_diff(self.frame_number - 1)
-                        else:
-                            self._print_frame(self.frame_number - 1)
+                        self._print_frame_diff(self.frame_number - 1)
                     else:
-                        self._print_frame(self.frame_number)
+                        self._print_frame_diff(self.frame_number)
                         self._error('this is the first frame.')
                 elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
                     while True:
@@ -283,7 +281,7 @@ class AsciiVisualizer:
                                         thread.start()
                                 except KeyboardInterrupt:
                                     _clear()
-                                    self._print_frame(self.frame_number)
+                                    self._print_frame_diff(self.frame_number)
                                 break
                         self._error('The speed must be a real nonzero number')
                 elif arrow is None and key in self.key_sets['quit']:
@@ -296,14 +294,14 @@ class AsciiVisualizer:
                         if frame.isnumeric():
                             number = int(frame) - 1
                             if number >= 0 and number < self._jury_state_count():
-                                self._print_frame(number)
+                                self._print_frame_diff(number)
                                 break
                             else:
                                 self._error('No such frame.')
                         else:
                             self._error('enter a NUMBER.')
                 else:
-                    self._print_frame(self.frame_number)
+                    self._print_frame_diff(self.frame_number)
                     self._help()
         finally:
             _clear()
