@@ -1,6 +1,8 @@
 import random
 import copy
 from jury_state import JuryState
+from math import sqrt
+
 
 _field_size = random.randint(10, 20)
 
@@ -21,6 +23,7 @@ class Generator:
 
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
+
         for player in range(players_count):
             player_x = random.randint(0, _field_size - 1)
             player_y = random.randint(0, _field_size - 1)

@@ -19,7 +19,7 @@ begin
  WriteLn ('Hello, world!');
 end.
 '''], ['py', '''
-print("Hello, world!")
+print('Hello, world!')
 ''']]
 
 
@@ -41,7 +41,7 @@ class BotCompilerTest(unittest.TestCase):
         ''' Creates source code files to compile '''
         j = 1
         for extension, program in HelloWorld:
-            f = open("hello{}.{}".format(str(j), extension), 'w')
+            f = open('hello{}.{}'.format(str(j), extension), 'w')
             for line in program:
                 f.writelines([line])
             f.close()
@@ -49,11 +49,11 @@ class BotCompilerTest(unittest.TestCase):
 
     def tearDown(self):
         ''' Removes source code files from disk '''
-        os.remove("hello1.cpp")
-        os.remove("hello1")
-        os.remove("hello2.pas")
-        os.remove("hello2")
-        os.remove("hello3.py")
+        os.remove('hello1.cpp')
+        os.remove('hello1')
+        os.remove('hello2.pas')
+        os.remove('hello2')
+        os.remove('hello3.py')
 
     def test_compile(self):
         bot_c = bot_compiler.BotCompiler()

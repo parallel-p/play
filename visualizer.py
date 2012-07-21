@@ -55,7 +55,7 @@ class VideoVisualizer:
         self._tempfiles = []
         self.mode = None
 
-    def _create_tempfile(self, suffix=""):
+    def _create_tempfile(self, suffix=''):
         self._tempfiles.append(tempfile.mkstemp(suffix))
         return self._tempfiles[-1]
 
@@ -77,7 +77,7 @@ class VideoVisualizer:
 
     def _get_game_controller(self, filename):
         '''Unpickles a game controller.'''
-        with open(filename, "rb") as file:
+        with open(filename, 'rb') as file:
             return pickle.load(file)
 
     def _generate_game_images(self, jstates):
@@ -94,7 +94,7 @@ class VideoVisualizer:
             # Unfortunately, MPEG1/2 format does not support any framerates
             # lower than 24 fps. So we have to clone images:
             file_list.append(self._create_tempfile(self.ext))
-            with open(file_list[-1][1], "wb") as f:
+            with open(file_list[-1][1], 'wb') as f:
                 f.write(image)
             if self.size is None or self.mode is None:
                 im = Image.open(file_list[-1][1])
