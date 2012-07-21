@@ -6,13 +6,17 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 
 FRAME_SIDE = 1024
-FREE_SIDE = 512
+FREE_SIDE = 1024
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
 LINE_WIDTH = 1
 MAX_NAME_LENGTH = 15
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
+
+
+class NoPlayerInTheListException(Exception):
+    pass
 
 
 def get_path(filename):
@@ -70,37 +74,20 @@ class Painter:
                                              SMALL_SIDE
                                              )
 
-    def draw_on_the_left(self, x, players, text, bullets_count, color, draw, image):
-        font = ImageFont.truetype(get_path('times.ttf'), 40)
-
-        y = players * (SMALL_SIDE + MARGIN)
-        draw.text((45, y + SMALL_SIDE // 5),
-                  text,
-                  fill='black',
-                  font=font
-                  )
-
-        x += 60
-        draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
-                       fill=color
-                       )
-
-        x += SMALL_SIDE + 20
-        patron_font = ImageFont.truetype(get_path('times.ttf'), 30)
-        draw.text((x, y + SMALL_SIDE // 4), str(bullets_count), fill='black',
-                  font=patron_font
-                  )
-        image.paste(self._patron_ico_left,
-                    (x + 20, y),
-                    self._patron_ico_left
-                    )
-
     def cut_all_names(self, jury_state):
         for player in self.players:
             player.author_name = player.author_name[:MAX_NAME_LENGTH]
         if jury_state.collision:
             for collision in jury_state.collision:
                 collision.author_name = collision.author_name[:MAX_NAME_LENGTH]
+
+    def index_of_player(self, _list, player_to_find):
+        if (len(_list) == 0):
+            return -1
+        for idx, player in enumerate(_list):
+            if (player.author_name == player_to_find.author_name):
+                return idx
+        return -1
 
     def paint(self, jury_state):
         '''
@@ -123,20 +110,41 @@ class Painter:
         '''
         x is maximal width of players names
         '''
-        x = -1
+        max_x = -1
         for player in self.players:
             font = ImageFont.truetype(get_path('times.ttf'), 40)
-            x = max(x, font.getsize(player.author_name)[0])
+            max_x = max(max_x, font.getsize(player.author_name)[0])
 
         '''
         Drawing Names, colors on the left of picture
         '''
         for num, player in enumerate(self.players):
-            self.draw_on_the_left(x, num,
-                                  player.author_name,
-                                  jury_state.bullets[self.players.index(player)],
-                                  colors[num + 1], draw, image
-                                  )
+            x = max_x
+            font = ImageFont.truetype(get_path('times.ttf'), 40)
+
+            y = num * (SMALL_SIDE + MARGIN)
+            draw.text((45, y + SMALL_SIDE // 5),
+                      player.author_name,
+                      fill='black',
+                      font=font
+                      )
+
+            x += 60
+            draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
+                           fill=colors[num + 1]
+                           )
+
+            x += SMALL_SIDE + 20
+            patron_font = ImageFont.truetype(get_path('times.ttf'), 30)
+            draw.text((x, y + SMALL_SIDE // 4), str(jury_state.bullets[num]), fill='black',
+                      font=patron_font
+                      )
+            image.paste(self._patron_ico_left,
+                        (x + 20, y),
+                        self._patron_ico_left
+                        )
+            if (self.index_of_player(jury_state.dead_players, player) != -1):
+                draw.text((x + 80, y), 'Dead with score ' + str(jury_state.scores[player]), fill='black', font = font)
 
         if not jury_state.collision:
             '''
@@ -201,7 +209,9 @@ class Painter:
             player_names = [None] * 2
             for idx, player in enumerate(jury_state.collision):
                 player_names[idx] = jury_state.collision[idx].author_name
-                player_id = self.players.index(player) + 1
+                player_id = self.index_of_player(self.players, player) + 1
+                if player_id == 0:
+                    raise NoPlayerInTheListException('There is no such player in the list')
                 color = colors[player_id]
                 bullets_count[idx] = jury_state.bullets[player_id - 1]
                 draw.rectangle(rectangles[idx], fill=color)
@@ -278,4 +288,6 @@ field[3][3] = 3
 field[4][5] = 4
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
 jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, None, None)
+jury_state.dead_players = [one]
+jury_state.scores[one] = 5
 painter.paint(jury_state)'''
