@@ -60,7 +60,7 @@ class Painter():
     bullets      : black  `**`      on yellow;
     players      : white  `P{0:1x}` on magenta.'''
         import config
-        default_chars = ('@@', '[]', '**', 'P{0:1x}'),
+        default_chars = ('@@', '[]', '**', 'P{}'),
         default_colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
         if chars is None:
             try:
