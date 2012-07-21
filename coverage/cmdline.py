@@ -239,35 +239,35 @@ CMDS = {
             Opts.omit,
             Opts.include,
             ] + GLOBAL_ARGS,
-        usage = "[options] [modules]",
-        description = "Make annotated copies of the given files, marking "
+        usage="[options] [modules]",
+        description="Make annotated copies of the given files, marking "
             "statements that are executed with > and statements that are "
             "missed with !."
         ),
 
     'combine': CmdOptionParser("combine", GLOBAL_ARGS,
-        usage = " ",
-        description = "Combine data from multiple coverage files collected "
+        usage=" ",
+        description="Combine data from multiple coverage files collected "
             "with 'run -p'.  The combined results are written to a single "
             "file representing the union of the data."
         ),
 
     'debug': CmdOptionParser("debug", GLOBAL_ARGS,
-        usage = "<topic>",
-        description = "Display information on the internals of coverage.py, "
+        usage="<topic>",
+        description="Display information on the internals of coverage.py, "
             "for diagnosing problems. "
             "Topics are 'data' to show a summary of the collected data, "
             "or 'sys' to show installation information."
         ),
 
     'erase': CmdOptionParser("erase", GLOBAL_ARGS,
-        usage = " ",
-        description = "Erase previously collected coverage data."
+        usage=" ",
+        description="Erase previously collected coverage data."
         ),
 
     'help': CmdOptionParser("help", GLOBAL_ARGS,
-        usage = "[command]",
-        description = "Describe how to use coverage.py"
+        usage="[command]",
+        description="Describe how to use coverage.py"
         ),
 
     'html': CmdOptionParser("html",
@@ -277,8 +277,8 @@ CMDS = {
             Opts.omit,
             Opts.include,
             ] + GLOBAL_ARGS,
-        usage = "[options] [modules]",
-        description = "Create an HTML report of the coverage of the files.  "
+        usage="[options] [modules]",
+        description="Create an HTML report of the coverage of the files.  "
             "Each file gets its own page, with the source decorated to show "
             "executed, excluded, and missed lines."
         ),
@@ -290,8 +290,8 @@ CMDS = {
             Opts.include,
             Opts.show_missing,
             ] + GLOBAL_ARGS,
-        usage = "[options] [modules]",
-        description = "Report coverage statistics on modules."
+        usage="[options] [modules]",
+        description="Report coverage statistics on modules."
         ),
 
     'run': CmdOptionParser("execute",
@@ -306,10 +306,10 @@ CMDS = {
             Opts.omit,
             Opts.include,
             ] + GLOBAL_ARGS,
-        defaults = {'erase_first': True},
-        cmd = "run",
-        usage = "[options] <pyfile> [program options]",
-        description = "Run a Python program, measuring code execution."
+        defaults={'erase_first': True},
+        cmd="run",
+        usage="[options] <pyfile> [program options]",
+        description="Run a Python program, measuring code execution."
         ),
 
     'xml': CmdOptionParser("xml",
@@ -319,10 +319,10 @@ CMDS = {
             Opts.include,
             Opts.output_xml,
             ] + GLOBAL_ARGS,
-        cmd = "xml",
-        defaults = {'outfile': 'coverage.xml'},
-        usage = "[options] [modules]",
-        description = "Generate an XML report of coverage results."
+        cmd="xml",
+        defaults={'outfile': 'coverage.xml'},
+        usage="[options] [modules]",
+        description="Generate an XML report of coverage results."
         ),
     }
 
@@ -459,14 +459,14 @@ class CoverageScript(object):
 
         # Do something.
         self.coverage = self.covpkg.coverage(
-            data_suffix = options.parallel_mode,
-            cover_pylib = options.pylib,
-            timid = options.timid,
-            branch = options.branch,
-            config_file = options.rcfile,
-            source = source,
-            omit = omit,
-            include = include,
+            data_suffix=options.parallel_mode,
+            cover_pylib=options.pylib,
+            timid=options.timid,
+            branch=options.branch,
+            config_file=options.rcfile,
+            source=source,
+            omit=omit,
+            include=include,
             )
 
         if 'debug' in options.actions:
@@ -532,10 +532,10 @@ class CoverageScript(object):
 
         # Remaining actions are reporting, with some common options.
         report_args = dict(
-            morfs = args,
-            ignore_errors = options.ignore_errors,
-            omit = omit,
-            include = include,
+            morfs=args,
+            ignore_errors=options.ignore_errors,
+            omit=omit,
+            include=include,
             )
 
         if 'report' in options.actions:

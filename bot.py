@@ -4,8 +4,7 @@ from log import logger
 import config
 import copy
 import bot_no_psutil
-from bot_no_psutil import BadPipesError, ExecuteError,\
-                   ProcessNotRunningException, TimeLimitException
+from bot_no_psutil import ExecuteError, ProcessNotRunningException, TimeLimitException
 
 
 MEGABYTE = 1 << 20
@@ -19,6 +18,7 @@ while process.is_running():
 # then count of steps became equal to
 # `y`, check limits and delete information
 '''
+
 
 class MemoryLimitException(OSError):
     '''

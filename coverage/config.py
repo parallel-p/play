@@ -167,4 +167,3 @@ class CoverageConfig(object):
         """
         value_list = cp.get(section, option)
         return list(filter(None, value_list.split('\n')))
-

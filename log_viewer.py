@@ -12,7 +12,6 @@ def main():
     from main import Main
     from development_tools.frame_visualizer import FrameVisualizer
 
-
     file = open(sys.argv[2], mode='rb')
     test_game_controller = pickle.load(file)
     file.close()

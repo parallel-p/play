@@ -42,7 +42,7 @@ class Analysis(object):
             n_branches = self.total_branches()
             mba = self.missing_branch_arcs()
             n_missing_branches = sum(
-                [len(v) for k,v in mba.items() if k not in self.missing]
+                [len(v) for k, v in mba.items() if k not in self.missing]
                 )
         else:
             n_branches = n_missing_branches = 0
@@ -78,7 +78,7 @@ class Analysis(object):
         """Returns a sorted list of the arcs actually executed in the code."""
         executed = self.coverage.data.executed_arcs(self.filename)
         m2fl = self.parser.first_line
-        executed = [(m2fl(l1), m2fl(l2)) for (l1,l2) in executed]
+        executed = [(m2fl(l1), m2fl(l2)) for (l1, l2) in executed]
         return sorted(executed)
 
     def arcs_missing(self):
@@ -109,7 +109,7 @@ class Analysis(object):
     def branch_lines(self):
         """Returns a list of line numbers that have more than one exit."""
         exit_counts = self.parser.exit_counts()
-        return [l1 for l1,count in exit_counts.items() if count > 1]
+        return [l1 for l1, count in exit_counts.items() if count > 1]
 
     def total_branches(self):
         """How many total branches are there?"""
@@ -179,7 +179,7 @@ class Numbers(object):
         """Set the number of decimal places used to report percentages."""
         assert 0 <= precision < 10
         cls._precision = precision
-        cls._near0 = 1.0 / 10**precision
+        cls._near0 = 1.0 / 10 ** precision
         cls._near100 = 100.0 - cls._near0
     set_precision = classmethod(set_precision)
 

@@ -1,7 +1,13 @@
 """Better tokenizing for coverage.py."""
 
-import codecs, keyword, re, sys, token, tokenize
+import codecs
+import keyword
+import re
+import sys
+import token
+import tokenize
 from coverage.backward import StringIO              # pylint: disable=W0622
+
 
 def phys_tokens(toks):
     """Return all physical tokens, even line continuations.
@@ -50,7 +56,7 @@ def phys_tokens(toks):
                     # Yield the token, with a fake token type.
                     yield (
                         99999, "\\\n",
-                        (slineno, ccol), (slineno, ccol+2),
+                        (slineno, ccol), (slineno, ccol + 2),
                         last_line
                         )
             last_line = ltext
@@ -106,6 +112,7 @@ def source_token_lines(source):
 
     if line:
         yield line
+
 
 def source_encoding(source):
     """Determine the encoding for `source` (a string), according to PEP 263.

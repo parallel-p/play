@@ -45,7 +45,7 @@ class GameSimulator:
         new_move = self.bots[player].get_move(player_state,
                                               serialaizer, deserializer)
         logger.debug('bot \'%s\' made a move', player.bot_name)
-        print('.', end = '')
+        print('.', end='')
         sys.stdout.flush()
         return new_move
 

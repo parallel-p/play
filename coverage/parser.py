@@ -1,8 +1,12 @@
 """Code parsing for Coverage."""
 
-import opcode, re, sys, token, tokenize
+import opcode
+import re
+import sys
+import token
+import tokenize
 
-from coverage.backward import set, sorted, StringIO # pylint: disable=W0622
+from coverage.backward import set, sorted, StringIO  # pylint: disable=W0622
 from coverage.backward import open_source
 from coverage.bytecode import ByteCodes, CodeObjects
 from coverage.misc import nice_pair, expensive, join_regex
@@ -80,7 +84,7 @@ class CodeParser(object):
         matches = set()
         for i, ltext in enumerate(self.lines):
             if regex_c.search(ltext):
-                matches.add(i+1)
+                matches.add(i + 1)
         return matches
 
     def _raw_parse(self):
@@ -130,7 +134,7 @@ class CodeParser(object):
                 # (a trick from trace.py in the stdlib.) This works for
                 # 99.9999% of cases.  For the rest (!) see:
                 # http://stackoverflow.com/questions/1769332/x/1769794#1769794
-                for i in range(slineno, elineno+1):
+                for i in range(slineno, elineno + 1):
                     self.docstrings.add(i)
             elif toktype == token.NEWLINE:
                 if first_line is not None and elineno != first_line:
@@ -138,7 +142,7 @@ class CodeParser(object):
                     # different line than the first line of the statement,
                     # so record a multi-line range.
                     rng = (first_line, elineno)
-                    for l in range(first_line, elineno+1):
+                    for l in range(first_line, elineno + 1):
                         self.multiline[l] = rng
                 first_line = None
 
@@ -260,6 +264,7 @@ class CodeParser(object):
 def _opcode(name):
     """Return the opcode by name from the opcode module."""
     return opcode.opmap[name]
+
 
 def _opcode_set(*names):
     """Return a set of opcodes by the names in `names`."""
@@ -484,7 +489,7 @@ class ByteParser(object):
                     chunk.exits.add(block_stack[-1][1])
                 # For the finally clause we need to find the closest exception
                 # block, and use its jump target as an exit.
-                for iblock in range(len(block_stack)-1, -1, -1):
+                for iblock in range(len(block_stack) - 1, -1, -1):
                     if block_stack[iblock][0] in OPS_EXCEPT_BLOCKS:
                         chunk.exits.add(block_stack[iblock][1])
                         break
@@ -518,8 +523,8 @@ class ByteParser(object):
 
             # Give all the chunks a length.
             chunks[-1].length = bc.next_offset - chunks[-1].byte
-            for i in range(len(chunks)-1):
-                chunks[i].length = chunks[i+1].byte - chunks[i].byte
+            for i in range(len(chunks) - 1):
+                chunks[i].length = chunks[i + 1].byte - chunks[i].byte
 
         return chunks
 
@@ -559,7 +564,7 @@ class ByteParser(object):
                     ch = byte_chunks[byte]
                 except KeyError:
                     for ch in chunks:
-                        if ch.byte <= byte < ch.byte+ch.length:
+                        if ch.byte <= byte < ch.byte + ch.length:
                             break
                     else:
                         # No chunk for this byte!

@@ -82,6 +82,7 @@ if sys.version_info >= (3, 0):
         from io import TextIOWrapper
         detect_encoding = tokenize.detect_encoding  # pylint: disable=E1101
         # Copied from the 3.2 stdlib:
+
         def open_source(fname):
             """Open a file in read only mode using the encoding detected by
             detect_encoding().

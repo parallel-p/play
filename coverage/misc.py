@@ -57,6 +57,7 @@ def expensive(fn):
 
     """
     attr = "_cache_" + fn.__name__
+
     def _wrapped(self):
         """Inner fn that checks the cache."""
         if not hasattr(self, attr):
@@ -122,13 +123,16 @@ class CoverageException(Exception):
     """An exception specific to Coverage."""
     pass
 
+
 class NoSource(CoverageException):
     """We couldn't find the source for a module."""
     pass
 
+
 class NotPython(CoverageException):
     """A source file turned out not to be parsable Python."""
     pass
+
 
 class ExceptionDuringRun(CoverageException):
     """An exception happened while running customer code.

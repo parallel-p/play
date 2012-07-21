@@ -1,6 +1,9 @@
 """HTML reporting for Coverage."""
 
-import os, re, shutil, sys
+import os
+import re
+import shutil
+import sys
 
 import coverage
 from coverage.backward import pickle
@@ -13,9 +16,11 @@ from coverage.templite import Templite
 # they're accessed in a Templite context via locals().
 # pylint: disable=W0612
 
+
 def data_filename(fname):
     """Return the path to a data file of ours."""
     return os.path.join(os.path.split(__file__)[0], fname)
+
 
 def data(fname):
     """Return the contents of a data file of ours."""
@@ -346,6 +351,7 @@ def escape(t):
             # so that "....." -> "&nbsp;.&nbsp;&nbsp;."
             .replace("  ", "&nbsp; ")
         )
+
 
 def spaceless(html):
     """Squeeze out some annoying extra space from an HTML string.

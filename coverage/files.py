@@ -2,7 +2,11 @@
 
 from coverage.backward import to_string
 from coverage.misc import CoverageException
-import fnmatch, os, re, sys
+import fnmatch
+import os
+import re
+import sys
+
 
 class FileLocator(object):
     """Understand how filenames work."""
@@ -62,12 +66,12 @@ class FileLocator(object):
 
         """
         import zipimport
-        markers = ['.zip'+os.sep, '.egg'+os.sep]
+        markers = ['.zip' + os.sep, '.egg' + os.sep]
         for marker in markers:
             if marker in filename:
                 parts = filename.split(marker)
                 try:
-                    zi = zipimport.zipimporter(parts[0]+marker[:-1])
+                    zi = zipimport.zipimporter(parts[0] + marker[:-1])
                 except zipimport.ZipImportError:
                     continue
                 try:

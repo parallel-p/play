@@ -2,7 +2,7 @@
 from unittest.mock import Mock
 
 good = Mock(bot_name='GoodBot', author_name='Longcat')
-bad  = Mock(bot_name='BadBot', author_name='Tacgnol')
+bad = Mock(bot_name='BadBot', author_name='Tacgnol')
 dead = Mock(bot_name='DeadBot', author_name='Tima')
 
 tests = [

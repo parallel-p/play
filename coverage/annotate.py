@@ -4,6 +4,7 @@ import os, re
 
 from coverage.report import Reporter
 
+
 class AnnotateReporter(Reporter):
     """Generate annotated source files showing line coverage.
 

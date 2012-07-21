@@ -2,6 +2,7 @@
 
 import opcode, sys, types
 
+
 class ByteCode(object):
     """A single bytecode."""
     def __init__(self):
@@ -49,9 +50,9 @@ class ByteCodes(object):
         bc.op = self[self.offset]
         bc.offset = self.offset
 
-        next_offset = self.offset+1
+        next_offset = self.offset + 1
         if bc.op >= opcode.HAVE_ARGUMENT:
-            bc.arg = self[self.offset+1] + 256*self[self.offset+2]
+            bc.arg = self[self.offset + 1] + 256 * self[self.offset + 2]
             next_offset += 2
 
             label = -1
