@@ -24,7 +24,7 @@ NORMAL_TIME = TIME / 5
 class BotTest(unittest.TestCase):
     def test_create_process(self):
         ''' This test checks if bot process are created correctly. '''
-        test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
+        test_bot = bot.Bot(PLAYER_COMMAND)
         test_bot.create_process()
         self.assertTrue(test_bot._is_running())
         test_bot.kill_process()
@@ -32,13 +32,13 @@ class BotTest(unittest.TestCase):
     def test_wrong_command(self):
         ''' This test checks whether error is raised when wrong
         command is executed '''
-        test_bot = bot.Bot(WRONG_PLAYER_COMMAND, CONFIG)
+        test_bot = bot.Bot(WRONG_PLAYER_COMMAND)
         with self.assertRaises(OSError):
             test_bot.create_process()
 
     def test_kill_process(self):
         ''' This test checks if the bot process was killed correctly '''
-        test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
+        test_bot = bot.Bot(PLAYER_COMMAND)
         test_bot.create_process()
         test_bot.kill_process()
         self.assertFalse(test_bot._is_running())
@@ -51,7 +51,7 @@ class BotTest(unittest.TestCase):
         def side_effect_for_serialize(PLAYER_STATE, pipe):
             pipe.write(b'abc\n')
 
-        test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
+        test_bot = bot.Bot(PLAYER_COMMAND)
         test_bot.create_process()
 
         deserialize = Mock()
@@ -93,7 +93,7 @@ class BotTest(unittest.TestCase):
             self.assertRaises(TimeLimitException)
             test_bot.kill_process()
 
-        test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
+        test_bot = bot.Bot(PLAYER_COMMAND)
         deserialize = Mock()
         serialize = Mock()
         test_without_timelimit_error()
@@ -103,7 +103,7 @@ class BotTest(unittest.TestCase):
         ''' Tests if ``MemoryLimitError`` is raised when a bot exceeds
         memory limit and whether not if it didn't. '''
         def test_without_memorylimit_error():
-            test_bot = bot.Bot(PLAYER_COMMAND, CONFIG)
+            test_bot = bot.Bot(PLAYER_COMMAND)
             test_bot.create_process()
             move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
             # mebibyte = 2 ** 20
@@ -112,7 +112,7 @@ class BotTest(unittest.TestCase):
             self.assertLessEqual(cpu_memory, MEMORY)
 
         def test_with_memorylimit_error():
-            test_bot = bot.Bot(ML_PLAYER_COMMAND, CONFIG)
+            test_bot = bot.Bot(ML_PLAYER_COMMAND)
             test_bot.create_process()
             move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
             self.assertRaises(MemoryLimitException)
