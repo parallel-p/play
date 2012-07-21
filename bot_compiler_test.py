@@ -3,6 +3,8 @@ import subprocess
 import unittest
 import os
 
+player_command_file = 'ololo'
+
 HelloWorld = [
     ['cpp', '''
 #include <iostream>
@@ -57,11 +59,11 @@ class BotCompilerTest(unittest.TestCase):
 
     def test_compile(self):
         bot_c = bot_compiler.BotCompiler()
-        bot_c.compile(players)
-        f = open('config.ini', 'r')
+        bot_c.compile(players, player_command_file)
+        f = open(player_command_file, 'r')
         bots = f.readlines()
         for bot in bots:
-            command_line = bot.split('\"')[5]
+            command_line = bot.split("\'")[5]
             process = subprocess.Popen(command_line, shell=True,
                 cwd=os.path.abspath(os.curdir),
                 stdout=subprocess.PIPE)
