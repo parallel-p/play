@@ -1,47 +1,22 @@
 import sys
 
 
-
-def print_dbg(dbgstring):
-    f = open('/home/denshion/dmitesttxt', mode='ta')
-    f.write(dbgstring + '\n')
-    f.close()
-
-
 def get_distance(my_x, my_y, dest_x, dest_y):
     return abs(my_x - dest_x) + abs(my_y - dest_y)
 
 
 def make_move(my_x, my_y, dest_x, dest_y):
-    print_dbg('Movement invokation: from ({}; {}) to ({}; {})'.format(my_x, my_y, dest_x, dest_y))
-    print_dbg('Determine: dx={}; dy={}'.format(my_x - dest_x, my_y - dest_y))
     if abs(dest_x - my_x) < abs(dest_y - my_y):
-        print_dbg('Selected mode |dx| < |dy|')
         if my_y > dest_y:
-            print_dbg('my_y > dest_y')
-#            print('UP')
             print('LEFT')
-            print_dbg('Reply: UP')
         elif dest_y > my_y:
-            print_dbg('my_y < dest_y')
- #           print('DOWN')
             print('RIGHT')
-            print_dbg('Reply: DOWN')
     else:
-        print_dbg('Selected mode |dx| >= |dy|')
         if my_x > dest_x:
-            print_dbg('my_x > dest_x')
             print('UP')
-  #          print('LEFT')
-            print_dbg('Reply: LEFT')
         elif dest_x > my_x:
-            print_dbg('my_x < dest_x')
             print('DOWN')
-   #         print('RIGHT')
-            print_dbg('Reply: RIGHT')
         else:
-            print_dbg('DEFAULT CASE')
-            print_dbg('Reply: STAND')
             print('STAND')
     sys.stdout.flush()
 
@@ -53,23 +28,20 @@ def determine_target(my_x, my_y, targets):
                 targets[0][2] == target[2] and get_distance(
                     my_x, my_y, target[0], target[1]) < get_distance(
                         my_x, my_y, result[0], result[1]))):
-            print_dbg('Selected target enemy={}'.format(target))
             result = target
         elif len(targets[0]) == 2 and get_distance(
                 my_x, my_y, target[0], target[1]) < get_distance(
                     my_x, my_y, result[0], result[1]):
             result = target
-            print_dbg('Selected target bullet={}'.format(target))
     return result
+
 
 def main():
     ''' Strategy:
         if there are some bullets, gather them;
             but if we have more bullets, than the enemy does and
             we can reach him before he finds one, go and kill him.
-        if there are no bullets, do the following:
-            if we have more bullets, than the enemy does, go and kill him.
-            Otherwise, run away (place?) '''
+        if there are no bullets, go and attack the enemy. '''
     n = int(input())
     while True:
         input1 = input()
@@ -86,7 +58,6 @@ def main():
             inputt = input()
             bullet = tuple(map(int, inputt.split()))
             bullets.append(bullet)
-        print_dbg("bULLETS: " + str(bullet_num))
         if bullet_num > 0:
             for enemy in enemies:
                 enemy_bullet = determine_target(
@@ -99,14 +70,12 @@ def main():
                                 # If I find an enemy, whose ammo is lower,
                                 # than mine and I would reach him before he
                                 # gets a bullet, I'll go and kill him.
-                                print_dbg('I WILL BREAK YOU!')
                                 make_move(my_x, my_y, enemy[0], enemy[1])
                                 continue
             # And if there isn't such one, I'll just collect bullets.
             bullet = determine_target(my_x, my_y, bullets)
             make_move(my_x, my_y, bullet[0], bullet[1])
         else:
-            print_dbg("Enemies: " + str(len(enemies)))
             if len(enemies) == 0:
                 make_move(my_x, my_y, n // 2, n // 2)
                 # If I'm alone, I'll go to the center.
@@ -116,7 +85,6 @@ def main():
                 # attack is better here.
                 target = determine_target(my_x, my_y, enemies)
                 make_move(my_x, my_y, target[0], target[1])
-#        (players, bullet_num, k) = map(int, input().split())
 
 
 if __name__ == '__main__':
