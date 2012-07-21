@@ -30,7 +30,7 @@ class GameMaster:
                     serialize_field_side, deserialize_start
                 )
             except OSError:
-                self._kill_player(cur_player, -1)
+                self._kill_player(player, -1)
         self._state = start_state
         self._controller.report_state(self._state)
 
