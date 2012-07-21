@@ -11,6 +11,7 @@ RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
 LINE_WIDTH = 1
+MAX_NAME_LENGTH = 15
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -80,6 +81,13 @@ class Painter:
                        fill=color
                        )
 
+    def cut_all_names(self, jury_state):
+        for player in self.players:
+            player.author_name = player.author_name[:MAX_NAME_LENGTH]
+        if jury_state.collision:
+            for collision in jury_state.collision:
+                collision.author_name = collision.author_name[:MAX_NAME_LENGTH]
+
     def paint(self, jury_state):
         '''
         Paints the state of the game;
@@ -87,6 +95,7 @@ class Painter:
         '''
         if not self._is_initialized:
             self._initialize(jury_state)
+        self.cut_all_names(jury_state)
 
         image = Image.new('RGBA',
                           (self._width, self._height),
@@ -236,13 +245,13 @@ class Painter:
 
         del draw
 
-        image.save("test-1.png", "PNG")
+        #image.save("test-1.png", "png")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
 
-one = Player(None, 'Dima')
-two = Player(None, 'VasyaVasyaVasya')
+'''one = Player(None, 'Dmitry Philippov')
+two = Player(None, 'Petr Smirnov')
 painter = Painter([one, two])
 side = 10
 field = [[0 for i in range(side)] for j in range(side)]
@@ -250,4 +259,4 @@ field[7][3] = 1
 field[7][4] = 2
 field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
 jury_state = JuryState(side, field, [30, 17], None, None, None, None)
-painter.paint(jury_state)
+painter.paint(jury_state)'''
