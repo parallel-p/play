@@ -11,6 +11,7 @@ import config
 from lib.keyboard_capture import getch
 from time import sleep
 from os import name, system
+from threading import Thread
 
 
 def _clear():
@@ -36,6 +37,7 @@ class AsciiVisualizer:
         self.painter_factory = config.AsciiPainter
         self.game_controller = game_controller
         self.frame_number = 0
+        self.stop = False
         self.key_sets = {
             'next': 'Nn.>]}+= \r\n',
             'prev': 'Bb\|,<[{-_',
@@ -169,7 +171,21 @@ class AsciiVisualizer:
 
         return (key, arrow)
 
+    def auto(self, addv, time, jscount, endframe, name):
+        while (self.frame_number + addv < jscount and
+                self.frame_number + addv >= 0 and 
+                    self.frame_number != endframe):
+            if name == 'posix':
+                self._print_frame_diff(self.frame_number + addv)
+            else:
+                self._print_frame(self.frame_number + addv)
+            sleep(time)
+            if self.stop:
+                self.stop = False
+                break
+
     def activate(self):
+        thread = None
         ''' Like ``FrameVisualizer``, ``AsciiVisualizer`` won't start
         on init - if you want to see the output, you have to invoke this
         method. '''
@@ -184,6 +200,7 @@ class AsciiVisualizer:
         try:
             while True:
                 (key, arrow) = self._read_key()
+                self.stop = True
                 if arrow is None and key is None:
                     continue
                 if arrow == 'H':
@@ -244,15 +261,11 @@ class AsciiVisualizer:
                                 else:
                                     endframe = jscount
                                 try:
-                                    while (
-                                        (self.frame_number + addv) < jscount) and (
-                                            self.frame_number + addv) >= 0 and (
-                                                self.frame_number != endframe):
-                                        if name == 'posix':
-                                            self._print_frame_diff(self.frame_number + addv)
-                                        else:
-                                            self._print_frame(self.frame_number + addv)
-                                        sleep(time)
+                                    if not thread or not thread.is_alive():
+                                        self.stop = False
+                                        thread = Thread(target=self.auto,
+                                                        args=(addv, time, jscount, endframe, name))
+                                        thread.start()
                                 except KeyboardInterrupt:
                                     _clear()
                                     self._print_frame(self.frame_number)
