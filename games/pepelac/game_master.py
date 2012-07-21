@@ -75,10 +75,15 @@ class GameMaster:
                 cell = self._state.field[new_row][new_col]
                 if cell > 0 and turn != cell - 1:
                     raise IncorrectMoveException()
-            except (OSError, DeserializeMoveException, IncorrectMoveException):
+            except IncorrectMoveException:
                 self._kill_player(cur_player, -1)
                 continue
-
+            except DeserializeMoveException:
+                self._kill_player(cur_player, 'wrong output')
+                continue
+            except OSError as error:
+                self._kill_player(cur_player, str(error))
+                continue
             if cell == BULLET:
                 self._state.bullets[turn] += 1
 

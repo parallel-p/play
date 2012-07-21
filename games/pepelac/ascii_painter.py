@@ -86,13 +86,15 @@ class Painter():
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
             why_dead = ''
             if player in dead:
-                if dead_reason[player] == -1:
-                    why_dead = 'made invalid move'
+                if dead_reason[player] == 1:
+                    why_dead = 'killed in fight'
+                elif dead_reason[player] == -1:
+                    why_dead = 'stepped somewhere wrong'
                 elif dead_reason[player] == 0:
                     why_dead = 'burnt in Armageddon'
                 else:
-                    why_dead = 'killed in fight'
-            (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:20}{textc}), with score {numcolor}{score:4}{textc} ') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets   ' + ' ' * 30)
+                    why_dead = dead_reason[player]
+            (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:25}{textc}), with score {numcolor}{score:4}{textc} ') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets   ' + ' ' * 35)
             scor = scores.get(player)
             if scor is None:
                 scor = 0

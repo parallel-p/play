@@ -20,9 +20,11 @@ class JuryState:
 
         dead_reason is reason of death
 
-        if dead_reason[player] == -1 then player made wrong move
-        if dead_reason[player] == 0 then player killed by Armageddon
-        if dead_reason[player] == 1 then player killed with bullet
+        if dead_reason[player] == -1 then player stepped somewhere wrong
+        if dead_reason[player] == 0 then player was killed by Armageddon
+        if dead_reason[player] == 1 then player was killed with bullet
+        Otherwise, an error has occurred and dead_reason[player] is a string
+        with its representation.
         '''
         self.scores = scores
         self.field_side = field_side

@@ -22,25 +22,31 @@ class ExecuteError(OSError):
     This exception is raised when create_process
     cannot start bot process (e.g. invalid command)
     '''
-
+    def __init__(self):
+        OSError.__init__(self, 'can\'t start bot process')
 
 class ProcessNotRunningException(OSError):
     '''
     This exception is raised after trying to
     send command to process that is not running.
     '''
-
+    def __init__(self):
+        OSError.__init__(self, 'process isn\'t running')
 
 class TimeLimitException(OSError):
     '''
     This exception is raised when bot's process exceeded time limit.
     '''
+    def __init__(self):
+        OSError.__init__(self, 'time limit exceeded')
 
 
 class BadPipesError(OSError):
     '''
     This exception is raised when bot's process pipes are broken.
     '''
+    def __init__(self):
+        OSError.__init__(self, 'pipes are broken')
 
 
 class Bot:
