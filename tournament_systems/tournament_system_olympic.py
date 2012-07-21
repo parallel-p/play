@@ -74,3 +74,19 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
+
+    def get_round_name(self, round_number, rounds_overall):
+        ''' Determines special names for rounds, e.g. final or
+        1/8 final. Returns None if no name is given.
+            ``round_number`` - number of a round is to be named,
+        starting from zero.
+            ``rounds_overall`` - number of rounds in the tournament. '''
+        rounds_left = rounds_overall - int(round_number) - 1
+        if rounds_left == 1:
+            return 'final'
+        elif rounds_left <= 2:
+            return 'semifinal'
+        elif rounds_left <= 4:
+            return 'quarterfinal'
+        elif rounds_left <= 8:
+            return '1/8 final'

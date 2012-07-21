@@ -65,3 +65,11 @@ class TournamentSystem:
         Return list of strings
         '''
         return ['']
+
+    def get_round_name(self, round_number, rounds_overall)
+        ''' Determines special names for rounds, e.g. final or
+        1/8 final. It's ok to return None if no special name is given.
+            ``round_number`` - number of a round is to be named,
+        starting from zero.
+            ``rounds_overall`` - number of rounds in the tournament. '''
+        return None

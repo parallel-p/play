@@ -3,6 +3,7 @@ class GameSignature:
     def __init__(self, tournament_id=None, round_id=None, series_id=None,
                  game_id=None):
         self.round_id = round_id
+        self.round_name = None
         self.series_id = series_id
         self.game_id = game_id
         self.tournament_id = tournament_id
@@ -15,6 +16,11 @@ class GameSignature:
         return self_tuple < signature_tuple
 
     def __repr__(self):
-        return '<GameSignature ({}, {}, {}, {})>'.format(
-            self.tournament_id, self.round_id,
-            self.series_id, self.game_id)
+        if self.round_name is None:
+            return '<GameSignature ({}, {}, {}, {})>'.format(
+                self.tournament_id, self.round_id,
+                self.series_id, self.game_id)
+        else:
+            return '<GameSignature ({}, {} ({}), {}, {})>'.format(
+                self.tournament_id, self.round_id,
+                self.round_name, self.series_id, self.game_id)

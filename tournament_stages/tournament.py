@@ -26,6 +26,11 @@ class Tournament:
         self.tournament_system = create()(self.players_list)
         for round_id, players in enumerate(self.tournament_system.get_rounds()):
             game_signature.round_id = round_id
+            # If our tournament can give names to rounds, e.g. olympic,
+            # we should also assign a name to the round. But it is also
+            # possible, that get_round_name returns None.
+            game_signature.round_name = self.tournament_system.get_round_name(
+                round_id, len(list(self.tournament_system.get_rounds())))
             _round = Round(list(players), game_signature)
             _round.run()
             _round_results = _round.games_results
