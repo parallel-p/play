@@ -1,6 +1,3 @@
-import bot
-import bot_no_psutil
-
 def is_psutil():
     '''
     Returns if psutil installed
@@ -18,6 +15,8 @@ def create():
     otherwise.
     '''
     if is_psutil():
+        import bot
         return bot.Bot
     else:
+        import bot_no_psutil
         return bot_no_psutil.Bot
