@@ -74,8 +74,8 @@ def print_final_scores(gc):
     print ('\n\nFinal scores:')
     output = sorted([(score, name) for name, score in gc.get_scores().items()])[::-1]
     for score, name in output:
-        print ('{player.bot_name:8s} by '
-               '{player.author_name:23s} \t {score}'.format(player=name,
+        print ('{player.bot_name:30s} by '
+               '{player.author_name:30s} \t {score}'.format(player=name,
                                                             score=score))
     print('\n\n')
 
