@@ -198,18 +198,18 @@ class VideoVisualizer:
         self._change_path(1)
         print('Compiling the video file...')
         try:
-            with open('con', 'w') as fnull:
+            with open(os.devnull, 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
                                  self.ext, self.size[0], self.size[1],
                                  output_name).split(), stderr=fnull,
                                  stdin=subprocess.PIPE).communicate(
                                  'y\n'.encode() * 10)
             self._change_path(0)
-            os.replace(os.path.join(self._paths[1], output_name),
-                       os.path.join(self.working_dir, output_name))
+            shutil.copyfile(os.path.join(self._paths[1], output_name),
+                            os.path.join(self.working_dir, output_name))
         except FileNotFoundError:
-            raise FileNotFoundError('You need to install '
-                    'ffmpeg to create videos.')
+            raise FileNotFoundError('You need to install ffmpeg to create'
+                                    ' videos.')
         print('Compiling finished.')
 
     def __del__(self):
