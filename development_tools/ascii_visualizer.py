@@ -161,8 +161,8 @@ class AsciiVisualizer:
             #print('')
             clear_string(height + 1)
             clear_string(height + 3)
-            self._error('Increase the height of the terminal \
-to see the full information', end='')
+            self._error('Increase the height of the terminal and necessarily \
+press Home to see the full information', end='')
             clear_string(height + 2)
 
     def _print_frame_diff(self, index):
@@ -203,8 +203,8 @@ to see the full information', end='')
             #print('')
             clear_string(height + 1)
             clear_string(height + 3)
-            self._error('Increase the height of the terminal \
-to see the full information', end='')
+            self._error('Increase the height of the terminal and necessarily \
+press Home to see the full information', end='')
             clear_string(height + 2)
         self.lock.release()
         # Here we save current frame as previouss
