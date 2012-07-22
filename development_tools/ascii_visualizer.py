@@ -14,7 +14,7 @@ from time import sleep
 from os import name, system
 from threading import Thread, Lock
 from shutil import get_terminal_size
-
+from math import ceil
 
 def _clear():
     '''this function clears the console by executing the appropriate command'''
@@ -265,13 +265,13 @@ press Home to see the full information', end='')
                         min(
                             len(self.game_controller.jury_states) - 1,
                             self.frame_number +
-                                int(len(self.game_controller.jury_states) / 20)
+                                ceil(len(self.game_controller.jury_states) / 20)
                         )
                     )
                 elif arrow == 'U':
                     self._print_frame_diff(
                         max(0, self.frame_number -
-                            int(len(self.game_controller.jury_states) / 20))
+                            ceil(len(self.game_controller.jury_states) / 20))
                     )
                 elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
                     if self.frame_number < self._jury_state_count() - 1:
