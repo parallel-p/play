@@ -64,4 +64,6 @@ class Generator:
             assert(len(players) == 2)
             field[players[0][0]][players[0][1]] = players[1][2]
             field[players[1][0]][players[1][1]] = players[0][2]
+
+            self.bullets = [0] * players_count
             yield JuryState(_field_size, field, self.bullets, self.time)
