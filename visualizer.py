@@ -53,7 +53,9 @@ class VideoVisualizer:
         self._frame_count = 0
         self.log = not _silent
         self._tempfiles = []
+        self.ext = None
         self.mode = None
+        self._printed_warning = False
 
     def _create_tempfile(self, suffix=''):
         self._tempfiles.append(tempfile.mkstemp(suffix))
@@ -69,8 +71,7 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.symlink(begname, '{:09d}'.format(self._frame_count \
-                        + loop + 1) + self.ext)
+            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -94,7 +95,6 @@ class VideoVisualizer:
         # We need filenames with leading zeroes for ffmpeg
         zero_count = int(log10(len(controller.jury_states)) + 1)
         file_list = []
-        self.ext = None
         painter = self.painter(controller._players)
         for ind, jstate in enumerate(controller.jury_states):
             if self.log:
@@ -132,6 +132,7 @@ class VideoVisualizer:
                 [''] +
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
+
         im = Image.new(self.mode, self.size, self.color)
         draw = ImageDraw.Draw(im)
         cfsize = 100
