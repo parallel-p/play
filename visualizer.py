@@ -83,6 +83,14 @@ class VideoVisualizer:
 
     def _generate_game_images(self, controller):
         '''Generates frames for video.'''
+        if len(controller.jury_states) == 0:
+            if self.ext is None:
+                raise NoJuryStatesException('First GameController contains no '
+                                            'jury states - cannot visualize '
+                                            'an empty game.')
+            else:
+                print('One of GameControllers consists no jury states - the '
+                      'game will be empty.')
         # We need filenames with leading zeroes for ffmpeg
         zero_count = int(log10(len(controller.jury_states)) + 1)
         file_list = []
@@ -94,8 +102,6 @@ class VideoVisualizer:
                     .format(ind + 1, len(controller.jury_states)), end='')
             image = painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
-            # Unfortunately, MPEG1/2 format does not support any framerates
-            # lower than 24 fps. So we have to clone images:
             file_list.append(self._create_tempfile(self.ext))
             with open(file_list[-1][1], 'wb') as f:
                 f.write(image)
