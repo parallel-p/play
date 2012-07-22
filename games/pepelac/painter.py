@@ -172,7 +172,8 @@ class Painter:
                 player_names[idx] = jury_state.collision[idx].author_name
                 player_id = self.index_of_player(self.players, player) + 1
                 if player_id == 0:
-                    raise NoPlayerInTheListException('There is no such player in the list')
+                    message = 'There is no such player in the list'
+                    raise NoPlayerInTheListException()
                 color = colors[player_id]
                 bullets_count[idx] = jury_state.bullets[player_id - 1]
                 draw.rectangle(rectangles[idx], fill=color)
@@ -224,8 +225,10 @@ class Painter:
             else:
                 text = '{} win!'.format(player_names[1])
             width = font.getsize(text)[0]
-            draw.text(((self._width - width) // 2 + 100, self._height // 20 * 16),
-                      text, fill='black', font=font)
+            draw.text(((self._width - width) // 2 + 100,
+                       self._height // 20 * 16),
+                      text, fill='black', font=font
+                      )
 
         '''
         x is maximal width of players names
@@ -256,7 +259,9 @@ class Painter:
 
             x += SMALL_SIDE + 20
             patron_font = ImageFont.truetype(get_path('times.ttf'), 30)
-            draw.text((x, y + SMALL_SIDE // 4), str(jury_state.bullets[num]), fill='black',
+            draw.text((x, y + SMALL_SIDE // 4),
+                      str(jury_state.bullets[num]),
+                      fill='black',
                       font=patron_font
                       )
             image.paste(self._patron_ico_left,
@@ -264,28 +269,14 @@ class Painter:
                         self._patron_ico_left
                         )
             if (self.index_of_player(jury_state.dead_players, player) != -1):
-                draw.text((x + 80, y), 'Dead with score ' + str(jury_state.scores[player]), fill='black', font = font)
+                draw.text((x + 80, y),
+                          'Dead with score ' + str(jury_state.scores[player]),
+                          fill='black', font=font
+                          )
 
         del draw
 
-        image.save("test-1.png", "png")
+        #image.save("test-1.png", "png")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
-
-one = Player(None, 'Dima Philippov')
-two = Player(None, 'Petr Smirnov')
-third = Player(None, 'Arthur Khashaev')
-fourth = Player(None, 'Pavel Dubov')
-painter = Painter([one, two, third, fourth])
-side = 10
-field = [[0 for i in range(side)] for j in range(side)]
-field[7][3] = 1
-field[7][4] = 2
-field[3][3] = 3
-field[4][5] = 4
-field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, None, None)
-jury_state.dead_players = [one]
-jury_state.scores[one] = 5
-painter.paint(jury_state)
