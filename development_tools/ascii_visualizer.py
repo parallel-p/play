@@ -16,6 +16,7 @@ from threading import Thread, Lock
 from shutil import get_terminal_size
 from math import ceil
 
+
 def _clear():
     '''this function clears the console by executing the appropriate command'''
     if name == 'posix':
@@ -122,7 +123,7 @@ class AsciiVisualizer:
                     }
                 arrow = nixdict.get(key)
                 if not arrow and key in '56':
-                    k = getch() 
+                    k = getch()
                     if k == '~':
                         arrow = {'5': 'U', '6': 'N'}.get(key)
         elif name == 'nt' and key == b'\xe0':

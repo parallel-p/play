@@ -1,4 +1,4 @@
-import unittest as ut
+import unittest
 from unittest.mock import Mock, patch
 config_mock = Mock(name='config')
 my_ascii_painter = Mock()
@@ -24,8 +24,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 with patch.dict('sys.modules', config=config_mock):
     from development_tools.ascii_visualizer import AsciiVisualizer
 
-
-    class AsciiVisualizerTestCase(ut.TestCase):
+    class AsciiVisualizerTestCase(unittest.TestCase):
         def test_ui(self):
             ''' It is testing of UI, so we can't do assertions or something
             like this here, just to look ourselves if everything is OK. '''
@@ -35,4 +34,4 @@ with patch.dict('sys.modules', config=config_mock):
             viz.activate()
 
     if __name__ == "__main__":
-        ut.main()
+        unittest.main()

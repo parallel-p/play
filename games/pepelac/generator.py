@@ -15,7 +15,6 @@ class Generator:
         for ind, cell in enumerate(random.sample(
                                    range(field_size_in_cells ** 2),
                                    players_count)):
-
             cell_x = cell // field_size_in_cells
             cell_y = cell % field_size_in_cells
             x = int(cell_x * cell_size + random.random() * cell_size)
@@ -26,6 +25,7 @@ class Generator:
             assert(0 <= player_x < _field_size)
             assert(0 <= player_y < _field_size)
             assert(new_field[player_x][player_y] == 0)
+
             new_field[player_x][player_y] = ind + 1
         return new_field
 

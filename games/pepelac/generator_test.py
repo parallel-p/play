@@ -4,7 +4,7 @@ mock = unittest.mock.Mock()
 r_mock = unittest.mock.Mock()
 r_mock.randint.side_effect = [i for i in range(50)]
 import generator
-import random
+
 
 _field_size = 50
 
@@ -34,5 +34,6 @@ class GeneratorTest(unittest.TestCase):
             for j in i:
                 sum += j
         self.assertEqual(sum, -4)
+
 if __name__ == '__main__':
     unittest.main()

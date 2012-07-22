@@ -19,13 +19,14 @@ int main()
 }
 '''
 
+
 class GameSimulatorTest(unittest.TestCase):
     def setUp(self):
         f = open('hello.cpp', 'w')
         f.writelines([helloworld])
         f.close()
         compile_string = ["g++", "hello.cpp"]
-        process = subprocess.call(compile_string)
+        subprocess.call(compile_string)
 
     def tearDown(self):
         os.remove('./a.out')

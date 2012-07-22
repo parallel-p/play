@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 from tournament_stages.game_signature import GameSignature
 from log import logger
 with patch.dict('sys.modules', {'config': Mock()}):
-    # import game
+    import game
     from tournament_stages.series import Series
 
 
@@ -25,8 +25,7 @@ class SeriesTest(unittest.TestCase):
             '1': 123,
         }
         signature = GameSignature(1, 1, 1, 1)
-        # game.Game.return_value = inst
-        # initial_jurystates, signature, players_list
+        game.Game.return_value = inst
         series1 = Series([1], signature, [1, 2])
         series1.run()
         result = {signature: {'1': 123}}
