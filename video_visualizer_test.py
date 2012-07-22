@@ -31,7 +31,7 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
         os.chdir('test')
 
         # For mocking a paint funtion:
-        def side_effect(fname):
+        def side_effect(self, fname):
             f = open(os.path.join('images', fname), 'rb')
             retv = f.read()
             f.close()
@@ -39,7 +39,7 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
 
         # There should be an image folder containing GIF images with specified
         # names (see below).
-        self.painter_obj = Mock()
+        self.painter_obj = Mock
         self.painter_obj.paint = side_effect
 
     def test_compile(self):
@@ -60,7 +60,8 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
         if os.path.exists(os.path.join('test', 'result.avi')):
             os.remove(os.path.join('test', 'result.avi'))
 
-        visualizer.VideoVisualizer(3, self.painter_obj, '.*\.gc', 'test').compile('result.avi')
+        visualizer.VideoVisualizer(3, self.painter_obj, '.*\.gc',\
+                                    'test').compile('result.avi')
 
         # Check whether all images have been removed:
         for fname in os.listdir('test'):

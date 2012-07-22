@@ -69,7 +69,8 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.symlink(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            os.symlink(begname, '{:09d}'.format(self._frame_count \
+                        + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -89,7 +90,8 @@ class VideoVisualizer:
         painter = self.painter(controller._players)
         for ind, jstate in enumerate(controller.jury_states):
             if self.log:
-                print(chr(13) + '    Generating game images... {}/{}'.format(ind + 1, len(controller.jury_states)), end='')
+                print(chr(13) + '    Generating game images... {}/{}'\
+                    .format(ind + 1, len(controller.jury_states)), end='')
             image = painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             # Unfortunately, MPEG1/2 format does not support any framerates
@@ -101,6 +103,12 @@ class VideoVisualizer:
                 im = Image.open(file_list[-1][1])
                 self.size = im.size
                 self.mode = im.mode
+                # For mode "P" color should be an int,
+                # but for "RGB" color should be a tuple
+                if self.mode.startswith('RGB'):
+                    self.color = (0, 0, 255)
+                else:
+                    self.color = 0
         return file_list
 
     def generate_tournament_status(self, contr):
@@ -118,8 +126,7 @@ class VideoVisualizer:
                 [''] +
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
-
-        im = Image.new(self.mode, self.size, (0, 0, 255))
+        im = Image.new(self.mode, self.size, self.color)
         draw = ImageDraw.Draw(im)
         cfsize = 100
         done_once = False
@@ -184,15 +191,16 @@ class VideoVisualizer:
         try:
             with open(os.devnull, 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
-                                 self.ext, self.size[0], self.size[1], output_name)
-                                 .split(), stderr=fnull,
+                                 self.ext, self.size[0], self.size[1],
+                                 output_name).split(), stderr=fnull,
                                  stdin=subprocess.PIPE).communicate(
                                  'y\n'.encode() * 10)
             self._change_path(0)
             os.replace(os.path.join(self._paths[1], output_name),
                        os.path.join(self.working_dir, output_name))
         except FileNotFoundError:
-            raise FileNotFoundError('You need to install ffmpeg to create videos.')
+            raise FileNotFoundError('You need to install '\
+                    'ffmpeg to create videos.')
         print('Compiling finished.')
 
     def __del__(self):
