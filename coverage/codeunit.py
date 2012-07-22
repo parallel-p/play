@@ -1,6 +1,7 @@
 """Code unit (module) handling for Coverage."""
 
-import glob, os
+import glob
+import os
 
 from coverage.backward import open_source, string_class, StringIO
 from coverage.misc import CoverageException

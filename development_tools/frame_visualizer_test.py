@@ -1,12 +1,9 @@
-from PIL import Image, ImageTk
-import unittest as ut
-from unittest.mock import Mock, MagicMock, patch
-from os.path import join
-import config_helpers as ch
+from PIL import Image
+import unittest
+from unittest.mock import Mock
+import os
 from os import listdir as ls
-ch.initialize_game_environment('./development_tools/testing')
-import frame_visualizer
-import config
+import development_tools.frame_visualizer as frame_visualizer
 
 imgpath = '../images'
 # See tests with or without byte streaming
@@ -15,13 +12,13 @@ imgpath = '../images'
 def paint_image(jury_state):
     ''' Opens an image file and returns an ``Image`` object.
     Used for testing user interface. '''
-    return Image.open(join(imgpath, jury_state))
+    return Image.open(os.path.join(imgpath, jury_state))
 
 
 def paint_bytes(jury_state):
     ''' Opens an image file and returns a byte stream.
     Used for checking bytestream->Image conversion. '''
-    return open(join(imgpath, jury_state), mode="rb").read()
+    return open(os.path.join(imgpath, jury_state), mode="rb").read()
 
 
 def do_nothing(image):
@@ -30,7 +27,7 @@ def do_nothing(image):
     return image
 
 
-class FrameVisualizerTestCase(ut.TestCase):
+class FrameVisualizerTestCase(unittest.TestCase):
 
     def test_without_byte_streaming(self):
         ''' This test checks user interface. It opens some images in
@@ -62,4 +59,4 @@ class FrameVisualizerTestCase(ut.TestCase):
 
 
 if __name__ == '__main__':
-    ut.main()
+    unittest.main()

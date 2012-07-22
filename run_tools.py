@@ -51,7 +51,7 @@ def visualize(game_controller):
 
 def dump_game_controller(gc, filename=None):
     if not filename:
-        print('Would you like to save game log? (y/n)', end = ' : ')
+        print('Would you like to save game log? (y/n)', end=' : ')
         while True:
             answer = input()
             if answer in 'yY':

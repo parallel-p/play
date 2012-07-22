@@ -1,7 +1,4 @@
 ﻿import os
-from jury_state import JuryState
-from player import Player
-from sys import stdout
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 
@@ -170,7 +167,7 @@ class Painter:
                 player_id = self.index_of_player(self.players, player) + 1
                 if player_id == 0:
                     message = 'There is no such player in the list'
-                    raise NoPlayerInTheListException()
+                    raise NoPlayerInTheListException(message)
                 color = colors[player_id]
                 bullets_count[idx] = jury_state.bullets[player_id - 1]
                 draw.rectangle(rectangles[idx], fill=color)

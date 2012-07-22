@@ -9,6 +9,7 @@ from unittest.mock import Mock
 import game_controller
 from game_controller import GameNotFinishedException
 
+
 class GameControllerTest(unittest.TestCase):
     def setUp(self):
         self.players = [4, 5]
@@ -19,7 +20,7 @@ class GameControllerTest(unittest.TestCase):
                     self.signature, self.jury_state, self._simulator)
         self.game.is_finished = False
         self.game._scores = {'5'}
-    
+
     def test_finish_game(self):
         self.is_finished = False
         with self.assertRaises(GameNotFinishedException):

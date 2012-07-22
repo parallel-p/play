@@ -8,29 +8,16 @@ _field_size = random.randint(10, 20)
 
 
 class Generator:
-    def _collect_around(self, field, x, y):
-        val = 0
-        if x > 1:
-            val += bool(field[x - 1][y])
-        if y > 1:
-            val += bool(field[x][y - 1])
-        if x < _field_size - 1:
-            val += bool(field[x + 1][y])
-        if y < _field_size - 1:
-            val += bool(field[x][y + 1])
-
-        return bool(val)
-
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
-        sells_side = int(ceil(sqrt(players_count)))
-        sell_size = _field_size / sells_side
+        cells_side = int(ceil(sqrt(players_count)))
+        cell_size = _field_size / cells_side
 
-        for ind, sell in enumerate(random.sample(range(sells_side ** 2),
-                                  players_count)):
-            sell_x, sell_y = sell // sells_side, sell % sells_side
-            player_x = int(sell_x * sell_size + random.random() * sell_size)
-            player_y = int(sell_y * sell_size + random.random() * sell_size)
+        for ind, cell in enumerate(random.sample(range(cells_side ** 2),
+                                   players_count)):
+            cell_x, cell_y = cell // cells_side, cell % cells_side
+            player_x = int(cell_x * cell_size + random.random() * cell_size)
+            player_y = int(cell_y * cell_size + random.random() * cell_size)
             new_field[player_x][player_y] = ind + 1
         return new_field
 
@@ -53,8 +40,7 @@ class Generator:
         self.time = random.randint(100, 140)
         self.bullets_count = self.players_count * 5
         for game in range(self._games_count):
-            field = [[0 for i in range(_field_size)]
-                     for j in range(_field_size)]
+            field = [[0 for i in range(_field_size)] for j in range(_field_size)]
             field = self.generate_players(field, self.players_count)
             self.bullets = [0] * self.players_count
             field = self.generate_bullets(field, self.bullets_count)

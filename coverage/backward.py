@@ -6,7 +6,9 @@
 # W0611: Unused import blah
 # W0622: Redefining built-in blah
 
-import os, re, sys
+import os
+import re
+import sys
 
 # Python 2.3 doesn't have `set`
 try:

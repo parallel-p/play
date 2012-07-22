@@ -1,4 +1,4 @@
-import game_controller
+from game_controller import GameController
 from log import logger
 import config
 from bot_factory import create, is_psutil
@@ -24,8 +24,8 @@ class GameSimulator:
         jury_state and game_signature
         '''
         self._start_state = start_state
-        self._game_controller = game_controller.GameController(players,
-          game_signature, start_state, self)
+        self._game_controller = GameController(players,
+            game_signature, start_state, self)
 
     def _create_bots(self):
         '''
@@ -38,12 +38,12 @@ class GameSimulator:
             logger.debug('created bot \'%s\'', player.bot_name)
         logger.info('all bots created')
 
-    def get_move(self, player, player_state, serialaizer, deserializer):
+    def get_move(self, player, player_state, serializer, deserializer):
         '''
         Gets move to Bot instance
         '''
         new_move = self.bots[player].get_move(player_state,
-                                              serialaizer, deserializer)
+                                              serializer, deserializer)
         logger.debug('bot \'%s\' made a move', player.bot_name)
         print('.', end='')
         sys.stdout.flush()

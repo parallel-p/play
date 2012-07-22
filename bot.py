@@ -27,6 +27,7 @@ class MemoryLimitException(OSError):
     def __init__(self):
         OSError.__init__(self, 'memory limit exceeded')
 
+
 class Bot(bot_no_psutil.Bot):
     '''
     This class wraps bot's process and stores its information.

@@ -1,11 +1,8 @@
 from tournament_stages.round import Round
 from tournament_stages.game_signature import GameSignature
 from tournament_systems.tournament_system_factory import create
-from tournament_systems.tournament_system import TournamentSystem
 from tournament_stages.exceptions import NoResultsException
 from log import logger
-
-from inspect import getframeinfo, currentframe
 
 
 class Tournament:

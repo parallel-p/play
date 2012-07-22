@@ -25,6 +25,7 @@ class ExecuteError(OSError):
     def __init__(self):
         OSError.__init__(self, 'can\'t start bot process')
 
+
 class ProcessNotRunningException(OSError):
     '''
     This exception is raised after trying to
@@ -32,6 +33,7 @@ class ProcessNotRunningException(OSError):
     '''
     def __init__(self):
         OSError.__init__(self, 'process isn\'t running')
+
 
 class TimeLimitException(OSError):
     '''

@@ -3,8 +3,6 @@ from tournament_stages.game import Game
 from copy import copy
 from log import logger
 
-from inspect import getframeinfo, currentframe
-
 
 class Series:
     '''

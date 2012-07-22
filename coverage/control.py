@@ -1,6 +1,10 @@
 """Core control stuff for Coverage."""
 
-import atexit, os, random, socket, sys
+import atexit
+import os
+import random
+import socket
+import sys
 
 from coverage.annotate import AnnotateReporter
 from coverage.backward import string_class
@@ -638,7 +642,8 @@ class coverage(object):
         """Return a list of (key, value) pairs showing internal information."""
 
         import coverage as covmod
-        import platform, re
+        import platform
+        import re
 
         try:
             implementation = platform.python_implementation()

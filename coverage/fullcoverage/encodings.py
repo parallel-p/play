@@ -15,6 +15,7 @@ of the most fundamental modules in the Standard Library.
 
 import sys
 
+
 class FullCoverageTracer(object):
     def __init__(self):
         # `traces` is a list of trace events.  Frames are tricky: the same
@@ -43,7 +44,7 @@ sys.settrace(FullCoverageTracer().fullcoverage_trace)
 # happen last, since all of the symbols in this module will become None
 # at that exact moment, including "sys".
 
-parentdirs = [ d for d in sys.path if __file__.startswith(d) ]
+parentdirs = [d for d in sys.path if __file__.startswith(d)]
 parentdirs.sort(key=len)
 sys.path.remove(parentdirs[-1])
 del sys.modules['encodings']

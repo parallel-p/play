@@ -29,6 +29,7 @@ from coverage.misc import CoverageException
 # created as needed when one of the module-level functions is called.
 _the_coverage = None
 
+
 def _singleton_method(name):
     """Return a function to the `name` method on a singleton `coverage` object.
 

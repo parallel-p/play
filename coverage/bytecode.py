@@ -1,6 +1,8 @@
 """Bytecode manipulation for coverage.py"""
 
-import opcode, sys, types
+import opcode
+import sys
+import types
 
 
 class ByteCode(object):
