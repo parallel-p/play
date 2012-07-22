@@ -15,11 +15,12 @@ def main():
     loader = unittest.TestLoader()
     suite = loader.discover(".", "*_test.py")
     test_runner = unittest.TextTestRunner(verbosity=2)
-    test_runner.run(suite)
+    test_result = test_runner.run(suite)
 
     coverage.stop()
     coverage.report(file=sys.stdout)
-    #coverage.html_report(directory='coverage_report')
+
+    print(test_result)
 
 if __name__ == '__main__':
     main()
