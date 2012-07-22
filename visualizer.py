@@ -53,6 +53,7 @@ class VideoVisualizer:
         self._frame_count = 0
         self.log = not _silent
         self._tempfiles = []
+        self.ext = None
         self.mode = None
 
     def _create_tempfile(self, suffix=''):
@@ -69,8 +70,10 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.symlink(begname, '{:09d}'.format(self._frame_count \
-                        + loop + 1) + self.ext)
+            try:
+                os.symlink(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            except NotImplementedError:
+                os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -83,10 +86,17 @@ class VideoVisualizer:
 
     def _generate_game_images(self, controller):
         '''Generates frames for video.'''
+        if len(controller.jury_states) == 0:
+            if self.ext is None:
+                raise NoJuryStatesException('First GameController contains no '
+                                            'jury states - cannot visualize '
+                                            'an empty game.')
+            else:
+                print('One of GameControllers consists no jury states - the '
+                      'game will be empty.')
         # We need filenames with leading zeroes for ffmpeg
         zero_count = int(log10(len(controller.jury_states)) + 1)
         file_list = []
-        self.ext = None
         painter = self.painter(controller._players)
         for ind, jstate in enumerate(controller.jury_states):
             if self.log:
@@ -94,8 +104,6 @@ class VideoVisualizer:
                     .format(ind + 1, len(controller.jury_states)), end='')
             image = painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
-            # Unfortunately, MPEG1/2 format does not support any framerates
-            # lower than 24 fps. So we have to clone images:
             file_list.append(self._create_tempfile(self.ext))
             with open(file_list[-1][1], 'wb') as f:
                 f.write(image)
@@ -126,6 +134,7 @@ class VideoVisualizer:
                 [''] +
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
+
         im = Image.new(self.mode, self.size, self.color)
         draw = ImageDraw.Draw(im)
         cfsize = 100
@@ -189,7 +198,7 @@ class VideoVisualizer:
         self._change_path(1)
         print('Compiling the video file...')
         try:
-            with open(os.devnull, 'w') as fnull:
+            with open('con', 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
                                  self.ext, self.size[0], self.size[1],
                                  output_name).split(), stderr=fnull,
@@ -199,7 +208,7 @@ class VideoVisualizer:
             os.replace(os.path.join(self._paths[1], output_name),
                        os.path.join(self.working_dir, output_name))
         except FileNotFoundError:
-            raise FileNotFoundError('You need to install '\
+            raise FileNotFoundError('You need to install '
                     'ffmpeg to create videos.')
         print('Compiling finished.')
 

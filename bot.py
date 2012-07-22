@@ -4,7 +4,8 @@ from log import logger
 import config
 import copy
 import bot_no_psutil
-from bot_no_psutil import ExecuteError, ProcessNotRunningException, TimeLimitException
+from bot_no_psutil import ExecuteError, ProcessNotRunningException, \
+    TimeLimitException
 
 
 MEGABYTE = 1 << 20
@@ -132,42 +133,53 @@ class Bot(bot_no_psutil.Bot):
 
     def _check_time_limits(self):
         import psutil
+
+        if self._count_of_moves % config.time_limit_count_of_moves == 0:
+            self._real_time_remainder = 0
+            self._cpu_time_remainder = 0
+
+        self._count_of_moves += 1
         real_time_start = self._get_real_time()
         cpu_time_start = self._get_cpu_time()
 
-        while True:
-            cpu_time = self._get_cpu_time()
-            real_time = self._get_real_time()
-            if cpu_time is None:
-                # psutil was raised NoSuchProcess
-                raise ProcessNotRunningException
+        try:
+            while True:
+                cpu_time = self._get_cpu_time()
+                real_time = self._get_real_time()
 
-            if real_time - real_time_start > config.real_time_limit_seconds:
-                print()
-                self.kill_process()
-                logger.error('bot with cmd \'%s\' exceeded time limit',
-                             self._player_command)
-                raise TimeLimitException
+                if cpu_time is None:
+                    # psutil was raised NoSuchProcess
+                    raise ProcessNotRunningException
 
-            if cpu_time - cpu_time_start > config.cpu_time_limit_seconds:
-                print()
-                self.kill_process()
-                logger.error('bot with cmd \'%s\' exceeded cpu time limit',
-                             self._player_command)
-                raise TimeLimitException
+                if (real_time - real_time_start + self._real_time_remainder >
+                    config.real_time_limit_seconds):
+                    self.kill_process()
+                    logger.error('bot with cmd \'%s\' exceeded time limit',
+                                 self._player_command)
+                    raise TimeLimitException
 
-            if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
-                print()
-                logger.critical(
-                    'unhandled exception has been raised in '
-                    'deserialize thread, aborting'
-                )
-                exc_copy = copy.deepcopy(self._deserialize_exc)
-                del self._deserialize_exc
-                raise exc_copy
+                if (cpu_time - cpu_time_start + self._cpu_time_remainder >
+                    config.cpu_time_limit_seconds):
+                    self.kill_process()
+                    logger.error('bot with cmd \'%s\' exceeded cpu time limit',
+                                 self._player_command)
+                    raise TimeLimitException
 
-            if hasattr(self, '_deserialize_result'):
-                break
+                if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
+                    logger.critical(
+                        'unhandled exception has been raised in '
+                        'deserialize thread, aborting'
+                    )
+                    exc_copy = copy.deepcopy(self._deserialize_exc)
+                    del self._deserialize_exc
+                    raise exc_copy
+
+                if hasattr(self, '_deserialize_result'):
+                    break
+        finally:
+            self._real_time_remainder += real_time - real_time_start
+            if not cpu_time is None:
+                self._cpu_time_remainder += cpu_time - cpu_time_start
 
     def get_move(self, player_state, serialize, deserialize):
         '''

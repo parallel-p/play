@@ -13,6 +13,7 @@ from lib.keyboard_capture import getch
 from time import sleep
 from os import name, system
 from threading import Thread, Lock
+from shutil import get_terminal_size
 
 
 def _clear():
@@ -23,6 +24,16 @@ def _clear():
         system('cls')
     else:
         raise Exception('I can\'t recognise your OS')
+
+
+def clear_string(y=None):
+    pos = lambda y, x: '\x1b[{};{}H'.format(y, x)
+    if y:
+        x = 0 if name == 'posix' else 1
+        msg = pos(y, x)
+    else:
+        msg = chr(13)
+    print(msg + ' ' * 99 + chr(13), end='', sep='')
 
 
 class AsciiVisualizer:
@@ -80,18 +91,19 @@ class AsciiVisualizer:
             gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
 
-    def _error(self, msg):
+    def _error(self, msg, end='\n'):
         '''prints an error message in bright red color'''
-        print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET)
+        print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET, end=end)
 
     def _prompt(self, msg):
         '''prints a prompt in bright yellow color'''
         self.lock.acquire()
+        clear_string()
         print(Fore.YELLOW + Style.BRIGHT + msg, end=' : '
               + Style.NORMAL + Fore.RESET)
         reply = input()
+        clear_string()
         self.lock.release()
-        _clear()
         self._print_frame(self.frame_number)
         return reply
 
@@ -138,9 +150,20 @@ class AsciiVisualizer:
             nocolor=Fore.RESET + Style.NORMAL)
         self.lock.acquire()
         _clear()
+        height = get_terminal_size()[1] - 3
+        frame_text = frame_text.split('\n')
+        lines = len(frame_text)
+        frame_text = '\n'.join(frame_text[:height])
         print(frame_text)
         self.lock.release()
         self.prev_frame = frame_text.split('\n')
+        if lines > get_terminal_size()[1]:
+            #print('')
+            clear_string(height + 1)
+            clear_string(height + 3)
+            self._error('Increase the height of the terminal and necessarily \
+press Home to see the full information', end='')
+            clear_string(height + 2)
 
     def _print_frame_diff(self, index):
         '''
@@ -158,10 +181,13 @@ class AsciiVisualizer:
             color=Fore.YELLOW + Style.BRIGHT,
             nocolor=Fore.RESET + Style.NORMAL)
         # Here we find diff between two frames
+        term_height = get_terminal_size()[1] - 3
         frame_text = frame_text.split('\n')
+        lines = len(frame_text)
+        frame_text = frame_text[:term_height]
         pos = lambda y, x: '\x1b[{};{}H'.format(y, x)
         self.lock.acquire()
-        height = len(frame_text) + 2
+        height = len(frame_text)
         for line in range(len(frame_text)):
             if (line >= len(self.prev_frame) or frame_text[line] !=
                                                 self.prev_frame[line]):
@@ -169,11 +195,17 @@ class AsciiVisualizer:
                     print(pos(line + 1, 1), frame_text[line], sep='')
                 else:
                     print(pos(line + 1, 0), frame_text[line], sep='')
-        #print(pos(len(frame_text) - 1, 0), ' ' * 80, sep='')
         if name == 'nt':
-            print(pos(height + 1, 1), sep='', end='')
+            print(pos(height + 1, 1), ' ' * 98, chr(13), sep='', end='')
         else:
-            print(pos(height, 0), sep='', end='')
+            print(pos(height, 0), ' ' * 98, chr(13), sep='', end='')
+        if lines > get_terminal_size()[1]:
+            #print('')
+            clear_string(height + 1)
+            clear_string(height + 3)
+            self._error('Increase the height of the terminal and necessarily \
+press Home to see the full information', end='')
+            clear_string(height + 2)
         self.lock.release()
         # Here we save current frame as previouss
         self.prev_frame = frame_text
@@ -190,11 +222,8 @@ class AsciiVisualizer:
                 key = key.decode()
             except UnicodeDecodeError:
                 key = None
-                self._error('''
-I cannot recognise the key you just pressed.
-It is likely that you have either pressed an unsupported key
-or have a keyboard layout with an encoding other than UTF-8 selected''')
-
+                self._error('I cannot recognise the key you just pressed')
+                self.prev_frame = None
         return (key, arrow)
 
     def auto(self, addv, time, jscount, endframe, name):
@@ -284,12 +313,13 @@ or have a keyboard layout with an encoding other than UTF-8 selected''')
                                 try:
                                     if not thread or not thread.is_alive():
                                         self.stop = False
+                                        self.prev_frame = None
                                         thread = Thread(target=self.auto,
                                                         args=(addv, time, jscount, endframe, name))
                                         thread.start()
                                 except KeyboardInterrupt:
                                     _clear()
-                                    self._print_frame_diff(self.frame_number)
+                                    self._print_frame(self.frame_number)
                                 break
                         self._error('The speed must be a real nonzero number')
                 elif arrow is None and key in self.key_sets['quit']:
@@ -302,14 +332,17 @@ or have a keyboard layout with an encoding other than UTF-8 selected''')
                         if frame.isnumeric():
                             number = int(frame) - 1
                             if number >= 0 and number < self._jury_state_count():
-                                self._print_frame_diff(number)
+                                self._print_frame(number)
                                 break
                             else:
-                                self._error('No such frame.')
+                                if number < 0:
+                                    self._error('Enter a positive integer.')
+                                else:
+                                    self._error('No such frame.')
                         else:
-                            self._error('enter a NUMBER.')
+                            self._error('Enter a positive integer.')
                 else:
-                    self._print_frame_diff(self.frame_number)
+                    self._print_frame(self.frame_number)
                     self._help()
                     self.prev_frame = None
         finally:

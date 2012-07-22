@@ -325,7 +325,7 @@ int main(){
     //cout << "armageddoned" << endl;
 
     if (p < 2){
-      safe();
+      go(n / 2 + 1, n / 2 + n % 2);
       //fuck yeah
     }
     else if (p == 2 && players[0].b >= players[1].b + b){
@@ -372,12 +372,12 @@ int main(){
       if (dan[bb.x][bb.y] < big)
         go(bb.x, bb.y);
       else
-        safe();
+        go(n / 2 + 1, n / 2 + n % 2);
 
     }
     else{
       debug && (cout << "oh fuck" << endl);
-      safe();
+      go(n / 2 + 1, n / 2 + n % 2);
       //failed
     }
 

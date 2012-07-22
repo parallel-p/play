@@ -39,8 +39,9 @@ players_config = 'players_config'
 apainter_chars = ('@@', '[]', '**', alpha_pchars)
 apainter_colors = ((5, 8, 0), (3, 2, 2), (8, 0, 2), (4, 7, 0))
 
-real_time_limit_seconds = 5.0
-cpu_time_limit_seconds = 10.0
+real_time_limit_seconds = 2.0
+cpu_time_limit_seconds = 1.0
+time_limit_count_of_moves = 50
 memory_limit_mb = 15.0
 
 tournament_system = 'round-robin'
