@@ -10,12 +10,12 @@ _field_size = random.randint(10, 20)
 class Generator:
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
-        cells_side = int(ceil(sqrt(players_count)))
-        cell_size = _field_size / cells_side
+        field_size_in_sells = int(ceil(sqrt(players_count)))
+        cell_size = _field_size / field_size_in_sells
 
-        for ind, cell in enumerate(random.sample(range(cells_side ** 2),
+        for ind, cell in enumerate(random.sample(range(field_size_in_sells ** 2),
                                    players_count)):
-            cell_x, cell_y = cell // cells_side, cell % cells_side
+            cell_x, cell_y = cell // field_size_in_sells, cell % field_size_in_sells
             player_x = int(cell_x * cell_size + random.random() * cell_size)
             player_y = int(cell_y * cell_size + random.random() * cell_size)
             new_field[player_x][player_y] = ind + 1
