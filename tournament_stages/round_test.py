@@ -9,8 +9,9 @@ with patch.dict('sys.modules', {'config': Mock(), 'series': Mock()}):
 
 class RoundTest(unittest.TestCase):
     def test_round(self):
-        test_round = Round(players_list=[[1, 2]],
-                           game_info=None)
+        with patch('config.Generator') as Generator:
+            test_round = Round(players_list=[[1, 2]],
+                               game_info=None)
         self.assertEqual(test_round._players_list, [[1, 2]])
         self.assertEqual(test_round._game_info, None)
 
@@ -23,16 +24,16 @@ class RoundTest(unittest.TestCase):
             self.assertEqual(test_round._jurystates_list[0], 42)
 
     def test_run(self):
-        config.Generator = Mock()
-        series.Series = Mock()
-        series.Series().get_results.return_value = {'aba': 'caba'}
-        test_round = Round(players_list=[[1, 2]],
-                           game_info=Mock())
-        test_round._jurystates_list = [Mock()]
-        logger.setLevel(10050000)
-        # logger = Mock()
-        test_round.run()
-        self.assertEqual(test_round.games_results, {'aba': 'caba'})
+        with patch('config.Generator') as Generator:
+            series.Series = Mock()
+            series.Series().get_results.return_value = {'aba': 'caba'}
+            test_round = Round(players_list=[[1, 2]],
+                               game_info=Mock())
+            test_round._jurystates_list = [Mock()]
+            logger.setLevel(10050000)
+            # logger = Mock()
+            test_round.run()
+            self.assertEqual(test_round.games_results, {'aba': 'caba'})
 
 if __name__ == '__main__':
     unittest.main()
