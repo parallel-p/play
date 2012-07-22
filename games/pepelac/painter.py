@@ -278,24 +278,7 @@ class Painter:
 
         del draw
 
-        image.save("test-1.png", "png")
+        #image.save("test-1.png", "png")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
-
-one = Player(None, 'Dmitry Philippov')
-two = Player(None, 'Petr Smirnov')
-third = Player(None, 'Arthur Khashaev')
-fourth = Player(None, 'Pavel Dubov')
-painter = Painter([one, two, third, fourth])
-side = 10
-field = [[0 for i in range(side)] for j in range(side)]
-field[7][3] = 1
-field[7][4] = 2
-field[3][3] = 3
-field[4][5] = 4
-field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
-jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, None, None)
-jury_state.dead_players = [one]
-jury_state.scores[one] = 5
-painter.paint(jury_state)
