@@ -13,7 +13,7 @@ class ascii_painter_test(unittest.TestCase):
             mock_js.bullets = test['bullets']
             mock_js.dead_players = test['dead']
             mock_js.scores = test['scores']
-            mock_js.dead_reason = test['why_dead']
+            mock_js.dead_reasons = test['why_dead']
             mock_js.collision = test['collisions']
             mock_js.field = test['field']
             picture = test_subject.ascii_paint(mock_js)

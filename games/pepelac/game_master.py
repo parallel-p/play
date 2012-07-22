@@ -15,8 +15,7 @@ class GameMaster:
     def __init__(self, controller, start_state):
         self._controller = controller
         self._players = controller.get_players()
-        side = start_state.field_side
-        self._number_of_correct_cells = side ** 2
+        self._number_of_correct_cells = start_state.field_side ** 2
         self._last_exploded_cell = (-1, -1)
         self._direction = 0
         self._scores = {}
@@ -178,6 +177,6 @@ class GameMaster:
 
     def _kill_player(self, player, reason):
         self._state.dead_players.append(player)
-        self._state.dead_reason[player] = reason
+        self._state.dead_reasons[player] = reason
         pos = self._players_poses[player]
         self._state.field[pos[0]][pos[1]] = EMPTY

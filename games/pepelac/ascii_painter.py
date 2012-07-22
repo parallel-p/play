@@ -78,21 +78,22 @@ class Painter():
             raise Exception('chars[3] must be callable')
         self.chars = chars
         self.colors = colors
-    def _generate_player_stats(self, players, bullets, scores, dead, dead_reason):
+
+    def _generate_player_stats(self, players, bullets, scores, dead, dead_reasons):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
             headercolor=set_color((1, 8, 0)),
             reset=set_color((None, None, 3)))
         for pnum, (player, bulletn) in enumerate(zip(players, bullets)):
             why_dead = ''
             if player in dead:
-                if dead_reason[player] == 1:
+                if dead_reasons[player] == 1:
                     why_dead = 'killed in fight'
-                elif dead_reason[player] == -1:
+                elif dead_reasons[player] == -1:
                     why_dead = 'stepped somewhere wrong'
-                elif dead_reason[player] == 0:
+                elif dead_reasons[player] == 0:
                     why_dead = 'burnt in Armageddon'
                 else:
-                    why_dead = dead_reason[player]
+                    why_dead = dead_reasons[player]
             (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:25}{textc}), with score {numcolor}{score:4}{textc} ') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets   ' + ' ' * 35)
             scor = scores.get(player)
             if scor is None:
@@ -155,7 +156,7 @@ class Painter():
                                                    jury_state.bullets,
                                                    jury_state.scores,
                                                    jury_state.dead_players,
-                                                   jury_state.dead_reason)
+                                                   jury_state.dead_reasons)
         text_field = ''
 
         if jury_state.collision is not None:

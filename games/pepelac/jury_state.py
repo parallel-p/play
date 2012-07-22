@@ -3,7 +3,7 @@
 
 class JuryState:
     def __init__(self, field_side, field, bullets,
-                 explosion_time, dead_players=[], dead_reason={},
+                 explosion_time, dead_players=[], dead_reasons={},
                  collision=None, scores={}):
         '''
         field_side is side of field
@@ -18,12 +18,12 @@ class JuryState:
 
         explosion_time is time before the explosion of the field
 
-        dead_reason is reason of death
+        dead_reasons is map from player to reason of his death
 
-        if dead_reason[player] == -1 then player stepped somewhere wrong
-        if dead_reason[player] == 0 then player was killed by Armageddon
-        if dead_reason[player] == 1 then player was killed with bullet
-        Otherwise, an error has occurred and dead_reason[player] is a string
+        if dead_reasons[player] == -1 then player stepped somewhere wrong
+        if dead_reasons[player] == 0 then player was killed by Armageddon
+        if dead_reasons[player] == 1 then player was killed with bullet
+        Otherwise, an error has occurred and dead_reasons[player] is a string
         with its representation.
         '''
         self.scores = scores
@@ -32,5 +32,5 @@ class JuryState:
         self.bullets = bullets
         self.explosion_time = explosion_time
         self.dead_players = dead_players
-        self.dead_reason = dead_reason
+        self.dead_reasons = dead_reasons
         self.collision = collision
