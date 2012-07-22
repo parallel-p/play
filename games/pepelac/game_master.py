@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from player_state import *
 from move import *
 
@@ -15,7 +16,8 @@ class GameMaster:
     def __init__(self, controller, start_state):
         self._controller = controller
         self._players = controller.get_players()
-        self._number_of_correct_cells = start_state.field_side ** 2
+        side = start_state.field_side
+        self._number_of_correct_cells = side ** 2
         self._last_exploded_cell = (-1, -1)
         self._direction = 0
         self._scores = {}
@@ -31,7 +33,7 @@ class GameMaster:
                     serialize_field_side, deserialize_start
                 )
             except OSError:
-                self._kill_player(player, -1)
+                self._kill_player(player, -2)
         self._controller.report_state(self._state)
 
     def tick(self, state):

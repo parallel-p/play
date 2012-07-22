@@ -88,6 +88,8 @@ class Painter():
             if player in dead:
                 if dead_reasons[player] == 1:
                     why_dead = 'killed in fight'
+                elif dead_reasons[player] == -2:
+                    why_dead = 'did something illegal'
                 elif dead_reasons[player] == -1:
                     why_dead = 'stepped somewhere wrong'
                 elif dead_reasons[player] == 0:
