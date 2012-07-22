@@ -1,4 +1,5 @@
 import tournament_systems.ascii_draw_tree as ascii_draw_tree
+import tournament_systems.image_draw_tree as image_draw_tree
 from tournament_systems.tournament_system import TournamentSystem
 from math import log
 import copy
@@ -71,10 +72,17 @@ class TournamentSystemOlympic(TournamentSystem):
 
     def get_table(self):
         '''
-        Draw a table with results.
+        Draw an ASCII table with the results.
         '''
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
+
+    def draw_table(self):
+        '''
+        Draw an image with the results.
+        '''
+        res_image = image_draw_tree.ImageDrawTree()
+        return res_image.draw_tree(self._data)
 
     def get_round_name(self, round_number, rounds_overall):
         ''' Determines special names for rounds, e.g. final or
