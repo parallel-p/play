@@ -261,7 +261,7 @@ class Painter:
                       font=font
                       )
 
-            x += 60
+            x += 20
             draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
                            fill=colors[num + 1]
                            )
@@ -286,13 +286,13 @@ class Painter:
                       font=patron_font
                       )
             image.paste(self._patron_ico_left,
-                        (x + 20, y),
+                        (x + 35, y),
                         self._patron_ico_left
                         )
 
         del draw
 
-        #image.save("test-1.png", "png")
+        #image.save("test-1.png", "png") #if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
