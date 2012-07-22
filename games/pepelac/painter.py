@@ -74,12 +74,10 @@ class Painter:
                                              SMALL_SIDE
                                              )
 
-    def cut_all_names(self, jury_state):
-        for player in self.players:
-            player.author_name = player.author_name[:MAX_NAME_LENGTH]
-        if jury_state.collision:
-            for collision in jury_state.collision:
-                collision.author_name = collision.author_name[:MAX_NAME_LENGTH]
+    def cut_name(self, name):
+        if (len(name) > MAX_NAME_LENGTH):
+            name = name[:MAX_NAME_LENGTH - 3] + '...'
+        return name
 
     def index_of_player(self, _list, player_to_find):
         if (len(_list) == 0):
@@ -96,7 +94,6 @@ class Painter:
         '''
         if not self._is_initialized:
             self._initialize(jury_state)
-        #self.cut_all_names(jury_state)
 
         image = Image.new('RGBA',
                           (self._width, self._height),
@@ -236,10 +233,13 @@ class Painter:
         max_x = -1
         for player in self.players:
             font = ImageFont.truetype(get_path('times.ttf'), 40)
-            max_x = max(max_x, font.getsize(player.author_name)[0])
+            text = self.cut_name(player.author_name)
+            max_x = max(max_x,
+                        font.getsize(text)[0]
+                        )
 
         '''
-        Drawing Names, colors on the left of picture
+        Drawing names, colors, patrons etc. on the left of picture
         '''
         for num, player in enumerate(self.players):
             x = max_x
@@ -247,7 +247,7 @@ class Painter:
 
             y = num * (SMALL_SIDE + MARGIN)
             draw.text((45, y + SMALL_SIDE // 5),
-                      player.author_name,
+                      self.cut_name(player.author_name),
                       fill='black',
                       font=font
                       )
@@ -256,6 +256,13 @@ class Painter:
             draw.rectangle((x, y, x + SMALL_SIDE, y + SMALL_SIDE + 5),
                            fill=colors[num + 1]
                            )
+
+            if (self.index_of_player(jury_state.dead_players, player) != -1):
+                draw.text((x + 80, y + SMALL_SIDE // 5),
+                          'Dead with score ' + str(jury_state.scores[player]),
+                          fill='black', font=font
+                          )
+                continue
 
             x += SMALL_SIDE + 20
             patron_font = ImageFont.truetype(get_path('times.ttf'), 30)
@@ -268,15 +275,27 @@ class Painter:
                         (x + 20, y),
                         self._patron_ico_left
                         )
-            if (self.index_of_player(jury_state.dead_players, player) != -1):
-                draw.text((x + 80, y),
-                          'Dead with score ' + str(jury_state.scores[player]),
-                          fill='black', font=font
-                          )
 
         del draw
 
-        #image.save("test-1.png", "png")
+        image.save("test-1.png", "png")
         bytes = BytesIO()
         image.save(bytes, format='png')
         return bytes.getvalue()
+
+one = Player(None, 'Dmitry Philippov')
+two = Player(None, 'Petr Smirnov')
+third = Player(None, 'Arthur Khashaev')
+fourth = Player(None, 'Pavel Dubov')
+painter = Painter([one, two, third, fourth])
+side = 10
+field = [[0 for i in range(side)] for j in range(side)]
+field[7][3] = 1
+field[7][4] = 2
+field[3][3] = 3
+field[4][5] = 4
+field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
+jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, None, None)
+jury_state.dead_players = [one]
+jury_state.scores[one] = 5
+painter.paint(jury_state)
