@@ -154,7 +154,7 @@ class AsciiVisualizer:
         height = get_terminal_size()[1] - 3
         frame_text = frame_text.split('\n')
         lines = len(frame_text)
-        frame_text = '\n'.join(frame_text[:height])
+        frame_text = '\n\r'.join(frame_text[:height])
         print(frame_text)
         self.lock.release()
         self.prev_frame = frame_text.split('\n')
