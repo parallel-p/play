@@ -1,7 +1,7 @@
-import exceptions
-import game
+from tournament_stages.exceptions import NoResultsException
+from tournament_stages.game import Game
 from copy import copy
-import log
+from log import logger
 
 
 class Series:
@@ -22,12 +22,12 @@ class Series:
         '''
         Starts all games in series.
         '''
-        log.logger.info('running series #%d', self._signature.series_id)
+        logger.info('running series #%d', self._signature.series_id)
         self._results = {}
         for game_id, initial_jurystate in enumerate(self._initial_jurystates):
             self._signature.game_id = game_id
-            _game = game.Game(initial_jurystate, self._signature,
-                              self._players_list)
+            _game = Game(initial_jurystate, self._signature,
+                         self._players_list)
             _game.run_engine()
             points = _game.get_results()
             self._results[copy(self._signature)] = copy(points)
@@ -39,5 +39,4 @@ class Series:
         if self._results is not None:
             return self._results
         else:
-            raise exceptions.NoResultsException(
-                'Series does not have the results yet.')
+            raise NoResultsException('Series does not have the results yet.')
