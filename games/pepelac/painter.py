@@ -1,8 +1,11 @@
 ﻿import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+import datetime
+from jury_state import JuryState
+from player import Player
 
-FRAME_SIDE = 1024
+FRAME_SIDE = 512
 FREE_SIDE = 1024
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
@@ -71,6 +74,16 @@ class Painter:
                                              SMALL_SIDE
                                              )
 
+    def dead_reason(self, jury_state, player):
+        ans = 'Dead reason: '
+        if jury_state.dead_reasons[player] == -1:
+            ans += 'wrong move'
+        elif jury_state.dead_reasons[player] == 0:
+            ans += 'killed by armageddon'
+        else:
+            ans += 'killed by other player'
+        return ans
+
     def cut_name(self, name):
         if (len(name) > MAX_NAME_LENGTH):
             name = name[:MAX_NAME_LENGTH - 3] + '...'
@@ -98,7 +111,6 @@ class Painter:
                           )
 
         colors = ['', 'red', 'blue', 'green', 'pink', 'black', 'yellow']
-
         draw = ImageDraw.Draw(image)
 
         if not jury_state.collision:
@@ -240,7 +252,7 @@ class Painter:
         '''
         for num, player in enumerate(self.players):
             x = max_x
-            font = ImageFont.truetype(get_path('times.ttf'), 40)
+            font = ImageFont.truetype(get_path('times.ttf'), 20)
 
             y = num * (SMALL_SIDE + MARGIN)
             draw.text((45, y + SMALL_SIDE // 5),
@@ -255,9 +267,14 @@ class Painter:
                            )
 
             if (self.index_of_player(jury_state.dead_players, player) != -1):
-                draw.text((x + 80, y + SMALL_SIDE // 5),
-                          'Dead with score ' + str(jury_state.scores[player]),
+                text = 'Dead with score ' + str(jury_state.scores[player])
+                y += 5
+                draw.text((x + SMALL_SIDE + 10, y), text,
                           fill='black', font=font
+                          )
+                draw.text((x + SMALL_SIDE + 10, y + 20),
+                          self.dead_reason(jury_state, player),
+                          fill='black', font = font
                           )
                 continue
 
