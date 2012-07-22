@@ -55,7 +55,6 @@ class VideoVisualizer:
         self._tempfiles = []
         self.ext = None
         self.mode = None
-        self._printed_warning = False
 
     def _create_tempfile(self, suffix=''):
         self._tempfiles.append(tempfile.mkstemp(suffix))
@@ -71,7 +70,10 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            try:
+                os.symlink(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            except NotImplementedError:
+                os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -196,7 +198,7 @@ class VideoVisualizer:
         self._change_path(1)
         print('Compiling the video file...')
         try:
-            with open(os.devnull, 'w') as fnull:
+            with open('con', 'w') as fnull:
                 subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
                                  self.ext, self.size[0], self.size[1],
                                  output_name).split(), stderr=fnull,
