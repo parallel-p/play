@@ -19,12 +19,12 @@ class Generator:
             cell_x = cell // field_size_in_cells
             cell_y = cell % field_size_in_cells
             x = int(cell_x * cell_size + random.random() * cell_size)
-            player_x = min(_field_size - 1, x)
             y = int(cell_y * cell_size + random.random() * cell_size)
+            player_x = min(_field_size - 1, x)
             player_y = min(_field_size, y)
 
-            assert(player_x >= 0 and player_x < _field_size)
-            assert(player_y >= 0 and player_y < _field_size)
+            assert(0 <= player_x < _field_size)
+            assert(0 <= player_y < _field_size)
             assert(new_field[player_x][player_y] == 0)
             new_field[player_x][player_y] = ind + 1
         return new_field
@@ -37,9 +37,9 @@ class Generator:
             while new_field[bullet_x][bullet_y] != 0:
                 bullet_x = random.randint(0, _field_size - 1)
                 bullet_y = random.randint(0, _field_size - 1)
-            assert(bullet_x >= 0 and bullet_x < _field_size)
-            assert(bullet_y >= 0 and bullet_y < _field_size)
-            assert(new_field[bullet_x][bullet_y] <= 0)
+            assert(0 <= bullet_x < _field_size)
+            assert(0 <= bullet_y < _field_size)
+            assert(new_field[bullet_x][bullet_y] == 0)
             new_field[bullet_x][bullet_y] = -1
         return new_field
 
@@ -53,8 +53,8 @@ class Generator:
                                  self.players_count * 5
                                  )
         field = [[0 for i in range(_field_size)] for j in range(_field_size)]
-        field = self.generate_bullets(field, self.bullets_count)
         field = self.generate_players(field, self.players_count)
+        field = self.generate_bullets(field, self.bullets_count)
         for game in range(self._games_count):
             players = []
             for i, row in enumerate(field):
