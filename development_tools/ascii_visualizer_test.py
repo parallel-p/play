@@ -1,34 +1,38 @@
 import unittest as ut
-from unittest.mock import Mock
-import config_helpers
-config_helpers.initialize_game_environment('games/nim')
-from development_tools.ascii_visualizer import AsciiVisualizer
+from unittest.mock import Mock, patch
+config_mock = Mock(name='config')
+my_ascii_painter = Mock()
+config_mock.AsciiPainter = Mock(return_value=my_ascii_painter)
+my_ascii_painter.ascii_paint = Mock(side_effect=lambda x: '''
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXX This is a sample game field XXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXX Frame: ''' + str(x) + ''' XXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+''')
+with patch.dict('sys.modules', config=config_mock):
+    from development_tools.ascii_visualizer import AsciiVisualizer
 
 
-class AsciiVisualizerTestCase(ut.TestCase):
-    @ut.mock.patch('print')
-    def test_with_nim_ascii_painter(self):
-        ''' Test with nim painter (we added it to nim). '''
-        game_controller = Mock()
-        game_controller.jury_states = []
-        for i in range(100):
-            sample_jury_state = Mock()
-            sample_jury_state.heap_sizes = [i, i + 1, i + 2]
-            game_controller.jury_states.append(sample_jury_state)
-        vis = AsciiVisualizer(game_controller)
-        vis.activate()
+    class AsciiVisualizerTestCase(ut.TestCase):
+        def test_ui(self):
+            ''' It is testing of UI, so we can't do assertions or something
+            like this here, just to look ourselves if everything is OK. '''
+            game_controller = Mock()
+            game_controller.jury_states = list(range(10))
+            viz = AsciiVisualizer(game_controller)
+            viz.activate()
 
-    def test_dump(self):
-        game_controller = Mock()
-        game_controller.jury_states = []
-        for i in range(100):
-            sample_jury_state = Mock()
-            sample_jury_state.heap_sizes = [i, i + 1, i + 2]
-            game_controller.jury_states.append(sample_jury_state)
-        vis = AsciiVisualizer(game_controller)
-        file = open('development_tools/testing/gamedump.txt', mode='wt')
-        vis.dump(file)
-        file.close()
-
-if __name__ == "__main__":
-    ut.main()
+    if __name__ == "__main__":
+        ut.main()
