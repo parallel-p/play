@@ -121,12 +121,14 @@ class Bot:
             real_time = self._get_real_time()
 
             if real_time - real_time_start > config.real_time_limit_seconds:
+                print()
                 self.kill_process()
                 logger.error('bot with cmd \'%s\' exceeded time limit',
                              self._player_command)
                 raise TimeLimitException
 
             if hasattr(self, '_deserialize_exc') and self._deserialize_exc:
+                print()
                 logger.critical(
                     'unhandled exception has been raised in '
                     'deserialize thread, aborting'
