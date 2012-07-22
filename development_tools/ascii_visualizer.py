@@ -110,7 +110,7 @@ class AsciiVisualizer:
     def _detect_arrow(self, key):
         arrow = None
         if name == 'posix' and key == '\x1b':
-            if getch() == '[':
+            if getch() in '[O':
                 key = getch()
                 nixdict = {
                     'A': 'A',
@@ -121,12 +121,10 @@ class AsciiVisualizer:
                     'F': 'E'
                     }
                 arrow = nixdict.get(key)
-                if not arrow and key in 'O56':
+                if not arrow and key in '56':
                     k = getch() 
                     if k == '~':
                         arrow = {'5': 'U', '6': 'N'}.get(key)
-                    else:
-                        arrow = nixdict.get(k)
         elif name == 'nt' and key == b'\xe0':
             windict = {
                 b'H': 'A',
