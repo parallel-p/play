@@ -206,7 +206,7 @@ class VideoVisualizer:
             os.replace(os.path.join(self._paths[1], output_name),
                        os.path.join(self.working_dir, output_name))
         except FileNotFoundError:
-            raise FileNotFoundError('You need to install '\
+            raise FileNotFoundError('You need to install '
                     'ffmpeg to create videos.')
         print('Compiling finished.')
 
