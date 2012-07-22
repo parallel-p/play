@@ -78,7 +78,6 @@ class Painter():
             raise Exception('chars[3] must be callable')
         self.chars = chars
         self.colors = colors
-
     def _generate_player_stats(self, players, bullets, scores, dead, dead_reason):
         statstr = '{headercolor}Players in game:{reset}\n'.format(
             headercolor=set_color((1, 8, 0)),

@@ -190,7 +190,10 @@ class AsciiVisualizer:
                 key = key.decode()
             except UnicodeDecodeError:
                 key = None
-                self._error('I cannot recognise the key you just pressed')
+                self._error('''
+I cannot recognise the key you just pressed.
+It is likely that you have either pressed an unsupported key
+or have a keyboard layout with an encoding other than UTF-8 selected''')
 
         return (key, arrow)
 
