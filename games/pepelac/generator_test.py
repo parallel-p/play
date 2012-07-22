@@ -14,7 +14,7 @@ class GeneratorTest(unittest.TestCase):
         self.field = [[0 for i in range(_field_size)]
                       for j in range(_field_size)]
         self.players = ["bla-bla" for i in range(4)]
-        self.players_count = 4
+        self.players_count = 2
         self.bullets_count = self.players_count * 2
         self.gen = generator.Generator()
 
@@ -24,7 +24,7 @@ class GeneratorTest(unittest.TestCase):
         for i in new_field:
             for j in i:
                 sum += j
-        self.assertEqual(sum, 10)
+        self.assertEqual(sum, 3)
 
     def test_generate_bullets(self):
         new_field = self.gen.generate_bullets(self.field,
@@ -33,6 +33,6 @@ class GeneratorTest(unittest.TestCase):
         for i in new_field:
             for j in i:
                 sum += j
-        self.assertEqual(sum, -8)
+        self.assertEqual(sum, -4)
 if __name__ == '__main__':
     unittest.main()
