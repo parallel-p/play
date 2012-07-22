@@ -274,7 +274,7 @@ class Painter:
                           )
                 draw.text((x + SMALL_SIDE + 10, y + 20),
                           self.dead_reason(jury_state, player),
-                          fill='black', font = font
+                          fill='black', font=font
                           )
                 continue
 
