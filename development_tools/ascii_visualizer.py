@@ -54,6 +54,7 @@ class AsciiVisualizer:
 
     def _help(self):
         '''prints a help screen for the visualizer'''
+        pos = lambda y, x: '\x1b[{};{}H'.format(y, x)
         msg = '''{brt}{bl}Navigation help:
           ____     ____  ____  ____
          |{gr}HOME{bl}|   |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
@@ -73,7 +74,9 @@ class AsciiVisualizer:
         display this message : {gr}any other key{norm}
         '''
         _clear()
-        print(msg.format(
+        x = 0 if name == 'posix' else 1
+        y = 0 if name == 'posix' else 1
+        print(pos(y, x), msg.format(
             gr=Fore.GREEN, bl=Fore.BLUE, mg=Fore.MAGENTA,
             brt=Style.BRIGHT, norm=Style.NORMAL) + Fore.RESET)
 
@@ -166,6 +169,7 @@ class AsciiVisualizer:
                     print(pos(line + 1, 1), frame_text[line], sep='')
                 else:
                     print(pos(line + 1, 0), frame_text[line], sep='')
+        #print(pos(len(frame_text) - 1, 0), ' ' * 80, sep='')
         if name == 'nt':
             print(pos(height + 1, 1), sep='', end='')
         else:
@@ -208,6 +212,7 @@ class AsciiVisualizer:
         colorama.init()
         _clear()
         self._help()
+        self.prev_frame = None
         print(Fore.MAGENTA + Style.BRIGHT + 'Press Any Key to begin...')
         self._detect_arrow(getch())
         self._print_frame_diff(0)
@@ -303,6 +308,7 @@ class AsciiVisualizer:
                 else:
                     self._print_frame_diff(self.frame_number)
                     self._help()
+                    self.prev_frame = None
         finally:
             _clear()
             colorama.deinit()
