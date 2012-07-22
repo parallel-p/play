@@ -69,7 +69,7 @@ class AsciiVisualizer:
         msg = '''{brt}{bl}Navigation help:
           ____     ____  ____  ____
          |{gr}HOME{bl}|   |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
-         |{mg}1st {bl}|  |{mg}RW5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
+         |{mg}1st {bl}|   |{mg}RW5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
           ____     ____  ____  ____
          |{gr}END {bl}|   |{gr}Left{bl}||{gr}Down{bl}||{gr}Rght{bl}|
          |{mg}last{bl}|   |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
@@ -121,9 +121,12 @@ class AsciiVisualizer:
                     'F': 'E'
                     }
                 arrow = nixdict.get(key)
-                if not arrow and key in '56':
-                    if getch() == '~':
+                if not arrow and key in 'O56':
+                    k = getch() 
+                    if k == '~':
                         arrow = {'5': 'U', '6': 'N'}.get(key)
+                    else:
+                        arrow = nixdict.get(k)
         elif name == 'nt' and key == b'\xe0':
             windict = {
                 b'H': 'A',
