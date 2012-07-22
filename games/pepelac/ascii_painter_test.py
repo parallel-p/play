@@ -18,7 +18,6 @@ class ascii_painter_test(unittest.TestCase):
             mock_js.field = test['field']
             picture = test_subject.ascii_paint(mock_js)
             print(picture)
-            print(repr(picture))
             self.assertEqual(test['result'], picture)
 
 if __name__ == '__main__':
