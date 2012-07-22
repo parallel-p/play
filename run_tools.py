@@ -90,6 +90,8 @@ def new_game(args):
             dump_game_controller(game_controller)
         else:
             dump_game_controller(game_controller, args.save_to)
+    elif game_controller:
+        print_final_scores(game_controller)
 
 
 def main():
