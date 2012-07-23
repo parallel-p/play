@@ -67,6 +67,7 @@ class GameMaster:
                             ps.players.append(player)
 
             old_row, old_col = old_pos = self._players_poses[cur_player]
+            killed = True
             try:
                 move = self._controller.get_move(
                     cur_player, ps, serialize_pstate, deserialize_move
@@ -78,11 +79,15 @@ class GameMaster:
                 cell = self._state.field[new_row][new_col]
                 if cell > 0 and turn != cell - 1:
                     raise IncorrectMoveException("Incorrect move")
-            except (IncorrectMoveException, DeserializeMoveException, OSError) as exception:
+            except (IncorrectMoveException,
+                    DeserializeMoveException, OSError) as exception:
                 self._kill_player(cur_player, str(exception))
-                continue
             except Exception:
                 self._kill_player(cur_player, "Runtime error")
+            else:
+                killed = False
+            if killed:
+                self._controller.report_state(self._state)
                 continue
 
             if cell == BULLET:
@@ -167,14 +172,14 @@ class GameMaster:
         self._controller.report_state(self._state)
         self._state.collision = None
 
-        kill = 0
+        kill = False
         for player_id in players:
             self._state.bullets[player_id] -= delta
             if self._state.bullets[player_id] == 0:
-                kill ^= 1
+                kill = not kill
                 kill_player_id = player_id
 
-        if kill == 1:
+        if kill:
             self._kill_player(self._players[kill_player_id], 1)
 
     def _kill_player(self, player, reason):
