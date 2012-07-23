@@ -4,6 +4,7 @@ import pickle
 import re
 import shutil
 import tempfile
+from game_controller import GameController
 from textwrap import wrap
 from PIL import Image, ImageDraw, ImageFont
 from math import log10
@@ -111,11 +112,11 @@ class VideoVisualizer:
                 self.mode = im.mode
         return file_list
 
-    def _draw_tournament_status(self, contr):
+    def _draw_tournament_status(self, round_id):
         if self.table_drawer is not None:
             tfile = self._create_tempfile(self.ext)
             with open(tfile[1], 'wb') as f:
-                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), contr.signature.round_id, self.mode, self.ext)
+                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), round_id, self.mode, self.ext)
                 f.write(imagew)
             im = Image.open(tfile[1])
             ratio = min(self.size[0] / im.size[0], self.size[1] / im.size[1])
@@ -190,8 +191,8 @@ class VideoVisualizer:
         # The games should be given in the right order:
         controllers = list(sorted(controllers))
 
-
         vfile_list = []
+        prev_rnd = controllers[0].signature.round_id
         for ind, controller in enumerate(controllers):
             if self.log:
                 print('Processing game {}:{}:{}:{} ({} of {}):'.format(
@@ -200,8 +201,9 @@ class VideoVisualizer:
                       controller.signature.series_id,
                       controller.signature.game_id, ind + 1, len(controllers)))
             t = self._generate_game_images(controller)
-            if ind > 0:
-                self._draw_tournament_status(controller)
+            if controller.signature.round_id > prev_rnd:
+                prev_rnd = controller.signature.round_id
+                self._draw_tournament_status(prev_rnd)
             self.generate_tournament_status(controller)
             if self.log:
                 print('\n    Creating frames...')
