@@ -34,7 +34,8 @@ class GameMaster:
             except OSError as exception:
                 self._kill_player(player, str(exception))
             except Exception:
-                self._kill_player(player, "Runtime error")
+                self._kill_player(player, 'Runtime error')
+        self._state.scores = self._scores
 
         self._controller.report_state(self._state)
 
@@ -53,7 +54,7 @@ class GameMaster:
                 continue
 
             ps = PlayerState()
-            ps.explosion_time = self._state.explosion_time
+            ps.explosion_time = self._state.explosion_time + 1
 
             for i, row in enumerate(self._state.field):
                 for j, cell in enumerate(row):
@@ -75,16 +76,16 @@ class GameMaster:
                 )
 
                 if not self._is_correct_cell(old_pos, move):
-                    raise IncorrectMoveException("Incorrect move")
+                    raise IncorrectMoveException('Incorrect move')
                 new_row, new_col = new_pos = self._make_move(old_pos, move)
                 cell = self._state.field[new_row][new_col]
                 if cell > 0 and turn != cell - 1:
-                    raise IncorrectMoveException("Incorrect move")
+                    raise IncorrectMoveException('Incorrect move')
             except (IncorrectMoveException,
                     DeserializeMoveException, OSError) as exception:
                 self._kill_player(cur_player, str(exception))
             except Exception:
-                self._kill_player(cur_player, "Runtime error")
+                self._kill_player(cur_player, 'Runtime error')
             else:
                 killed = False
             if killed:
@@ -111,8 +112,8 @@ class GameMaster:
         for player in self._players:
             if not player in self._state.dead_players:
                 self._scores[player] += 1
-
         self._state.scores = self._scores
+
         if self._state.explosion_time < 0:
             self._explode_cell()
 

@@ -26,7 +26,6 @@ class JuryState:
         Otherwise, an error has occurred and dead_reasons[player] is a string
         with its representation.
         '''
-        self.scores = scores
         self.field_side = field_side
         self.field = field
         self.bullets = bullets
@@ -34,3 +33,4 @@ class JuryState:
         self.dead_players = dead_players
         self.dead_reasons = dead_reasons
         self.collision = collision
+        self.scores = scores
