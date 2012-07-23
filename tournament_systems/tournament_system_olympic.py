@@ -2,6 +2,7 @@ import tournament_systems.ascii_draw_tree as ascii_draw_tree
 import tournament_systems.image_draw_tree as image_draw_tree
 from tournament_systems.tournament_system import TournamentSystem
 from math import log
+from log import logger
 import copy
 
 
@@ -76,6 +77,7 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
+        self._save_data()
 
     def draw_table(self, mode, size, ext):
         '''
@@ -99,3 +101,20 @@ class TournamentSystemOlympic(TournamentSystem):
             return 'quarterfinal'
         elif rounds_left <= 8:
             return '1/8 final'
+
+    def _save_data(self):
+        '''
+        Save final self._data into special log.
+        '''
+        path = os.path.dirname(__file__)
+        path = os.path.join(path,  '..', 'logs')
+        path = os.path.normpath(path)
+        path = os.path.join(path, 'tournament' +
+                            str(self.game_info.tournament_id))
+        if (os.path.exists(path) == 0):
+            os.makedirs(path)
+        filename = 'tournament.data'
+        path = os.path.join(path, filename)
+        log_file = open(path, 'wb')
+        pickle.dump(self._data, log_file)
+        log_file.close()

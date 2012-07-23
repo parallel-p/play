@@ -9,7 +9,12 @@ class ImageDrawTree:
     This class draw image based on `data` with results
     of the tournament.
     '''
-    def draw_tree(self, data, mode, size, ext):
+    def _get_data(self):
+        '''Unpickles a data from tournament system.'''
+        with open('tournament.data', 'rb') as file:
+            return pickle.load(file)
+
+    def draw_tree(self, rounds, mode, size, ext):
         def get_path(filename):
             return os.path.join(MY_DIR, filename)
 
@@ -52,6 +57,7 @@ class ImageDrawTree:
             font = ImageFont.truetype(get_path('times.ttf'), 33)
             draw.text((indent + eps, winner_line - eps), winner,
                 fill=colors[4], font=font)
+        data = self._get_data()
         FRAME_SIDE = len(data[0]) * 400  # based on numbers of players
         RIGHT_MARGIN = 250
         width = FRAME_SIDE + RIGHT_MARGIN
