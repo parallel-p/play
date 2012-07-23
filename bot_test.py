@@ -10,7 +10,7 @@ import unittest
 import time
 import psutil
 from unittest.mock import Mock
-from bot import TimeLimitException, MemoryLimitException
+from bot import TimeLimitException
 
 
 PLAYER_COMMAND = 'python3 test_game.py'
