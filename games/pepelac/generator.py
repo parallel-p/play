@@ -45,7 +45,7 @@ class Generator:
 
     def generate_start_positions(self, game_signature, players_count):
         self.players_count = players_count
-        self._games_count = 2
+        self._games_count = 1
         '''Generates a list of start positions'''
         random.seed()
         self.time = random.randint(100, 140)
