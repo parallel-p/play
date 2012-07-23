@@ -1,5 +1,4 @@
 import tournament_systems.ascii_draw_tree as ascii_draw_tree
-import tournament_systems.image_draw_tree as image_draw_tree
 from tournament_systems.tournament_system import TournamentSystem
 from math import log
 import copy
@@ -46,6 +45,7 @@ class TournamentSystemOlympic(TournamentSystem):
             raise Exception("Count of players have to be equal 2^N. Can not create Olympic system.")
         for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
+            next_round = self.get_round(count_of_players, list_of_players)
             yield self.get_round(count_of_players, list_of_players)
             list_of_players = self.update_list_of_players(count_of_players)
 
@@ -72,17 +72,10 @@ class TournamentSystemOlympic(TournamentSystem):
 
     def get_table(self):
         '''
-        Draw an ASCII table with the results.
+        Draw a table with results.
         '''
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
-
-    def draw_table(self, mode, size, ext):
-        '''
-        Draw an image with the results.
-        '''
-        res_image = image_draw_tree.ImageDrawTree()
-        return res_image.draw_tree(self._data, mode, size, ext)
 
     def get_round_name(self, round_number, rounds_overall):
         ''' Determines special names for rounds, e.g. final or

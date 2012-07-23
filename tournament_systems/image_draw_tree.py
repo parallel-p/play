@@ -9,7 +9,7 @@ class ImageDrawTree:
     This class draw image based on `data` with results
     of the tournament.
     '''
-    def draw_tree(self, data):
+    def draw_tree(self, data, mode, size, ext):
         def get_path(filename):
             return os.path.join(MY_DIR, filename)
 
@@ -46,17 +46,17 @@ class ImageDrawTree:
             '''
             winner_line = (first_line + second_line) // 2
             draw.line((indent, winner_line, indent + line_len, winner_line),
-                fill='black', width=3)    
+                fill='black', width=3)
             draw.line((indent, first_line, indent, second_line), fill='black',
                 width=3)
             font = ImageFont.truetype(get_path('times.ttf'), 33)
             draw.text((indent + eps, winner_line - eps), winner,
-                fill=colors[4], font=font)    
+                fill=colors[4], font=font)
         FRAME_SIDE = len(data[0]) * 400  # based on numbers of players
         RIGHT_MARGIN = 250
         width = FRAME_SIDE + RIGHT_MARGIN
         height = FRAME_SIDE
-        image = Image.new('RGBA', (width, height), 'white')
+        image = Image.new(mode, size, 'white')
         colors = ['red', 'blue', 'green', 'pink', 'black', 'yellow']
         draw = ImageDraw.Draw(image)
         eps = 50  # height of indent before name
@@ -88,7 +88,7 @@ class ImageDrawTree:
             f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
             indent += line_len * (2 - round_id)
 
-        image.save("results.jpeg", "JPEG")
+        image.save("results" + ext, ext[1:])
         bytes = BytesIO()
-        image.save(bytes, format='JPEG')
+        image.save(bytes, format=ext[1:])
         return bytes.getvalue()
