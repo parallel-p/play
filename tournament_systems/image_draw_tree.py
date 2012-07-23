@@ -15,7 +15,7 @@ class ImageDrawTree:
         with open(filename, 'rb') as file:
             return pickle.load(file)
 
-    def draw_tree(self, filename, rounds_count, mode, size, ext):
+    def draw_tree(self, filename, rounds_count, mode, ext):
         def get_path(f):
             return os.path.join(MY_DIR, f)
 

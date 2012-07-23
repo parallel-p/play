@@ -115,6 +115,7 @@ class GameMaster:
         self._state.scores = self._scores
         if self._state.explosion_time < 0:
             self._explode_cell()
+
         self._controller.report_state(self._state)
 
     def _calc_players_poses(self):

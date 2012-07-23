@@ -83,12 +83,12 @@ class TournamentSystemOlympic(TournamentSystem):
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
 
-    def draw_table(self, filename, round_id, mode, size, ext):
+    def draw_table(self, filename, round_id, mode, ext):
         '''
         Draw an image with the results.
         '''
         res_image = image_draw_tree.ImageDrawTree()
-        return res_image.draw_tree(filename, round_id, mode, size, ext)
+        return res_image.draw_tree(filename, round_id, mode, ext)
 
     def get_round_name(self, round_number, rounds_overall):
         ''' Determines special names for rounds, e.g. final or
@@ -120,6 +120,5 @@ class TournamentSystemOlympic(TournamentSystem):
         filename = 'tournament.data'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
-        print(self._data)
         pickle.dump(self._data, log_file)
         log_file.close()

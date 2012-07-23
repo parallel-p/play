@@ -109,12 +109,6 @@ class VideoVisualizer:
                 im = Image.open(file_list[-1][1])
                 self.size = im.size
                 self.mode = im.mode
-                # For mode "P" color should be an int,
-                # but for "RGB" color should be a tuple
-                if self.mode.startswith('RGB'):
-                    self.color = (0, 0, 255)
-                else:
-                    self.color = 0
         return file_list
 
     def _draw_tournament_status(self, contr):
@@ -123,7 +117,18 @@ class VideoVisualizer:
             with open(tfile[1], 'wb') as f:
                 imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), contr.signature.round_id, self.mode, self.ext)
                 f.write(imagew)
-            self._create_frame(tfile, 2 * self.framerate)
+            im = Image.open(tfile[1])
+            ratio = min(self.size[0] / im.size[0], self.size[1] / im.size[1])
+            im = im.resize((int(im.size[0] * ratio), int(im.size[1] * ratio)), Image.ANTIALIAS)
+            res = Image.new(self.mode, self.size, 'white')
+            res.paste(im, ((self.size[0]-im.size[0])//2, (self.size[1]-im.size[1])//2,
+                           (self.size[0]+im.size[0])//2, (self.size[1]+im.size[1])//2))
+            resfile = self._create_tempfile(self.ext)
+            res.save(resfile[1], self.ext[1:])
+            del im
+            os.close(tfile[0])
+            os.remove(tfile[1])
+            self._create_frame(resfile, 2 * self.framerate)
 
     def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status.'''
@@ -141,7 +146,7 @@ class VideoVisualizer:
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
 
-        im = Image.new(self.mode, self.size, self.color)
+        im = Image.new(self.mode, self.size, 'blue')
         draw = ImageDraw.Draw(im)
         cfsize = 100
         done_once = False
@@ -203,7 +208,7 @@ class VideoVisualizer:
             for fname in t:
                 self._create_frame(fname, 1)
 
-        self._draw_tournament_status(controllers[-1].signature.round_id)
+        self._draw_tournament_status(controllers[-1].signature.round_id + 1)
         self._change_path(1)
         print('Compiling the video file...')
         try:
