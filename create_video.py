@@ -1,7 +1,8 @@
-from config_helpers import initialize_game_environment
+from config_helpers import initialize_game_environment, players_parse
 from visualizer import VideoVisualizer
 import sys
 from time import clock
+from tournament_systems.tournament_system_factory import create
 import os
 
 if len(sys.argv) < 5:
@@ -17,8 +18,9 @@ if __name__ == '__main__':
     initialize_game_environment(game_path)
     import config
     beg = clock()
+    ts = create()(players_parse(os.path.join(game_path, config.players_config)))
     visualizer = VideoVisualizer(framerate, config.Painter, log_mask,
-                                 log_path, silent)
+                                 log_path, silent, ts.draw_table if hasattr(ts, 'draw_table') else None)
     visualizer.compile(res_name)
     if not silent:
         print('Compiled in', clock() - beg, 'sec.')

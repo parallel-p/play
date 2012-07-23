@@ -29,7 +29,7 @@ class VideoVisualizer:
     '''Composes video file from game data.'''
 
     def __init__(self, _framerate, _painter_obj, _file_mask, _working_dir='.',
-                 _silent=False):
+                 _silent=False, _table_drawer=None):
         '''
         Constructor. Parameters:
             * _framerate - framerate of video (max=24)
@@ -40,6 +40,7 @@ class VideoVisualizer:
             * _silent - if True, compiler will write nothing to screen
         '''
         self.painter = _painter_obj
+        self.table_drawer = _table_drawer
         self.file_mask = _file_mask
         self.working_dir = _working_dir
         self.framerate = _framerate
@@ -69,8 +70,8 @@ class VideoVisualizer:
         self._change_path(1)
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
-        for loop in range(number * self.inframe - 1):
-            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+        #for loop in range(number * self.inframe - 1):
+        #    os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -132,6 +133,13 @@ class VideoVisualizer:
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
 
+        if self.table_drawer is not None:
+            tfile = self._create_tempfile(self.ext)
+            with open(tfile[1], 'wb') as f:
+                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), contr.signature.round_id, self.mode, self.size, self.ext)
+                f.write(imagew)
+            self._create_frame(tfile, self.framerate)
+
         im = Image.new(self.mode, self.size, self.color)
         draw = ImageDraw.Draw(im)
         cfsize = 100
@@ -160,8 +168,8 @@ class VideoVisualizer:
                       fill=(255, 255, 255))
             y += dy
         im.save(temptitle[1])
-        # Compiling into a video file:
-        TIME_IN_SEC = 4
+        # Compiling a video file:
+        TIME_IN_SEC = 2
         self._create_frame(temptitle, TIME_IN_SEC * self.framerate)
 
     def compile(self, output_name):
@@ -176,6 +184,7 @@ class VideoVisualizer:
                                    self.working_dir, filename)))
         # The games should be given in the right order:
         controllers = list(sorted(controllers))
+
 
         vfile_list = []
         for ind, controller in enumerate(controllers):
