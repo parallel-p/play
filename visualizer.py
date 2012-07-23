@@ -70,8 +70,8 @@ class VideoVisualizer:
         self._change_path(1)
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
-        #for loop in range(number * self.inframe - 1):
-        #    os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+        for loop in range(number * self.inframe - 1):
+            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])

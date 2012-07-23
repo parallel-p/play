@@ -120,5 +120,6 @@ class TournamentSystemOlympic(TournamentSystem):
         filename = 'tournament.data'
         path = os.path.join(path, filename)
         log_file = open(path, 'wb')
+        print(self._data)
         pickle.dump(self._data, log_file)
         log_file.close()
