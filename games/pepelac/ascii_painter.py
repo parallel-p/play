@@ -87,13 +87,9 @@ class Painter():
             why_dead = ''
             if player in dead:
                 if dead_reasons[player] == 1:
-                    why_dead = 'killed in fight'
-                elif dead_reasons[player] == -2:
-                    why_dead = 'did something illegal'
-                elif dead_reasons[player] == -1:
-                    why_dead = 'stepped somewhere wrong'
+                    why_dead = 'Killed in the fight'
                 elif dead_reasons[player] == 0:
-                    why_dead = 'burnt in Armageddon'
+                    why_dead = 'Burnt in Armageddon'
                 else:
                     why_dead = dead_reasons[player]
             (bgcolor, endmsg) = ((5, None, None), ' is dead ({numcolor} {reason:25}{textc}), with score {numcolor}{score:4}{textc} ') if player in dead else ((0, None, None), ' has {numcolor}{bullets:4d}{textc} bullets   ' + ' ' * 35)

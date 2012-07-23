@@ -16,5 +16,5 @@ def deserialize_move(stream):
         if turn == representation:
             answer = (dx[idx], dy[idx])
     if answer is None:
-        raise DeserializeMoveException("Incorrect move!")
+        raise DeserializeMoveException("Presentation error")
     return answer

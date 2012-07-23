@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from player_state import *
 from move import *
 
@@ -32,8 +31,11 @@ class GameMaster:
                     player, start_state.field_side,
                     serialize_field_side, deserialize_start
                 )
-            except OSError:
-                self._kill_player(player, -2)
+            except OSError as exception:
+                self._kill_player(player, str(exception))
+            except Exception:
+                self._kill_player(player, "Runtime error")
+
         self._controller.report_state(self._state)
 
     def tick(self, state):
@@ -71,20 +73,18 @@ class GameMaster:
                 )
 
                 if not self._is_correct_cell(old_pos, move):
-                    raise IncorrectMoveException()
+                    raise IncorrectMoveException("Incorrect move")
                 new_row, new_col = new_pos = self._make_move(old_pos, move)
                 cell = self._state.field[new_row][new_col]
                 if cell > 0 and turn != cell - 1:
-                    raise IncorrectMoveException()
-            except IncorrectMoveException:
-                self._kill_player(cur_player, -1)
+                    raise IncorrectMoveException("Incorrect move")
+            except (IncorrectMoveException, DeserializeMoveException, OSError) as exception:
+                self._kill_player(cur_player, str(exception))
                 continue
-            except DeserializeMoveException:
-                self._kill_player(cur_player, 'wrong output')
+            except Exception:
+                self._kill_player(cur_player, "Runtime error")
                 continue
-            except OSError as error:
-                self._kill_player(cur_player, str(error))
-                continue
+
             if cell == BULLET:
                 self._state.bullets[turn] += 1
 
