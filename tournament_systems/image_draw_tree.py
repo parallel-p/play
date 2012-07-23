@@ -63,7 +63,7 @@ class ImageDrawTree:
         RIGHT_MARGIN = 250
         width = FRAME_SIDE + RIGHT_MARGIN
         height = FRAME_SIDE
-        image = Image.new(mode, size, 'white')
+        image = Image.new(mode, (width, height), 'white')
         colors = ['red', 'blue', 'green', 'pink', 'black', 'yellow']
         draw = ImageDraw.Draw(image)
         eps = 50  # height of indent before name
