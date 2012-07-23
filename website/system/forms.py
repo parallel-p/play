@@ -5,11 +5,12 @@ from .models import Game, Bot
 
 
 class GameForm(forms.ModelForm):
+    image = forms.FileField(widget=AdminFileWidget)
     source = forms.FileField(widget=AdminFileWidget)
 
     class Meta:
         model = Game
-        fields = ('name', 'description', 'source')
+        fields = ('name', 'image', 'description', 'source')
 
 
 class BotForm(forms.ModelForm):

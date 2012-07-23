@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
-{% load url from future %}
+{% load url from future %}{% load thumbnail %}
 
 {% block title %}Список игр{% endblock %}
 {% block html_title %}Список игр{% endblock %}
 
-<ol>
-<li><b>{% block game_name %}</b></li>
-<p>{% block game_description %}</p>
-</li>
-
 {% block content %}
-{% endblock}
+<!--ol>    
+    <li><b></b></li>
+    <p></p>
+</ol-->
+{% for object in object_list %}
+{% if not forloop.first %}<hr>{% endif %}
+<h3>{{ object.name }}</h3>
+{% if object.image %}<image src="{% thumbnail object.image 100x100 %}">{% endif %}
+<p>{{ object.description }}</p>
+{% endfor %}
+{% endblock %}

@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_ROOT, 'website', 'sqlite3.db'),
+        'NAME': os.path.join(PROJECT_ROOT, 'sqlite3.db'),
     }
 }
 
@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'south',
     'tinymce',
     'flatpages_tinymce',
+    'easy_thumbnails',
 
     'system',
 )

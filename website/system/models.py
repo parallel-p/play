@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 class Game(models.Model):
     name = models.CharField(_(u'name'), max_length=255)
+    image = models.ImageField(_(u'image'), upload_to='games/images',
+                              null=True, blank=True)
     author_name = models.ForeignKey(User, verbose_name=_(u'author name'),
                                     null=True, blank=True)
     source = models.FileField(_(u'source'), upload_to='games')
