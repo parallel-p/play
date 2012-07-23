@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import os
 
 
 class BotCompiler():
@@ -44,9 +45,9 @@ class BotCompiler():
         else:
             if extension == 'cpp' or extension == 'c++' or (
                     extension == 'cxx'):
-                execfile_string = './' + filename
+                execfile_string = os.path.join('.', filename)
             elif extension == 'pas':
-                execfile_string = './' + filename
+                execfile_string = os.path.join('.', filename)
             else:
                 raise Exception('Language of this file is not supported')
             if operating_system.startswith('win'):
