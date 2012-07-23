@@ -77,7 +77,7 @@ class TournamentSystemOlympic(TournamentSystem):
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
 
-    def draw_table(self):
+    def draw_table(self, mode, size, ext):
         '''
         Draw an image with the results.
         '''
