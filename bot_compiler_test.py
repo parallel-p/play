@@ -77,7 +77,10 @@ class BotCompilerTest(unittest.TestCase):
                 stdout=subprocess.PIPE)
             out = process.stdout.read()
             process.kill()
-            self.assertEqual(out, b'Hello, world!\n')
+            if os.name == 'nt':
+                self.assertEqual(out, b'Hello, world!\r\n')
+            else:
+                self.assertEqual(out, b'Hello, world!\n')
 
 if __name__ == '__main__':
     unittest.main()
