@@ -11,17 +11,17 @@ HelloWorld = [
 
 int main()
 {
-    std::cout << "Hello, world!" << std::endl;
+    std::cout << "Hello, world!";
     return 0;
 }
 '''], ['pas', '''
 program MyProgram;
 
 begin
- WriteLn ('Hello, world!');
+ Write ('Hello, world!');
 end.
 '''], ['py', '''
-print('Hello, world!')
+print('Hello, world!', end='')
 ''']]
 
 
@@ -77,10 +77,7 @@ class BotCompilerTest(unittest.TestCase):
                 stdout=subprocess.PIPE)
             out = process.stdout.read()
             process.kill()
-            if os.name == 'nt':
-                self.assertEqual(out, b'Hello, world!\r\n')
-            else:
-                self.assertEqual(out, b'Hello, world!\n')
+            self.assertEqual(out, b'Hello, world!')
 
 if __name__ == '__main__':
     unittest.main()
