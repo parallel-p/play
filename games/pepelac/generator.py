@@ -10,7 +10,7 @@ class Generator:
     def generate_players(self, field, players_count):
         new_field = copy.deepcopy(field)
         field_size_in_cells = int(ceil(sqrt(players_count)))
-        cell_size = _field_size / field_size_in_cells
+        cell_size = _field_size // field_size_in_cells
 
         for ind, cell in enumerate(random.sample(
                                    range(field_size_in_cells ** 2),
@@ -20,7 +20,7 @@ class Generator:
             x = int(cell_x * cell_size + random.random() * cell_size)
             y = int(cell_y * cell_size + random.random() * cell_size)
             player_x = min(_field_size - 1, x)
-            player_y = min(_field_size, y)
+            player_y = min(_field_size - 1, y)
 
             assert(0 <= player_x < _field_size)
             assert(0 <= player_y < _field_size)
@@ -61,7 +61,7 @@ class Generator:
                 for j, cell in enumerate(row):
                     if (cell > 0):
                         players.append((i, j, cell))
-            assert(len(players) == 2)
+            
             field[players[0][0]][players[0][1]] = players[1][2]
             field[players[1][0]][players[1][1]] = players[0][2]
 
