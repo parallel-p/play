@@ -57,6 +57,7 @@ class BotCompilerTest(unittest.TestCase):
         else:
             os.remove('hello1')
         os.remove('hello2.pas')
+        os.remove('hello2.o')
         if os.name == 'nt':
             os.remove('hello2.exe')
         else:
