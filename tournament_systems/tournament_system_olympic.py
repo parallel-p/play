@@ -1,8 +1,10 @@
 import tournament_systems.ascii_draw_tree as ascii_draw_tree
 import tournament_systems.image_draw_tree as image_draw_tree
+import os
 from tournament_systems.tournament_system import TournamentSystem
 from math import log
 from log import logger
+import pickle
 import copy
 
 
@@ -19,6 +21,7 @@ class TournamentSystemOlympic(TournamentSystem):
         self._current_round_id = -1
         self._list_of_rounds = []
         self._data = []
+        self._tournament_id = 0
 
     def add_round_results(self, round_results):
         '''
@@ -27,6 +30,7 @@ class TournamentSystemOlympic(TournamentSystem):
         self._results.update(round_results)
         self._current_round_id += 1
         results_list = []
+        self._tournament_id = list(round_results.keys())[0].tournament_id
         for _, game in sorted(round_results.items()):
             games_results = []
             for player, score in sorted(game.items()):
@@ -49,6 +53,7 @@ class TournamentSystemOlympic(TournamentSystem):
             count_of_players = len(list_of_players)
             yield self.get_round(count_of_players, list_of_players)
             list_of_players = self.update_list_of_players(count_of_players)
+        self._save_data()
 
     def get_round(self, count_of_players, list_of_players):
         '''
@@ -77,14 +82,13 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         tree_drawer = ascii_draw_tree.ASCIIDrawTree()
         return tree_drawer.draw_tree(self._data)
-        self._save_data()
 
-    def draw_table(self, mode, size, ext):
+    def draw_table(self, filename, round_id, mode, size, ext):
         '''
         Draw an image with the results.
         '''
         res_image = image_draw_tree.ImageDrawTree()
-        return res_image.draw_tree(self._data, mode, size, ext)
+        return res_image.draw_tree(filename, round_id, mode, size, ext)
 
     def get_round_name(self, round_number, rounds_overall):
         ''' Determines special names for rounds, e.g. final or
@@ -110,7 +114,7 @@ class TournamentSystemOlympic(TournamentSystem):
         path = os.path.join(path,  '..', 'logs')
         path = os.path.normpath(path)
         path = os.path.join(path, 'tournament' +
-                            str(self.game_info.tournament_id))
+                            str(self._tournament_id))
         if (os.path.exists(path) == 0):
             os.makedirs(path)
         filename = 'tournament.data'

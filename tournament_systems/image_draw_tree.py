@@ -1,4 +1,5 @@
 import os
+import pickle
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 
@@ -9,14 +10,14 @@ class ImageDrawTree:
     This class draw image based on `data` with results
     of the tournament.
     '''
-    def _get_data(self):
+    def _get_data(self, filename):
         '''Unpickles a data from tournament system.'''
-        with open('tournament.data', 'rb') as file:
+        with open(filename, 'rb') as file:
             return pickle.load(file)
 
-    def draw_tree(self, rounds, mode, size, ext):
-        def get_path(filename):
-            return os.path.join(MY_DIR, filename)
+    def draw_tree(self, filename, rounds_count, mode, size, ext):
+        def get_path(f):
+            return os.path.join(MY_DIR, f)
 
         def create_game(first_line, second_line):
             '''
@@ -57,7 +58,7 @@ class ImageDrawTree:
             font = ImageFont.truetype(get_path('times.ttf'), 33)
             draw.text((indent + eps, winner_line - eps), winner,
                 fill=colors[4], font=font)
-        data = self._get_data()
+        data = self._get_data(filename)
         FRAME_SIDE = len(data[0]) * 400  # based on numbers of players
         RIGHT_MARGIN = 250
         width = FRAME_SIDE + RIGHT_MARGIN
@@ -71,7 +72,7 @@ class ImageDrawTree:
         f_line, s_line = 100, 300 # y-coordinates of first player
         indent = 10  # indent for first players
         round_ind = [(200, 600), (400, 1200), (800, 2400)]  #other indents
-        for round_id in range(len(data)):
+        for round_id in range(rounds_count):
             for game in data[round_id]:
                 if round_id == 0:
                     players = [str(game[0][0]), str(game[1][0])]
