@@ -27,17 +27,18 @@
 <body>
     <p align=center>Параллель Промышленного Программирования «П» Представляет Первенство Программистов</p>
     <hr>
-    <p align=right>
+    <div align="right" style="width: 100%;">
+    <p>
         {% if request.user.is_authenticated %}{% if request.user.get_full_name %}{{ user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}
         | <a href="{% url 'logout' %}">Выйти</a>{% else %}
         <a href="{% url 'login' %}">Войти</a> |
         <a href="{% url 'registration' %}">Регистрация</a>{% endif %}
     </p>
-
+    </div>
     <h2 align="center">Play | {% block title %}Главная{% endblock %}</h2>
     
     <div style="margin:0 auto;">
-    <table>
+    <table width="100%">
         <tbody>
             <tr>
                 <td width="20%" style="vertical-align: top; border-right: 1px solid black;">
