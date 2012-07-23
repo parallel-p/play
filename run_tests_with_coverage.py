@@ -22,7 +22,9 @@ def main():
         for filename in directory[2]:
             if re.search(".*_tests?\.py", filename):
                 list_of_test_files.append(filename)
+    list_of_test_files.append('config_testing.py')
     coverage = Coverage(omit=list_of_test_files)
+    list_of_test_files.pop()
     coverage.start()
 
     # no log messages
