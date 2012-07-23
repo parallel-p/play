@@ -70,10 +70,7 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            try:
-                os.symlink(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
-            except NotImplementedError:
-                os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
