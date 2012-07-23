@@ -13,10 +13,11 @@ urlpatterns = patterns('',
         name='login',
     ),
     url(r'^logout/$', 'django.contrib.auth.views.logout',
-        {'template_name': 'auth/logout.html'},
+        {'template_name': 'index.html'},
         name='logout'
     ),
     url(r'^registration/$', 'auth.views.registration', name='registration'),
     url(r'^', include('system.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^tinymce/', include('tinymce.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

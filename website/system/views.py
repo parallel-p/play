@@ -4,10 +4,6 @@ from .models import Bot, Game
 from .forms import GameForm, BotForm
 
 
-def index(request):
-    return render(request, 'index.html')
-
-
 def games_list(request):
     qs = Game.objects.all()
     return render(request, 'games_list.html', {'object_list': qs})

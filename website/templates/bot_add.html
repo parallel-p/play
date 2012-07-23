@@ -3,6 +3,7 @@
 {% load url from future %}
 
 {% block title %}Загрузка стратегий{% endblock %}
+{% block html_title %}Загрузка стратегий{% endblock %}
 
 {% block content %}
 <form method="POST" action="{% url 'bot_add' %}" enctype="multipart/form-data">

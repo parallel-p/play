@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load url from future %}
+
+{% block title %}Вход{% endblock %}
+{% block html_title %}Вход{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+    <input type="submit" value="Войти" />
+    <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}{% url 'index' %}{% endif %}" />
+</form>
+{% endblock %}

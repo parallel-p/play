@@ -1,20 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
+{% load url from future %}
 <head>
 	<title>{% block html_title %}Главная{% endblock %}</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta name="generator" content="Geany 0.21" />
         <style type="text/css">
         div {
-        border: 1px solid #434343;
-        padding: 10px;
-        background: #e3e3e3;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        width: 95%
+            border: 1px solid #434343;
+            padding: 10px;
+            background: #e3e3e3;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            width: 95%;
         }
+        td, th {
+            vertical-align:top;
+        }
+
 </style>
 
 </head>
@@ -22,7 +26,13 @@
 <body>
     <p align=center>Параллель Промышленного Программирования «П» Представляет Первенство Программистов</p>
     <hr>
-    <p align=right>{% login_string %}</p>
+    <p align=right>
+        {% if request.user.is_authenticated %}{% if request.user.get_full_name %}{{ user.get_full_name }}{% else %}{{ request.user.username }}{% endif %}
+        | <a href="{% url 'logout' %}">Выйти</a>{% else %}
+        <a href="{% url 'login' %}">Войти</a> |
+        <a href="{% url 'registration' %}">Регистрация</a>{% endif %}
+    </p>
+
     <h2 align="center">Play | {% block title %}Главная{% endblock %}</h2>
     
     <div style="margin:0 auto;">
