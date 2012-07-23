@@ -65,10 +65,12 @@ class BaseBot:
         '''
         logger.info('executing \'%s\'', self._player_command)
         try:
-            self._process = Popen(self._player_command.split(),
-                                  stdout=PIPE,
-                                  stdin=PIPE,
-                                  stderr=PIPE)
+            self._process = psutil.Popen(
+                self._player_command.split(),
+                stdout=PIPE,
+                stdin=PIPE,
+                # stderr=PIPE
+            )
         except OSError:
             logger.critical('executing of \'%s\' failed: invalid command',
                             self._player_command)
@@ -122,8 +124,8 @@ class BaseBot:
             while get_move_thread.is_alive():
                 real_time = self._get_real_time()
 
-                if (real_time - real_time_start + self._real_time_remainder >
-                    config.real_time_limit_seconds):
+                if real_time - real_time_start + self._real_time_remainder\
+                        > config.real_time_limit_seconds:
                     self.kill_process()
                     logger.error('bot with cmd \'%s\' exceeded time limit',
                                  self._player_command)
@@ -277,8 +279,8 @@ class ComplexBot(BaseBot):
                     real_time = self._get_real_time()
                     cpu_time = self._get_cpu_time()
 
-                    real_executing_time = (real_time - real_time_start +
-                                          self._real_time_remainder)
+                    real_executing_time = real_time - real_time_start +\
+                        self._real_time_remainder
                     if real_executing_time > config.real_time_limit_seconds:
                         self.kill_process()
                         logger.error('bot with cmd \'%s\' exceeded '
