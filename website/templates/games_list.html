@@ -5,5 +5,10 @@
 {% block title %}Список игр{% endblock %}
 {% block html_title %}Список игр{% endblock %}
 
+<ol>
+<li><b>{% block game_name %}</b></li>
+<p>{% block game_description %}</p>
+</li>
+
 {% block content %}
 {% endblock}
