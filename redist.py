@@ -47,12 +47,10 @@ file_list = {
     'README': 'README',
     'log.py': 'log.py',
     'bot.py': 'bot.py',
-    'bot_no_psutil.py': 'bot_no_psutil.py',
     'commands': 'commands',
     'lib/__init__.py': 'lib/__init__.py',
     'lib/keyboard_capture.py': 'lib/keyboard_capture.py',
     'game_simulator.py': 'game_simulator.py',
-    'bot_factory.py': 'bot_factory.py'
 }
 
 for name, archname in file_list.items():

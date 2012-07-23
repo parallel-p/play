@@ -1,7 +1,7 @@
 from game_controller import GameController
 from log import logger
 import config
-from bot_factory import create, is_psutil
+import bot
 import copy
 import time
 import sys
@@ -33,7 +33,7 @@ class GameSimulator:
         '''
         self.bots = {}
         for player in self._game_controller._players:
-            self.bots[player] = create()(player.command_line)
+            self.bots[player] = bot.Bot(player.command_line)
             self.bots[player].create_process()
             logger.debug('created bot \'%s\'', player.bot_name)
         logger.info('all bots created')
