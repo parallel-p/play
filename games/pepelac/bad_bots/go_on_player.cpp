@@ -179,7 +179,7 @@ int main(){
   //freopen("input.txt", "r", stdin);
   //freopen("outputtxt", "w", stdout);
   int i, j;
-  srandom(1654);
+  srand(1654);
   cin >> n;
   while (1){
     read();
