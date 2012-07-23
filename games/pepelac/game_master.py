@@ -115,8 +115,7 @@ class GameMaster:
         self._state.explosion_time -= 1
         if self._state.explosion_time < 0:
             self._explode_cell()
-
-        self._controller.report_state(self._state)
+            self._controller.report_state(self._state)
 
     def _calc_players_poses(self):
         for i, row in enumerate(self._state.field):
