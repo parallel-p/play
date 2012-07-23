@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load url from future %}
+
+{% block title %}Загрузка стратегий{% endblock %}
+
+{% block content %}
+<form method="POST" action="{% url 'bot_add' %}" enctype="multipart/form-data">
+    <table>
+        {% csrf_token %}
+        {{ form }}
+        <tr>
+            <td colspan="2">
+                <input type="submit">
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
