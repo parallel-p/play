@@ -41,6 +41,7 @@ class GameMaster:
     def tick(self, state):
         self._state = state
         self._calc_players_poses()
+        self._state.explosion_time -= 1
 
         for turn, cur_player in enumerate(self._players):
             if(self._number_of_correct_cells == 0 or
@@ -112,7 +113,6 @@ class GameMaster:
                 self._scores[player] += 1
 
         self._state.scores = self._scores
-        self._state.explosion_time -= 1
         if self._state.explosion_time < 0:
             self._explode_cell()
             self._controller.report_state(self._state)
