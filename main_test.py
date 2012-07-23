@@ -6,7 +6,6 @@ from exceptions import PlayersException
 with patch.dict('sys.modules',
                 {'config_helpers': MagicMock(),
                  'config': MagicMock(),
-                 'tournament_stages.tournament': MagicMock(),
                  'Tournament': MagicMock(),
                  '_load_players': MagicMock(),
                  'print_tournament_system_results': MagicMock()}):
