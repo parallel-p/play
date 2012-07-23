@@ -184,3 +184,5 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_statusbar_location': 'bottom',
     'theme_advanced_resizing': 'true',
 }
+
+LOGIN_URL = '/login/'

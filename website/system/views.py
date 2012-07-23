@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Bot, Game
 from .forms import GameForm, BotForm
@@ -14,6 +15,7 @@ def bots_list(request):
     return render(request, 'bots_list.html', {'object_list': qs})
 
 
+@login_required
 def bot_add(request):
     if request.method == 'POST':
         form = BotForm(request.POST, request.FILES)
@@ -26,6 +28,7 @@ def bot_add(request):
     return render(request, 'bot_add.html', {'form': form})
 
 
+@login_required
 def game_add(request):
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES)

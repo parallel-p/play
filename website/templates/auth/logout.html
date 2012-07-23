@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% load url from future %}
+
+{% block html_title %}Не авторизован{% endblock %}
+{% block title %}Не авторизован{% endblock %}
+
+{% block content %}
+Успешный выход.
+<br>
+<a href="{% url 'login' %}">Войти снова</a>
+{% endblock %}

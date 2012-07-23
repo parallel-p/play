@@ -7,7 +7,7 @@
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta name="generator" content="Geany 0.21" />
         <style type="text/css">
-        div {
+        #main {
             border: 1px solid #434343;
             padding: 10px;
             background: #e3e3e3;
@@ -37,17 +37,14 @@
     </div>
     <h2 align="center">Play | {% block title %}Главная{% endblock %}</h2>
     
-    <div style="margin:0 auto;">
+    <div style="margin:0 auto;" id="main">
     <table width="100%">
         <tbody>
             <tr>
                 <td width="20%" style="vertical-align: top; border-right: 1px solid black;">
-                    {% block menu %}{% endblock %}
-                    <a href='#'>Link</a><br>
-                    <a href='#'>Link</a><br>
-                    <a href='#'>Link</a><br>
-                    <a href='#'>Link</a><br>
-                    <a href='#'>Link</a><br>
+                    <a href="/">Главная</a><br>
+                    <a href="{% url 'games_list' %}">Список игр</a><br>
+                    <a href="{% url 'game_add' %}">Добавить игру</a><br>
                 </td>
                 <td width="5%">
                 </td>

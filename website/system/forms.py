@@ -9,6 +9,7 @@ class GameForm(forms.ModelForm):
 
     class Meta:
         model = Game
+        fields = ('name', 'description', 'source')
 
 
 class BotForm(forms.ModelForm):
@@ -16,3 +17,4 @@ class BotForm(forms.ModelForm):
 
     class Meta:
         model = Bot
+        fields = ('name', 'game', 'source')
