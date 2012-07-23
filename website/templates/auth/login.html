@@ -6,7 +6,13 @@
 {% block html_title %}Вход{% endblock %}
 
 {% block content %}
-{% if next %}<p>Для начала авторизуйтесь</p>{% endif %}
+{% if next %}
+<p>Для начала авторизуйтесь.<br>
+<a href="{% url 'registration' %}">Еще не зарегистрированы?</a></p>
+{% endif %}
+{% if form.errors %}
+    <p class="error">Неправильный логин или пароль</p>
+{% endif %}
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
     {% csrf_token %}
     <table>

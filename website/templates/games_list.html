@@ -6,14 +6,10 @@
 {% block html_title %}Список игр{% endblock %}
 
 {% block content %}
-<!--ol>    
-    <li><b></b></li>
-    <p></p>
-</ol-->
 {% for object in object_list %}
 {% if not forloop.first %}<hr>{% endif %}
 <h3>{{ object.name }}</h3>
-<p>{% if object.image %}<image src="{% thumbnail object.image 100x100 %}" class="thumb">{% endif %}
+<p>{% if object.image %}<image src="{% thumbnail object.image 60x60 %}" class="thumb">{% endif %}
 {{ object.description }}</p>
 {% endfor %}
 {% endblock %}

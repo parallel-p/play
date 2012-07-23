@@ -6,10 +6,39 @@
 {% block html_title %}Загрузка игр{% endblock %}
 
 {% block content %}
+<span class="error">Игра будет добавлена на сайт только после проверки</span>
+<br><br>
 <form method="POST" action="{% url 'game_add' %}" enctype="multipart/form-data">
     <table>
+        <tr>
+            <td><label for="{{ form.name.auto_id }}">Название *</label></td>
+            <td>{{ form.name }}</td>
+            {% if form.name.errors %}
+            <td class="error">{{ form.name.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.image.auto_id }}">Изображение</label></td>
+            <td>{{ form.image }}</td>
+            {% if form.image.errors %}
+            <td class="error">{{ form.image.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.description.auto_id }}">Описание *</label></td>
+            <td>{{ form.description }}</td>
+            {% if form.description.errors %}
+            <td class="error">{{ form.description.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.source.auto_id }}">Исходные файлы *</label></td>
+            <td>{{ form.source }}</td>
+            {% if form.source.errors %}
+            <td class="error">{{ form.source.errors.0 }}</td>
+            {% endif %}
+        </tr>
         {% csrf_token %}
-        {{ form }}
         <tr>
             <td colspan="2">
                 <input type="submit">

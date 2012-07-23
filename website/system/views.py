@@ -6,7 +6,7 @@ from .forms import GameForm, BotForm
 
 
 def games_list(request):
-    qs = Game.objects.all()
+    qs = Game.objects.filter(verified=True)
     return render(request, 'games_list.html', {'object_list': qs})
 
 
@@ -33,7 +33,9 @@ def game_add(request):
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            game = form.save()
+            game.author = request.user
+            game.save()
             return redirect(games_list)
     else:
         form = GameForm()

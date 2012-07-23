@@ -8,9 +8,57 @@
 <form method="POST" action="{% url 'registration' %}">
     <table>
         {% csrf_token %}
-        {{ form }}
         <tr>
-            <td colspan="2">
+            <td><label for="{{ form.username.auto_id }}">Логин *</label></td>
+            <td>{{ form.username }}</td>
+            {% if form.username.errors %}
+            <td class="error">{{ form.username.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2">{{ form.username.help_text }}</td>
+        <tr>
+        <tr>
+            <td><label for="{{ form.email.auto_id }}">E-mail *</label></td>
+            <td>{{ form.email }}</td>
+            {% if form.email.errors %}
+            <td class="error">{{ form.email.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.first_name.auto_id }}">Имя *</label></td>
+            <td>{{ form.first_name }}</td>
+            {% if form.first_name.errors %}
+            <td class="error">{{ form.first_name.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.last_name.auto_id }}">Фаммилия *</label></td>
+            <td>{{ form.last_name }}</td>
+            {% if form.last_name.errors %}
+            <td class="error">{{ form.last_name.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.password1.auto_id }}">Пароль *</label></td>
+            <td>{{ form.password1 }}</td>
+            {% if form.password1.errors %}
+            <td class="error">{{ form.password1.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.password2.auto_id }}">Подтверждение пароля *</label></td>
+            <td>{{ form.password2 }}</td>
+            {% if form.password2.errors %}
+            <td class="error">{{ form.password2.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2">{{ form.password2.help_text }}</td>
+        <tr>
+            <td colspan="3">
                 <input type="submit">
             </td>
         </tr>

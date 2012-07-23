@@ -5,7 +5,7 @@ from .models import Game, Bot
 
 
 class GameForm(forms.ModelForm):
-    image = forms.FileField(widget=AdminFileWidget)
+    image = forms.FileField(widget=AdminFileWidget, required=False)
     source = forms.FileField(widget=AdminFileWidget)
 
     class Meta:
