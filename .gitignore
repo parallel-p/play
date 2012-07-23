@@ -30,3 +30,8 @@ logs
 games/pepelac/players_config
 commands
 
+# Databases
+*.db
+
+# Uploaded files
+public/
