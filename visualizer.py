@@ -117,6 +117,14 @@ class VideoVisualizer:
                     self.color = 0
         return file_list
 
+    def _draw_tournament_status(self, contr):
+        if self.table_drawer is not None:
+            tfile = self._create_tempfile(self.ext)
+            with open(tfile[1], 'wb') as f:
+                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), contr.signature.round_id, self.mode, self.ext)
+                f.write(imagew)
+            self._create_frame(tfile, 2 * self.framerate)
+
     def generate_tournament_status(self, contr):
         '''Generates a frame with a tournament status.'''
         temptitle = self._create_tempfile(self.ext)
@@ -132,13 +140,6 @@ class VideoVisualizer:
                 [''] +
                 wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
                      contr._players)), width=40))
-
-        if self.table_drawer is not None:
-            tfile = self._create_tempfile(self.ext)
-            with open(tfile[1], 'wb') as f:
-                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), contr.signature.round_id, self.mode, self.size, self.ext)
-                f.write(imagew)
-            self._create_frame(tfile, self.framerate)
 
         im = Image.new(self.mode, self.size, self.color)
         draw = ImageDraw.Draw(im)
@@ -169,8 +170,7 @@ class VideoVisualizer:
             y += dy
         im.save(temptitle[1])
         # Compiling a video file:
-        TIME_IN_SEC = 2
-        self._create_frame(temptitle, TIME_IN_SEC * self.framerate)
+        self._create_frame(temptitle, self.framerate)
 
     def compile(self, output_name):
         '''
@@ -195,12 +195,15 @@ class VideoVisualizer:
                       controller.signature.series_id,
                       controller.signature.game_id, ind + 1, len(controllers)))
             t = self._generate_game_images(controller)
+            if ind > 0:
+                self._draw_tournament_status(controller)
             self.generate_tournament_status(controller)
             if self.log:
                 print('\n    Creating frames...')
             for fname in t:
                 self._create_frame(fname, 1)
 
+        self._draw_tournament_status(controllers[-1].signature.round_id)
         self._change_path(1)
         print('Compiling the video file...')
         try:
