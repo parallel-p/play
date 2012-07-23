@@ -29,7 +29,10 @@ class GameSimulatorTest(unittest.TestCase):
         subprocess.call(compile_string)
 
     def tearDown(self):
-        os.remove('./a.out')
+        if os.name == 'nt':
+            os.remove('a.exe')
+        else:
+            os.remove('a.out')
         os.remove('hello.cpp')
 
     def test_game(self):
