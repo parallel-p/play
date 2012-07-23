@@ -69,6 +69,7 @@ class BotCompilerTest(unittest.TestCase):
         bot_c.compile(players, player_command_file)
         f = open(player_command_file, 'r')
         bots = f.readlines()
+        f.close()
         for bot in bots:
             command_line = bot.split("\'")[5]
             process = subprocess.Popen(command_line, shell=True,
