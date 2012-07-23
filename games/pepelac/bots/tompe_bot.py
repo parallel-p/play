@@ -14,13 +14,13 @@ def make_move(my_pos, his_pos, rev=False):
     while angle < -pi:
         angle += 2 * pi
     if -pi / 4 < angle <= pi / 4:
-        return "RIGHT"
+        return "RIGHT" if my_pos[1] < n else "STAND"
     elif pi / 4 < angle <= 3 * pi / 4:
-        return "DOWN"
+        return "DOWN" if my_pos[0] < n else "STAND"
     elif -3 * pi / 4 < angle <= -pi / 4:
-        return "UP"
+        return "UP" if my_pos[0] > 1 else "STAND"
     else:
-        return "LEFT"
+        return "LEFT" if my_pos[1] > 1 else "STAND"
 
 
 def distance(me, him):
@@ -53,4 +53,4 @@ while True:
                 if distance(my, bullet) > distance(my, cbull):
                     bullet = cbull
             print(make_move(my, bullet))
-        sys.stdout.flush()
+    sys.stdout.flush()
