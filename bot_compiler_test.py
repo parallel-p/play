@@ -62,6 +62,7 @@ class BotCompilerTest(unittest.TestCase):
         else:
             os.remove('hello2')
         os.remove('hello3.py')
+        os.remove('ololo')
 
     def test_compile(self):
         bot_c = bot_compiler.BotCompiler()
