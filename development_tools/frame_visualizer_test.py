@@ -14,7 +14,7 @@ config_mock = Mock()
 my_painter = Mock()
 
 def paint_file(js):
-    img = Image.open(join(MYDIR, '../images/0{}.gif'.format(js)))
+    img = Image.open(join(MYDIR, './testing/images/0{}.gif'.format(js)))
     bytes = BytesIO()
     img.save(bytes, format='png')
     return bytes.getvalue()
@@ -28,7 +28,7 @@ with patch.dict('sys.modules', config=config_mock):
 
     class FrameVisualizerTestCase(ut.TestCase):
         def setUp(self):
-            self.imgpath = join(MYDIR, '../images')
+            self.imgpath = join(MYDIR, './testing/images')
             self.game_controller = Mock()
             self.game_controller.jury_states = list(range(1, 10, 1))
             self.game_controller.get_players = Mock(return_value=[])
@@ -37,14 +37,16 @@ with patch.dict('sys.modules', config=config_mock):
 
         def test__bytes2image(self):
             for i in os.listdir(self.imgpath):
-                print(i)
                 file = open(join(self.imgpath, i), mode='rb')
                 bytes = file.read()
                 file.close()
                 bytes2 = BytesIO()
+                format=imghdr.what(None, h=bytes)
                 vis_module._bytes2image(bytes).save(
-                    bytes2, format=imghdr.what(None, h=bytes))
-                self.assertEqual(bytes, bytes2.getvalue())
+                    bytes2, format=format)
+                self.assertTrue(isinstance(Image.open(
+                    vis_module._NamedTempFile(
+                        bytes2.getvalue(), 'file.' + format)), Image.Image))
 
         def test__resize(self):
             for i in os.listdir(self.imgpath):
@@ -104,7 +106,7 @@ with patch.dict('sys.modules', config=config_mock):
 
     class FrameVisualizerDrawFrameTestCase(ut.TestCase):
         def setUp(self):
-            self.imgpath = join(MYDIR, '../images')
+            self.imgpath = join(MYDIR, './testing/images')
             self.game_controller = Mock()
             self.game_controller.jury_states = list(range(1, 10, 1))
             self.game_controller.get_players = Mock(return_value=[])
