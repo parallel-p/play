@@ -1,9 +1,6 @@
 ﻿import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-import datetime
-from jury_state import JuryState
-from player import Player
 
 FRAME_SIDE = 1024
 FREE_SIDE = 800
@@ -110,8 +107,8 @@ class Painter:
                           'white'
                           )
 
-        colors = ['', 'red', 'blue', 'green', 'pink', 'black', 
-                  'yellow', 'LawnGreen', 'SandyBrown', 'Orange', 
+        colors = ['', 'red', 'blue', 'green', 'pink', 'black',
+                  'yellow', 'LawnGreen', 'SandyBrown', 'Orange',
                   'DarkViolet', 'NavajoWhite1', 'Azure4', 'PaleGreen4'
                   'IndianRed1', 'DarkRed', 'DarkCyan']
         draw = ImageDraw.Draw(image)

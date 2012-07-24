@@ -12,6 +12,7 @@ class _NamedTempFile:
     closed = closefd = False
     mode = 'rb'
     pos = 0
+
     def __init__(self, bytes, name):
         self.bytes = BytesIO(bytes).getvalue()
         self.name = name

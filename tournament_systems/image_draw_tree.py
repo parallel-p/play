@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
+
 class ImageDrawTree:
     '''
     This class draw image based on `data` with results
@@ -69,9 +70,9 @@ class ImageDrawTree:
         eps = 40  # height of indent before name
         line_len = 400  # length of line with name
 
-        f_line, s_line = 50, 150 # y-coordinates of first player
+        f_line, s_line = 50, 150  # y-coordinates of first player
         indent = 5  # indent for first players
-        round_ind = [(50, 150), (100, 300), (200, 600), (400, 1200), (800, 2400)]  #other indents
+        round_ind = [(50, 150), (100, 300), (200, 600), (400, 1200), (800, 2400)]  # other indents
         for round_id in range(rounds_count):
             f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
             for game in data[round_id]:

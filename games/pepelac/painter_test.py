@@ -2,12 +2,12 @@ from painter import Painter
 from PIL import Image
 import unittest
 from unittest.mock import Mock
-import random
 from os.path import dirname, join
 import os
 import painter as painter_module
 
 MYDIR = dirname(__file__)
+
 
 class PainterTests(unittest.TestCase):
 
@@ -86,7 +86,6 @@ class PainterTests(unittest.TestCase):
         self.assertEqual(
             'abcabcabcabc...',
              self.painter_object.cut_name('abcabcabcabcabca'))
-
 
     def test_index_of_player(self):
         self.assertEqual(-1, self.painter_object.index_of_player([], None))

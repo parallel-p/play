@@ -1,6 +1,6 @@
 import unittest as ut
 from unittest.mock import Mock, patch
-from os.path import dirname, join
+from os.path import join
 import os
 from io import BytesIO
 import imghdr
@@ -12,6 +12,7 @@ MYDIR = os.path.dirname(__file__)
 
 config_mock = Mock()
 my_painter = Mock()
+
 
 def paint_file(js):
     img = Image.open(join(MYDIR, './testing/images/0{}.gif'.format(js)))
@@ -41,7 +42,7 @@ with patch.dict('sys.modules', config=config_mock):
                 bytes = file.read()
                 file.close()
                 bytes2 = BytesIO()
-                format=imghdr.what(None, h=bytes)
+                format = imghdr.what(None, h=bytes)
                 vis_module._bytes2image(bytes).save(
                     bytes2, format=format)
                 self.assertTrue(isinstance(Image.open(
@@ -117,7 +118,6 @@ with patch.dict('sys.modules', config=config_mock):
                 self.vis_object._draw_frame(i)
                 self.assertIsNotNone(self.vis_object.frame_label['image'])
                 self.assertEqual(self.vis_object.frame_number, i)
-
 
     if __name__ == '__main__':
         ut.main()

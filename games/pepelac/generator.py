@@ -61,7 +61,7 @@ class Generator:
                 for j, cell in enumerate(row):
                     if (cell > 0):
                         players.append((i, j, cell))
-            
+
             field[players[0][0]][players[0][1]] = players[1][2]
             field[players[1][0]][players[1][1]] = players[0][2]
 

@@ -104,7 +104,6 @@ with patch.dict('sys.modules', config=config_mock):
                 Fore.RED + Style.BRIGHT + 'We have big problems!!!' +\
                 Style.NORMAL + Fore.RESET, end='\n')
 
-
         def test__prompt(self):
             self.vis_object.frame_number = 0
             self.vis_object.lock = Mock()
@@ -131,12 +130,12 @@ with patch.dict('sys.modules', config=config_mock):
         def test__detect_arrow_posix(self):
             vis_module.name = 'posix'
             mydict = {
-                '[A' : 'A',
-                '[B' : 'B',
-                '[C' : 'C',
-                '[D' : 'D',
-                '[5~' : 'U',
-                '[6~' : 'N'
+                '[A': 'A',
+                '[B': 'B',
+                '[C': 'C',
+                '[D': 'D',
+                '[5~': 'U',
+                '[6~': 'N'
                 }
             for arrow in mydict.keys():
                 vis_module.getch = Mock(side_effect=iter(arrow))
@@ -210,7 +209,6 @@ with patch.dict('sys.modules', config=config_mock):
                 vis_module.print.assert_any_call('\x1b[{};{}H'.format(
                     (len(splitted) + i), i), ' ' * 98, chr(13), sep='', end='')
 
-
         def test__read_key_posix(self):
             vis_module.name = 'posix'
             for i in 'ampqebjgJGBAMPQE':
@@ -250,7 +248,6 @@ with patch.dict('sys.modules', config=config_mock):
                 check += 'Frame #{}:\n{}\n'.format(i, make_sample_frame(i))
             self.vis_object.dump(my_log)
             self.assertEqual(my_log.getvalue(), check)
-
 
     if __name__ == "__main__":
         unittest.main()
