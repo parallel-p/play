@@ -37,7 +37,7 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
             f.close()
             return retv
 
-        # There should be an image folder containing GIF images with specified
+        # There should be an image folder containing png images with specified
         # names (see below).
         self.painter_obj = Mock
         self.painter_obj.paint = side_effect
@@ -51,7 +51,7 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
                     for gc.signature.game_id in range(randint(1, 3)):
                         filenum = 0
                         gc.jury_states = [str(randrange(19) + 1).zfill(2) + '.'
-                                          'gif' for i in range(randint(3, 20))]
+                                          'png' for i in range(randint(3, 20))]
                         while os.path.exists('contr' + str(filenum) + '.gc'):
                             filenum = randrange(10000000000)
                         with open('contr' + str(filenum) + '.gc', 'wb') as f:
