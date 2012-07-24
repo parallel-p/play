@@ -72,7 +72,8 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.link(begname, '{:09d}'.format(self._frame_count + loop + 1) + self.ext)
+            os.link(begname, '{:09d}'.format(self._frame_count +\
+                                             loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
@@ -116,16 +117,20 @@ class VideoVisualizer:
         if self.table_drawer is not None:
             tfile = self._create_tempfile(self.ext)
             with open(tfile[1], 'wb') as f:
-                imagew = self.table_drawer(os.path.join(self.working_dir, 'tournament.data'), round_id, self.mode, self.ext)
+                imagew = self.table_drawer(os.path.join(self.working_dir,
+                         'tournament.data'), round_id, self.mode, self.ext)
                 f.write(imagew)
             im = Image.open(tfile[1])
             ratio = min(self.size[0] / im.size[0], self.size[1] / im.size[1])
-            ratio_turned = min(self.size[1] / im.size[0], self.size[0] / im.size[1])
+            ratio_turned = min(self.size[1] / im.size[0],
+                               self.size[0] / im.size[1])
             if ratio_turned > ratio:
                 im = im.transpose(Image.ROTATE_90)
-                im = im.resize((int(im.size[0] * ratio_turned), int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
+                im = im.resize((int(im.size[0] * ratio_turned),
+                              int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
             else:
-                im = im.resize((int(im.size[0] * ratio), int(im.size[1] * ratio)), Image.ANTIALIAS)
+                im = im.resize((int(im.size[0] * ratio),
+                                int(im.size[1] * ratio)), Image.ANTIALIAS)
             res = Image.new(self.mode, self.size, 'white')
             res.paste(im, ((self.size[0] - im.size[0]) // 2,
                            (self.size[1] - im.size[1]) // 2,

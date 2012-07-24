@@ -23,7 +23,8 @@ def parse_bots_file(filename):
 def create_players(filename):
     import player
     for number, cmd in enumerate(parse_bots_file(filename)):
-        yield player.Player(cmd, cmd.split()[-1].split('/')[-1], 'Bot #{}'.format(number))
+        yield player.Player(cmd, cmd.split()[-1].split('/')[-1],
+                            'Bot #{}'.format(number))
 
 
 def play(args):
@@ -72,7 +73,8 @@ def load_game_controller(filename):
 
 def print_final_scores(gc):
     print ('\n\nFinal scores:')
-    output = sorted([(score, name) for name, score in gc.get_scores().items()])[::-1]
+    output = sorted([(score, name) for name, score in\
+                                    gc.get_scores().items()])[::-1]
     for score, name in output:
         print ('{player.bot_name:30s} by '
                '{player.author_name:30s} \t {score}'.format(player=name,
@@ -112,7 +114,8 @@ def main():
     )
 
     arg_parser.add_argument('-s', '--save-to', help='save game log to file')
-    arg_parser.add_argument('-f', '--from-file', help='visualize log from file')
+    arg_parser.add_argument('-f', '--from-file',
+                            help='visualize log from file')
     arg_parser.add_argument(
         '-r', '--only-run', action='store_true',
         help='don\'t visualize and save logs, only run game'
