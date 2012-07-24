@@ -1,8 +1,16 @@
-"01" "conseq" "python3 games/pepelac/bots/consequent_bot.py"
-"03" "daniel_bot" "python3 games/pepelac/bots/daniel_bot.py"
-"05" "tompe_bot" "python3 games/pepelac/bots/tompe_bot.py"
-"07" "valzevul_bot" "python3 games/pepelac/bots/valzevul_bot.py"
-"08" "greedy_bot" "games/pepelac/bots/greedy_bot"
-"09" "lolita_bot" "games/pepelac/bots/lolita_bot"
-"12" "p_pechatnov_bot" "games/pepelac/bots/p_pechatnov_bot"
-"13" "simple_bot" "games/pepelac/bots/simple_bot"
+'1' 'stand' 'python3 games/pepelac/bots/stand.py'
+'2' 'conseq' 'python3 games/pepelac/bots/consequent_bot.py'
+'3' '1moving' 'python3 games/pepelac/bots/first_moving_bot.py'
+'4' 'greedy' './games/pepelac/bots/greedy_bot'
+'5' 'kamikad' 'python3 games/pepelac/bots/kamikadze.py'
+'6' 'random' './games/pepelac/bots/random_bot'
+'7' 'simple' './games/pepelac/bots/simple_bot'
+'8' 'sosimple' './games/pepelac/bots/sosimple'
+'9' 'valzevul' 'python3 games/pepelac/bots/valzevul_bot.py'
+'10' 'lolita' 'python3 games/pepelac/bots/lolita_bot.py'
+'11' 'fitnes' 'python3 games/pepelac/bots/p_pechatnov_bot.py'
+'12' 'tompebot' 'python3 games/pepelac/bots/tompe_bot.py'
+'13' 'stand' 'python3 games/pepelac/bots/stand.py'
+'14' 'stand' 'python3 games/pepelac/bots/stand.py'
+'15' 'stand' 'python3 games/pepelac/bots/stand.py'
+'16' 'stand' 'python3 games/pepelac/bots/stand.py'
