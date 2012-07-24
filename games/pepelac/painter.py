@@ -110,7 +110,10 @@ class Painter:
                           'white'
                           )
 
-        colors = ['', 'red', 'blue', 'green', 'pink', 'black', 'yellow']
+        colors = ['', 'red', 'blue', 'green', 'pink', 'black', 
+                  'yellow', 'LawnGreen', 'SandyBrown', 'Orange', 
+                  'DarkViolet', 'NavajoWhite1', 'Azure4', 'PaleGreen4'
+                  'IndianRed1', 'DarkRed', 'DarkCyan']
         draw = ImageDraw.Draw(image)
 
         if not jury_state.collision:
