@@ -2,9 +2,47 @@
 # TODO: Add scrolling of a single frame and some more useful functions.
 import tkinter as tk
 from PIL import Image, ImageTk
-from tempfile import NamedTemporaryFile as TempFile
 import imghdr
 import config
+from io import BytesIO
+
+
+class _NamedTempFile:
+    ''' Represents a named file in memory '''
+    closed = closefd = False
+    mode = 'rb'
+    pos = 0
+    def __init__(self, bytes, name):
+        self.bytes = BytesIO(bytes).getvalue()
+        self.name = name
+
+    def readall(self):
+        self.pos = len(self.bytes)
+        return self.bytes
+
+    def read(self, i=None):
+        if i is None:
+            i = len(self.bytes)
+        self.pos += i
+        return self.bytes[self.pos - i:self.pos]
+
+    def readable(self):
+        return self.pos < len(self.bytes)
+
+    def writable(self):
+        return False
+
+    def close(self):
+        self.closed = True
+
+    def seekable(self):
+        return True
+
+    def seek(self, offset, whence=0):
+        self.pos = offset
+
+    def tell(self):
+        return self.pos
 
 
 def _bytes2image(bytes):
@@ -14,13 +52,8 @@ def _bytes2image(bytes):
 
     header = imghdr.what(None, h=bytes)
     if header:
-        temp_file = TempFile(
-            mode='wb', prefix='.painter_frame_', suffix='.' + header)
-        temp_file.write(bytes)
-        temp_file.flush()
-        img = Image.open(temp_file.name)
-        temp_file.close()
-        return img
+        temp_file = _NamedTempFile(bytes, 'frame.' + header)
+        return Image.open(temp_file)
     else:
         raise Exception('''Unknown image format!
 I can only read bytestreams with file-like headers of such formats:
