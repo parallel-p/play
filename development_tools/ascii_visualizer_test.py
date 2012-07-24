@@ -34,7 +34,7 @@ config_mock.AsciiPainter = Mock(return_value=my_ascii_painter)
 with patch.dict('sys.modules', config=config_mock):
     import development_tools.ascii_visualizer as vis_module
 
-    class AsciiVisualizerTestCase(ut.TestCase):
+    class AsciiVisualizerTestCase(unittest.TestCase):
         def test__clear_nt(self):
             vis_module.name = 'nt'
             vis_module.system = Mock()
@@ -79,7 +79,7 @@ with patch.dict('sys.modules', config=config_mock):
                     '''{brt}{bl}Navigation help:
           ____     ____  ____  ____
          |{gr}HOME{bl}|   |{gr}PgUp{bl}||{gr} Up {bl}||{gr}PgDn{bl}|
-         |{mg}1st {bl}|  |{mg}RW5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
+         |{mg}1st {bl}|   |{mg}RW5%{bl}||{mg}auto{bl}||{mg}FF5%{bl}|
           ____     ____  ____  ____
          |{gr}END {bl}|   |{gr}Left{bl}||{gr}Down{bl}||{gr}Rght{bl}|
          |{mg}last{bl}|   |{mg}prev{bl}||{mg}jump{bl}||{mg}next{bl}|
@@ -102,7 +102,7 @@ with patch.dict('sys.modules', config=config_mock):
             self.vis_object._error('We have big problems!!!')
             vis_module.print.assert_called_once_with(
                 Fore.RED + Style.BRIGHT + 'We have big problems!!!' +\
-                Style.NORMAL + Fore.RESET)
+                Style.NORMAL + Fore.RESET, end='\n')
 
 
         def test__prompt(self):
@@ -110,6 +110,7 @@ with patch.dict('sys.modules', config=config_mock):
             self.vis_object.lock = Mock()
             self.vis_object.lock.acquire = Mock()
             self.vis_object.lock.release = Mock()
+            vis_module.clear_string = Mock()
             vis_module.print = Mock()
             vis_module.input = Mock(return_value='user answer')
             vis_module._clear = Mock()
@@ -124,7 +125,6 @@ with patch.dict('sys.modules', config=config_mock):
                 'Write!', end=' : ' + Style.NORMAL + Fore.RESET)
             vis_module.input.assert_called_once_with()
             self.vis_object.lock.release.assert_called_once_with()
-            vis_module._clear.assert_called_once_with()
             self.vis_object._print_frame.assert_called_once_with(0)
             self.assertEqual(retval, 'user answer')
 
@@ -178,9 +178,11 @@ with patch.dict('sys.modules', config=config_mock):
             text = '{color}Frame #0001 of 10 :{nocolor}\n{0:s}\n'.format(
                     make_sample_frame(0), color=Fore.YELLOW +\
                     Style.BRIGHT, nocolor=Fore.RESET + Style.NORMAL)
-            vis_module.print.assert_called_once_with(text)
+            vis_module.print.assert_called_once_with('\n\r'.join(text.split('\n')))
             self.vis_object.lock.release.assert_called_once_with()
-            self.assertEqual(self.vis_object.prev_frame, text.split('\n'))
+            self.assertEqual(
+                self.vis_object.prev_frame, (
+                    '\n\r'.join(text.split('\n'))).split('\n'))
 
         def test__print_frame_diff(self):
             for i, name in enumerate(['posix', 'nt']):
@@ -206,7 +208,7 @@ with patch.dict('sys.modules', config=config_mock):
                             '\x1b[{};{}H'.format(
                                 line + 1, i), splitted[line], sep='')
                 vis_module.print.assert_any_call('\x1b[{};{}H'.format(
-                    (len(splitted) + 2 + i), i), sep='', end='')
+                    (len(splitted) + i), i), ' ' * 98, chr(13), sep='', end='')
 
 
         def test__read_key_posix(self):
