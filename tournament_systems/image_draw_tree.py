@@ -59,19 +59,19 @@ class ImageDrawTree:
             draw.text((indent + eps, winner_line - eps), winner,
                 fill=colors[round_id + 2], font=font)
         data = self._get_data(filename)
-        FRAME_SIDE = len(data[0]) * 400  # based on numbers of players
-        RIGHT_MARGIN = 250
+        FRAME_SIDE = len(data[0]) * 200  # based on numbers of players
+        RIGHT_MARGIN = 1000
         width = FRAME_SIDE + RIGHT_MARGIN
         height = FRAME_SIDE
         image = Image.new(mode, (width, height), 'white')
         colors = ['red', 'blue', 'green', 'DeepPink', 'black', 'DarkViolet']
         draw = ImageDraw.Draw(image)
-        eps = 50  # height of indent before name
+        eps = 40  # height of indent before name
         line_len = 400  # length of line with name
 
-        f_line, s_line = 100, 300 # y-coordinates of first player
-        indent = 10  # indent for first players
-        round_ind = [(100, 300), (200, 600), (400, 1200), (800, 2400), (1600, 4800)]  #other indents
+        f_line, s_line = 50, 150 # y-coordinates of first player
+        indent = 5  # indent for first players
+        round_ind = [(50, 150), (100, 300), (200, 600), (400, 1200), (800, 2400)]  #other indents
         for round_id in range(rounds_count):
             f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
             for game in data[round_id]:
@@ -83,19 +83,19 @@ class ImageDrawTree:
                         players.append(str(game[1][0]))
                     create_game(f_line, s_line)
                     set_names(f_line, s_line, players)
-                    f_line = s_line + 200
-                    s_line = f_line + 200
+                    f_line = s_line + 100
+                    s_line = f_line + 100
                 else:
                     if game[0][1] > game[1][1]:
                         winner = str(game[0][0])
                     else:
                         winner = str(game[1][0])
                     draw_lines(f_line, s_line, winner, round_id)
-                    f_line = s_line + 200 * (round_id + 1)
-                    s_line = f_line + 200 * (round_id + 1)
+                    f_line = s_line + 100 * (round_id + 1)
+                    s_line = f_line + 100 * (round_id + 1)
                     if round_id > 1:
-                        f_line += 200
-                        s_line += 400
+                        f_line += 100
+                        s_line += 200
             if round_id < 2:
                 indent += line_len * (2 - round_id)
             else:
