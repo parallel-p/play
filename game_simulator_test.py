@@ -46,7 +46,10 @@ class GameSimulatorTest(unittest.TestCase):
         game_master.is_finished = False
         game_master.tick.side_effect = game_side_effect
         # Sample command line
-        config = [player.Player('./a.out') for i in range(2)]
+        if os.name == 'nt':
+            config = [player.Player('a.exe') for i in range(2)]
+        else:
+            config = [player.Player('./a.out') for i in range(2)]
         gen = generator.Generator()
         start_state = next(gen.generate_start_positions(' ', 2))
         eng = game_simulator.GameSimulator(config, start_state, '')
