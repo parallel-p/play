@@ -1,4 +1,4 @@
-GAME_PATH = 'games/nim'
+GAME_PATH = 'games/pepelac'
 import config_helpers
 config_helpers.initialize_game_environment(GAME_PATH)
 
@@ -9,7 +9,7 @@ import game_controller
 from unittest.mock import Mock
 import os
 import player
-from games.nim import generator
+from games.pepelac import generator
 import subprocess
 
 helloworld = '''
