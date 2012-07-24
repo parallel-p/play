@@ -15,7 +15,7 @@ class ExecuteError(OSError):
     cannot start bot process (e.g. invalid command)
     '''
     def __init__(self):
-        OSError.__init__(self, 'can\'t start bot process')
+        super().__init__('can\'t start bot process')
 
 
 class ProcessNotRunningException(OSError):
@@ -24,7 +24,7 @@ class ProcessNotRunningException(OSError):
     send command to process that is not running.
     '''
     def __init__(self):
-        OSError.__init__(self, 'process isn\'t running')
+        super().__init__('process isn\'t running')
 
 
 class TimeLimitException(OSError):
@@ -32,7 +32,7 @@ class TimeLimitException(OSError):
     This exception is raised when bot's process exceeded time limit.
     '''
     def __init__(self):
-        OSError.__init__(self, 'time limit exceeded')
+        super().__init__('time limit exceeded')
 
 
 class BaseBot:
