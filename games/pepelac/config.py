@@ -44,4 +44,4 @@ cpu_time_limit_seconds = 1.0
 time_limit_count_of_moves = 50
 memory_limit_mb = 15.0
 
-tournament_system = 'round-robin'
+tournament_system = 'olympic'
