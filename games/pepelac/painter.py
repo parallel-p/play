@@ -163,14 +163,14 @@ class Painter:
             Drawing two players who have to fight
             '''
             size = self._player_ico_fight.size[0]
-            rectangles = [(self._width // 8,
+            rectangles = [(self._width // 3,
                            int(self._height / 4.8),
-                           self._width // 8 + size - 5,
+                           self._width // 3 + size - 5,
                            self._height // 5 + size - 5
                            ),
-                          (self._width // 8 + self._width // 2,
+                          (self._width // 8 + self._width // 2 + 150,
                            int(self._height // 4.8),
-                           self._width // 8 + self._width // 2 + size - 5,
+                           self._width // 8 + self._width // 2 + 150 + size - 5,
                            self._height // 5 + size - 5
                            )
                           ]
@@ -188,11 +188,11 @@ class Painter:
                 draw.rectangle(rectangles[idx], fill=color)
 
             image.paste(self._player_ico_fight,
-                        (self._width // 8, int(self._height / 4.8)),
+                        (self._width // 3, int(self._height / 4.8)),
                         self._player_ico_fight
                         )
             image.paste(self._player_ico_fight,
-                        (self._width // 8 + self._width // 2,
+                        (self._width // 8 + self._width // 2 + 150,
                         int(self._height / 4.8)),
                         self._player_ico_fight
                         )
@@ -201,7 +201,7 @@ class Painter:
             text = 'Gunplay!'
 
             width = font.getsize(text)[0]
-            draw.text(((self._width - width) // 2 + 100,
+            draw.text(((self._width - width) // 2 + 350,
                        self._height // 3),
                       text, fill='black', font=font
                       )
@@ -211,8 +211,8 @@ class Painter:
             '''
             patron_font = ImageFont.truetype(get_path('times.ttf'), 70)
             y = self._height // 5 + size + 10
-            coordinates = [(self._width // 4, y),
-                           (self._width // 4 + self._width // 2, y)
+            coordinates = [(self._width // 2 - 50, y),
+                           (self._width // 8 + self._width // 2 + 410, y)
                            ]
 
             for idx, bullets_cnt in enumerate(bullets_count):
@@ -222,11 +222,11 @@ class Painter:
                           )
 
             image.paste(self._patron_ico_fight,
-                        (int(self._width / 3.2), y),
+                        (int(self._width // 3) + 320, y),
                         self._patron_ico_fight
                         )
             image.paste(self._patron_ico_fight,
-                        (int(self._width / 3.2) + self._width // 2, y),
+                        (int(self._width // 3) + self._width // 2 + 80, y),
                         self._patron_ico_fight
                         )
             font = ImageFont.truetype(get_path('times.ttf'), 50)
@@ -237,7 +237,7 @@ class Painter:
             else:
                 text = '{} win!'.format(player_names[1])
             width = font.getsize(text)[0]
-            draw.text(((self._width - width) // 2 + 100,
+            draw.text(((self._width - width) // 2 + 370,
                        self._height // 20 * 16),
                       text, fill='black', font=font
                       )
@@ -275,10 +275,10 @@ class Painter:
             if (self.index_of_player(jury_state.dead_players, player) != -1):
                 text = 'Dead with score ' + str(jury_state.scores[player])
                 y += 5
-                draw.text((x + SMALL_SIDE + 10, y), text,
+                draw.text((x + SMALL_SIDE + 30, y), text,
                           fill='black', font=font
                           )
-                draw.text((x + SMALL_SIDE + 10, y + 20),
+                draw.text((x + SMALL_SIDE + 30, y + 20),
                           self.dead_reason(jury_state, player),
                           fill='black', font=font
                           )
