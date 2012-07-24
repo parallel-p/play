@@ -46,7 +46,7 @@ class ImageDrawTree:
             draw.text((indent + line_len + eps, winner_line - eps),
                 players[2], fill=colors[0], font=font)
 
-        def draw_lines(first_line, second_line, winner):
+        def draw_lines(first_line, second_line, winner, round_id):
             '''
             Print other lines of tree.
             '''
@@ -57,22 +57,23 @@ class ImageDrawTree:
                 width=3)
             font = ImageFont.truetype(get_path('times.ttf'), 33)
             draw.text((indent + eps, winner_line - eps), winner,
-                fill=colors[4], font=font)
+                fill=colors[round_id + 2], font=font)
         data = self._get_data(filename)
         FRAME_SIDE = len(data[0]) * 400  # based on numbers of players
         RIGHT_MARGIN = 250
         width = FRAME_SIDE + RIGHT_MARGIN
         height = FRAME_SIDE
         image = Image.new(mode, (width, height), 'white')
-        colors = ['red', 'blue', 'green', 'pink', 'black', 'yellow']
+        colors = ['red', 'blue', 'green', 'DeepPink', 'black', 'DarkViolet']
         draw = ImageDraw.Draw(image)
         eps = 50  # height of indent before name
-        line_len = 333  # length of line with name
+        line_len = 400  # length of line with name
 
         f_line, s_line = 100, 300 # y-coordinates of first player
         indent = 10  # indent for first players
-        round_ind = [(200, 600), (400, 1200), (800, 2400)]  #other indents
+        round_ind = [(100, 300), (200, 600), (400, 1200), (800, 2400), (1600, 4800)]  #other indents
         for round_id in range(rounds_count):
+            f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
             for game in data[round_id]:
                 if round_id == 0:
                     players = [str(game[0][0]), str(game[1][0])]
@@ -89,11 +90,16 @@ class ImageDrawTree:
                         winner = str(game[0][0])
                     else:
                         winner = str(game[1][0])
-                    draw_lines(f_line, s_line, winner)
+                    draw_lines(f_line, s_line, winner, round_id)
                     f_line = s_line + 200 * (round_id + 1)
                     s_line = f_line + 200 * (round_id + 1)
-            f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
-            indent += line_len * (2 - round_id)
+                    if round_id > 1:
+                        f_line += 200
+                        s_line += 400
+            if round_id < 2:
+                indent += line_len * (2 - round_id)
+            else:
+                indent += line_len * (3 - round_id)
 
         image.save("results" + ext, ext[1:])
         bytes = BytesIO()
