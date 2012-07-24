@@ -170,7 +170,8 @@ class GameMaster:
         self._state.collision = [
             self._players[player_id] for player_id in players
         ]
-        self._controller.report_state(self._state)
+        for i in range(20):
+            self._controller.report_state(self._state)
         self._state.collision = None
 
         kill = False
