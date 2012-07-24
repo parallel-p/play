@@ -48,7 +48,6 @@ import bot
 
 
 class Main:
-
     def __init__(self, game_path, tournament_id):
         self._game_path = game_path
         self._players_list = None
@@ -89,8 +88,10 @@ class Main:
 
     def _make_good_tournament_id(self):
         if not self._tournament_id:
-            self._tournament_id = self._get_free_dirname(path='logs/',
-                dirname_begin='tournament')
+            self._tournament_id = self._get_free_dirname(
+                path='logs/',
+                dirname_begin='tournament'
+            )
 
     def main(self):
         self._load_players()
