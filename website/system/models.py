@@ -1,10 +1,27 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 import os
 import shutil
 from zipfile import ZipFile
+
+
+class BotQuerySet(QuerySet):
+
+    def delete(self):
+        for obj in self.all():
+            obj.delete()
+
+
+class BotManager(models.Manager):
+
+    def get_query_set(self):
+        return BotQuerySet(self.model, using=self._db)
+
+    def delete(self):
+        self.get_query_set().delete()
 
 
 class Game(models.Model):
@@ -60,6 +77,7 @@ class Bot(models.Model):
     game = models.ForeignKey(Game, verbose_name=_(u'game'),
                              blank=True, null=True)
     source = models.FileField(_('source'), upload_to='bots')
+    objects = BotManager()
 
     class Meta:
         verbose_name = _(u'bot')
@@ -92,7 +110,6 @@ class Bot(models.Model):
             lines = players_files.readlines()
         for line in lines:
             line1 = line[1:len(line) - 2].split('\" \"')
-            print line1[0], author
             if line1[0] != author:
                 new_lines.append(line)
         with open(players_files_path, 'w') as players_files:
