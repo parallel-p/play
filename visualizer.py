@@ -127,8 +127,10 @@ class VideoVisualizer:
             else:
                 im = im.resize((int(im.size[0] * ratio), int(im.size[1] * ratio)), Image.ANTIALIAS)
             res = Image.new(self.mode, self.size, 'white')
-            res.paste(im, ((self.size[0]-im.size[0])//2, (self.size[1]-im.size[1])//2,
-                           (self.size[0]+im.size[0])//2, (self.size[1]+im.size[1])//2))
+            res.paste(im, ((self.size[0] - im.size[0]) // 2,
+                           (self.size[1] - im.size[1]) // 2,
+                           (self.size[0] + im.size[0]) // 2,
+                           (self.size[1] + im.size[1]) // 2))
             resfile = self._create_tempfile(self.ext)
             res.save(resfile[1], self.ext[1:])
             del im

@@ -14,7 +14,8 @@ if __name__ == '__main__':
         '-hr', '--html-report',
         help='Directory save htmlreport to'
         )
-    args = arg_parser.parse_args();
+    args = arg_parser.parse_args()
+
 
 def main():
     list_of_test_files = list()
@@ -39,7 +40,7 @@ def main():
     coverage.report(file=sys.stdout)
 
     if args.html_report:
-        coverage.html_report(directory=args.html_report)#, ignore_errors=True)
+        coverage.html_report(directory=args.html_report)
     print(test_result)
 
 

@@ -12,15 +12,18 @@ if len(sys.argv) < 5:
 
 if __name__ == '__main__':
     game_path, log_path, log_mask, res_name = sys.argv[1:5]
-    framerate = 3 if '-f' not in sys.argv else int(sys.argv[sys.argv.index('-f') + 1])
+    framerate = 3 if '-f' not in sys.argv\
+                  else int(sys.argv[sys.argv.index('-f') + 1])
     silent = '--silent' in sys.argv
     initialize_game_environment(game_path)
     import config
     from tournament_systems.tournament_system_factory import create
     beg = clock()
-    ts = create()(players_parse(os.path.join(game_path, config.players_config)))
+    ts = create()(players_parse(os.path.join(game_path,
+                                             config.players_config)))
     visualizer = VideoVisualizer(framerate, config.Painter, log_mask,
-                                 log_path, silent, ts.draw_table if hasattr(ts, 'draw_table') else None)
+                                 log_path, silent, ts.draw_table\
+                                 if hasattr(ts, 'draw_table') else None)
     visualizer.compile(res_name)
     if not silent:
         print('Compiled in', clock() - beg, 'sec.')

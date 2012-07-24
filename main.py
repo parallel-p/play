@@ -38,13 +38,14 @@ if you don't set tournament id it will be least non-used one'''
     '''
     If tournament id isn't setted it will be least non-used one
     '''
-    
+
     config_helpers.initialize_game_environment(args.game_path)
 import config
 
 from tournament_stages.tournament import Tournament
 from utils import print_tournament_system_results
 import bot
+
 
 class Main:
 
@@ -90,7 +91,7 @@ class Main:
         if not self._tournament_id:
             self._tournament_id = self._get_free_dirname(path='logs/',
                 dirname_begin='tournament')
-        
+
     def main(self):
         self._load_players()
         self._make_good_tournament_id()

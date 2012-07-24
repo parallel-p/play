@@ -12,7 +12,8 @@ if len(sys.argv) < 4:
 
 if __name__ == '__main__':
     game_path, log_name, res_name = sys.argv[1:4]
-    framerate = 3 if '-f' not in sys.argv else int(sys.argv[sys.argv.index('-f') + 1])
+    framerate = 3 if '-f' not in sys.argv\
+                  else int(sys.argv[sys.argv.index('-f') + 1])
     silent = '--silent' in sys.argv
     initialize_game_environment(game_path)
     import config

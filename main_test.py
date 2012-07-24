@@ -10,7 +10,7 @@ with patch.dict('sys.modules',
                  '_load_players': MagicMock(),
                  'print_tournament_system_results': MagicMock()}):
     import main
-    
+
 
 class MainTest(unittest.TestCase):
 
@@ -44,14 +44,14 @@ class MainTest(unittest.TestCase):
         self.assertEqual(self.main.tournament_results, 42)
         self.assertEqual(self.main.show_result(), 42)
         main.Tournament().run.assert_called_once_with()
-    
+
     def test_print_tournament_system_results(self):
         main.print_tournament_system_results = MagicMock()
         self.main._print_tournament_results(42)
         main.print_tournament_system_results.assert_called_once_with(42)
 
     def test_get_free_dirname(self):
-        if self.main._get_free_dirname('logs', 
+        if self.main._get_free_dirname('logs',
                                        'tournament') not in range(1, 1024):
             raise Exception('_get_free_dirname doesn\'t work')
 
