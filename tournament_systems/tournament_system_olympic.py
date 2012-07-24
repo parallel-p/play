@@ -44,34 +44,25 @@ class TournamentSystemOlympic(TournamentSystem):
         '''
         list_of_players = copy.deepcopy(self._players_list)
         count_of_players = len(list_of_players)
-
         if count_of_players == 0:
             raise Exception("No players found. Can not create Olympic system.")
-
         count_of_all_rounds = round(log(count_of_players, 2))
         if log(count_of_players, 2) != count_of_all_rounds:
-            raise Exception("Count of players have to be equal 2^N."
-                            " Can not create Olympic system.")
-
+            raise Exception("Count of players have to be equal 2^N. Can not create Olympic system.")
         for game_round in range(count_of_all_rounds):
             count_of_players = len(list_of_players)
-            yield self._get_round(count_of_players, list_of_players)
+            yield self.get_round(count_of_players, list_of_players)
             list_of_players = self.update_list_of_players(count_of_players)
-
         self._save_data()
 
-    def _get_round(self, count_of_players, list_of_players):
+    def get_round(self, count_of_players, list_of_players):
         '''
-        Returns list of players for current round.
+        Yields list of players for current round.
         '''
         list_of_round = []
         for player in range(0, count_of_players - 1, 2):
-            list_of_round.append(
-                (list_of_players[player], list_of_players[player + 1])
-            )
-            list_of_round.append(
-                (list_of_players[player + 1], list_of_players[player])
-            )
+            list_of_round.append([list_of_players[player],
+                                  list_of_players[player + 1]])
         return list_of_round
 
     def update_list_of_players(self, count_of_players):
@@ -105,7 +96,7 @@ class TournamentSystemOlympic(TournamentSystem):
             ``round_number`` - number of a round is to be named,
         starting from zero.
             ``rounds_overall`` - number of rounds in the tournament. '''
-        rounds_left = rounds_overall - int(round_number)
+        rounds_left = rounds_overall - int(round_number) - 1
         names = ['final', 'semifinal', 'quarterfinal', '1/8 final', '1/16 final']
         return names[rounds_left - 1]
 
