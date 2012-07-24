@@ -125,9 +125,8 @@ class VideoVisualizer:
             ratio_turned = min(self.size[1] / im.size[0],
                                self.size[0] / im.size[1])
             if ratio_turned > ratio:
-                im = im.transpose(Image.ROTATE_90)
-                im = im.resize((int(im.size[0] * ratio_turned),
-                              int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
+                im = im.transpose(Image.ROTATE_270)
+                im = im.resize((int(im.size[0] * ratio_turned), int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
             else:
                 im = im.resize((int(im.size[0] * ratio),
                                 int(im.size[1] * ratio)), Image.ANTIALIAS)
@@ -156,7 +155,7 @@ class VideoVisualizer:
                      width=40) +
                 wrap('Game:       ' + str(contr.signature.game_id), width=40) +
                 [''] +
-                wrap('Players: ' + ', '.join(map(lambda x: x.author_name,
+                wrap('Players: ' + ', '.join(map(lambda x: x.bot_name + ' by ' + x.author_name,
                      contr._players)), width=40))
 
         im = Image.new(self.mode, self.size, 'blue')
@@ -188,7 +187,7 @@ class VideoVisualizer:
             y += dy
         im.save(temptitle[1])
         # Compiling a video file:
-        self._create_frame(temptitle, 3 * self.framerate)
+        self._create_frame(temptitle, 2 * self.framerate)
 
     def compile(self, output_name):
         '''
@@ -222,6 +221,7 @@ class VideoVisualizer:
             for fname in t:
                 self._create_frame(fname, 1)
 
+        self._draw_tournament_status(prev_rnd + 1)
         self._change_path(1)
         print('Compiling the video file...')
         try:
