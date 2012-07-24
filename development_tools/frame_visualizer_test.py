@@ -6,6 +6,7 @@ from io import BytesIO
 import imghdr
 from PIL import Image
 import tkinter
+import tempfile
 
 MYDIR = os.path.dirname(__file__)
 
@@ -32,9 +33,11 @@ with patch.dict('sys.modules', config=config_mock):
             self.game_controller.jury_states = list(range(1, 10, 1))
             self.game_controller.get_players = Mock(return_value=[])
             self.vis_object = vis_module.FrameVisualizer(self.game_controller)
+            tempfile._RandomNameSequence.__next__ = Mock(return_value='mocked')
 
         def test__bytes2image(self):
             for i in os.listdir(self.imgpath):
+                print(i)
                 file = open(join(self.imgpath, i), mode='rb')
                 bytes = file.read()
                 file.close()
