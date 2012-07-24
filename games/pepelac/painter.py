@@ -5,8 +5,8 @@ import datetime
 from jury_state import JuryState
 from player import Player
 
-FRAME_SIDE = 512
-FREE_SIDE = 1024
+FRAME_SIDE = 1024
+FREE_SIDE = 800
 RIGHT_MARGIN = 50
 SMALL_SIDE = 50
 MARGIN = 20
@@ -197,8 +197,11 @@ class Painter:
             font = ImageFont.truetype(get_path('times.ttf'), 100)
             text = 'Gunplay!'
 
-            draw.text((int(self._width / 2.3), self._height // 3),
-                      text, fill='black', font=font)
+            width = font.getsize(text)[0]
+            draw.text(((self._width - width) // 2 + 100,
+                       self._height // 3),
+                      text, fill='black', font=font
+                      )
 
             '''
             Drawing number of bullets
@@ -223,7 +226,7 @@ class Painter:
                         (int(self._width / 3.2) + self._width // 2, y),
                         self._patron_ico_fight
                         )
-
+            font = ImageFont.truetype(get_path('times.ttf'), 50)
             if bullets_count[0] == bullets_count[1]:
                 text = 'Draw!'
             elif bullets_count[0] > bullets_count[1]:
@@ -292,7 +295,25 @@ class Painter:
 
         del draw
 
-        #image.save("test-1.jpeg", "jpeg") #if you want to save picture in file
+        image.save("test-1.jpeg", "jpeg") #if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='jpeg')
         return bytes.getvalue()
+
+one = Player(None, 'Dima Philippov')
+two = Player(None, 'Petr Smirnov')
+third = Player(None, 'Arthur Khashaev')
+fourth = Player(None, 'Pavel Dubov')
+painter = Painter([one, two, third, fourth])
+side = 10
+field = [[0 for i in range(side)] for j in range(side)]
+field[7][3] = 1
+field[7][4] = 2
+field[3][3] = 3
+field[4][5] = 4
+field[8][8] = field[5][3] = field[3][7] = field[3][4] = field[6][6] = -1
+jury_state = JuryState(side, field, [30, 17, 15, 14], None, None, {}, tuple((two, fourth)), {})
+jury_state.dead_players = [one]
+jury_state.scores[one] = 5
+jury_state.dead_reasons[one] = 1
+painter.paint(jury_state)
