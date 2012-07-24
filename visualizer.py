@@ -120,7 +120,12 @@ class VideoVisualizer:
                 f.write(imagew)
             im = Image.open(tfile[1])
             ratio = min(self.size[0] / im.size[0], self.size[1] / im.size[1])
-            im = im.resize((int(im.size[0] * ratio), int(im.size[1] * ratio)), Image.ANTIALIAS)
+            ratio_turned = min(self.size[1] / im.size[0], self.size[0] / im.size[1])
+            if ratio_turned > ratio:
+                im = im.transpose(Image.ROTATE_90)
+                im = im.resize((int(im.size[0] * ratio_turned), int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
+            else:
+                im = im.resize((int(im.size[0] * ratio), int(im.size[1] * ratio)), Image.ANTIALIAS)
             res = Image.new(self.mode, self.size, 'white')
             res.paste(im, ((self.size[0]-im.size[0])//2, (self.size[1]-im.size[1])//2,
                            (self.size[0]+im.size[0])//2, (self.size[1]+im.size[1])//2))
@@ -176,7 +181,7 @@ class VideoVisualizer:
             y += dy
         im.save(temptitle[1])
         # Compiling a video file:
-        self._create_frame(temptitle, self.framerate)
+        self._create_frame(temptitle, 3 * self.framerate)
 
     def compile(self, output_name):
         '''
@@ -210,7 +215,6 @@ class VideoVisualizer:
             for fname in t:
                 self._create_frame(fname, 1)
 
-        self._draw_tournament_status(controllers[-1].signature.round_id + 1)
         self._change_path(1)
         print('Compiling the video file...')
         try:

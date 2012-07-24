@@ -46,7 +46,7 @@ while True:
         print(make_move(my, opp, True))
     else:
         if k <= 0 or b == 0:
-            print(make_move(my, ((n + 1) // 2, (n + 1) // 2)))
+            print(make_move(my, ((n + 1) // 2 + (n%2==0), (n + 1) // 2)))
         else:
             bullet = None
             for cbull in patron:
