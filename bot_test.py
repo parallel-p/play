@@ -1,6 +1,8 @@
+import sys
+
 GAME_PATH = 'games/pepelac'
-BOTS = ['python3 games/nim/bots/random_bot.py',
-        'python3 games/nim/bots/wrong_bot.py']
+BOTS = [sys.executable + ' games/nim/bots/random_bot.py',
+        sys.executable + ' games/nim/bots/wrong_bot.py']
 
 import config_helpers
 config_helpers.initialize_game_environment(GAME_PATH)
@@ -13,8 +15,8 @@ from unittest.mock import Mock
 from bot import TimeLimitException
 
 
-PLAYER_COMMAND = 'python3 test_game.py'
-ML_PLAYER_COMMAND = 'python3 test_game2.py'
+PLAYER_COMMAND = sys.executable + ' test_game.py'
+ML_PLAYER_COMMAND = sys.executable + ' test_game2.py'
 WRONG_PLAYER_COMMAND = 'fffaaasd test_game.py'
 PLAYER_STATE = ''
 CONFIG = Mock()
@@ -62,10 +64,10 @@ class BotTest(unittest.TestCase):
         test_bot.create_process()
 
         deserialize = Mock()
-        deserialize.side_effect = side_effect_for_deserialize
+        deserialize().side_effect = side_effect_for_deserialize
 
         serialize = Mock()
-        serialize.side_effect = side_effect_for_serialize
+        serialize().side_effect = side_effect_for_serialize
 
         move = test_bot.get_move(PLAYER_STATE, serialize, deserialize)
         self.assertTrue(serialize.called)
