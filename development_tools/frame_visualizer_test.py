@@ -1,62 +1,118 @@
-from PIL import Image
-import unittest
-from unittest.mock import Mock
+import unittest as ut
+from unittest.mock import Mock, patch
+from os.path import dirname, join
 import os
-from os import listdir as ls
-import development_tools.frame_visualizer as frame_visualizer
+from io import BytesIO
+import imghdr
+from PIL import Image
+import tkinter
 
-imgpath = '../images'
-# See tests with or without byte streaming
+MYDIR = os.path.dirname(__file__)
 
+config_mock = Mock()
+my_painter = Mock()
 
-def paint_image(jury_state):
-    ''' Opens an image file and returns an ``Image`` object.
-    Used for testing user interface. '''
-    return Image.open(os.path.join(imgpath, jury_state))
+def paint_file(js):
+    img = Image.open(join(MYDIR, '../images/0{}.gif'.format(js)))
+    bytes = BytesIO()
+    img.save(bytes, format='png')
+    return bytes.getvalue()
 
-
-def paint_bytes(jury_state):
-    ''' Opens an image file and returns a byte stream.
-    Used for checking bytestream->Image conversion. '''
-    return open(os.path.join(imgpath, jury_state), mode="rb").read()
-
-
-def do_nothing(image):
-    ''' Fake bytestream->Image conversion. Used to mock the
-    real one for testing with ``paint_image``. '''
-    return image
+my_painter.paint = Mock(side_effect=paint_file)
+config_mock.Painter = Mock(return_value=my_painter)
 
 
-class FrameVisualizerTestCase(unittest.TestCase):
+with patch.dict('sys.modules', config=config_mock):
+    import development_tools.frame_visualizer as vis_module
 
-    def test_without_byte_streaming(self):
-        ''' This test checks user interface. It opens some images in
-        ../images directory and passes them directly to the visualizer. '''
-        print("TEST WITHOUT BYTE STREAMING")
-        game_controller = Mock()
-        game_controller.jury_states = sorted(ls(path=imgpath))
-        frame_visualizer._bytes2image = Mock(side_effect=do_nothing)
-        vis = frame_visualizer.FrameVisualizer(game_controller)
-        painter = Mock()
-        painter.paint = Mock(side_effect=paint_image)
-        vis.painter_factory = Mock(return_value=painter)
-        vis.mainloop()
+    class FrameVisualizerTestCase(ut.TestCase):
+        def setUp(self):
+            self.imgpath = join(MYDIR, '../images')
+            self.game_controller = Mock()
+            self.game_controller.jury_states = list(range(1, 10, 1))
+            self.game_controller.get_players = Mock(return_value=[])
+            self.vis_object = vis_module.FrameVisualizer(self.game_controller)
 
-    def test_with_byte_streaming(self):
-        ''' This test checks bytestream->Image conversion.
-        Painter is mocked here, and the visualizer will draw
-        images from ../images directory. If images aren't
-        corrupted during conversion, you will see numbers
-        from 1 to 20 in the GUI. '''
-        print("TEST WITH BYTE STREAM")
-        game_controller = Mock()
-        game_controller.jury_states = sorted(ls(path=imgpath))
-        vis = frame_visualizer.FrameVisualizer(game_controller)
-        painter = Mock()
-        painter.paint = Mock(side_effect=paint_bytes)
-        vis.painter_factory = Mock(return_value=painter)
-        vis.mainloop()
+        def test__bytes2image(self):
+            for i in os.listdir(self.imgpath):
+                file = open(join(self.imgpath, i), mode='rb')
+                bytes = file.read()
+                file.close()
+                bytes2 = BytesIO()
+                vis_module._bytes2image(bytes).save(
+                    bytes2, format=imghdr.what(None, h=bytes))
+                self.assertEqual(bytes, bytes2.getvalue())
+
+        def test__resize(self):
+            for i in os.listdir(self.imgpath):
+                image = vis_module._resize(Image.open(join(self.imgpath, i)))
+                self.assertLessEqual(image.size[0], 800)
+                self.assertLessEqual(image.size[1], 600)
+
+        def test_creation(self):
+            self.assertEqual(
+                self.vis_object.painter_factory, config_mock.Painter)
+            self.assertEqual(self.vis_object.frame_number, 0)
+            self.assertTrue(
+                hasattr(self.vis_object, 'control_panel') and (
+                    hasattr(self.vis_object, 'frame_label')))
+
+        def test_control_panel__set_frame_number(self):
+            self.vis_object.control_panel._set_frame_number(232)
+            self.assertEqual(
+                self.vis_object.control_panel.num_label['text'], 'Frame #233')
+
+        def test_control_panel_creation(self):
+            self.assertTrue(
+                hasattr(self.vis_object.control_panel, 'back_button') and (
+                    hasattr(
+                        self.vis_object.control_panel, 'forward_button')) and (
+                hasattr(self.vis_object.control_panel, 'num_label')))
+
+        def test__back(self):
+            self.vis_object._draw_frame = Mock()
+            self.vis_object.frame_number = 0
+            self.vis_object._back()
+            self.assertEqual(self.vis_object._draw_frame.call_count, 0)
+            self.vis_object.frame_number = 1
+            self.vis_object._back()
+            self.vis_object._draw_frame.assert_called_once_with(0)
+
+        def test__forward(self):
+            self.vis_object._draw_frame = Mock()
+            self.vis_object.frame_number = len(
+                self.game_controller.jury_states) - 1
+            self.vis_object._forward()
+            self.assertEqual(self.vis_object._draw_frame.call_count, 0)
+            self.vis_object.frame_number = 0
+            self.vis_object._forward()
+            self.vis_object._draw_frame.assert_called_once_with(1)
+
+        def test_mainloop(self):
+            self.vis_object.pack = Mock()
+            self.vis_object._draw_frame = Mock()
+            tkinter.Frame.mainloop = Mock()
+
+            self.vis_object.mainloop()
+
+            self.vis_object.pack.assert_called_once_with()
+            self.vis_object._draw_frame.assert_called_once_with(0)
+            tkinter.Frame.mainloop.assert_called_once_with(self.vis_object)
+
+    class FrameVisualizerDrawFrameTestCase(ut.TestCase):
+        def setUp(self):
+            self.imgpath = join(MYDIR, '../images')
+            self.game_controller = Mock()
+            self.game_controller.jury_states = list(range(1, 10, 1))
+            self.game_controller.get_players = Mock(return_value=[])
+            self.vis_object = vis_module.FrameVisualizer(self.game_controller)
+
+        def test__draw_frame(self):
+            for i in range(9):
+                self.vis_object._draw_frame(i)
+                self.assertIsNotNone(self.vis_object.frame_label['image'])
+                self.assertEqual(self.vis_object.frame_number, i)
 
 
-if __name__ == '__main__':
-    unittest.main()
+    if __name__ == '__main__':
+        ut.main()
