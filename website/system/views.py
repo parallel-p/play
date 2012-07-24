@@ -21,10 +21,8 @@ def bot_add(request, game_pk):
     if request.method == 'POST':
         form = BotForm(request.POST, request.FILES)
         if form.is_valid():
-            bot = form.save()
-            bot.author = request.user
-            bot.game = _game
-            bot.save()
+            cd = form.cleaned_data
+            bot = Bot.objects.create(author=request.user, game=_game, **cd)
             return redirect(game, _game.pk)
     else:
         form = BotForm()

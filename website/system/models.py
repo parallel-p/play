@@ -64,53 +64,59 @@ class Bot(models.Model):
     class Meta:
         verbose_name = _(u'bot')
         verbose_name_plural = _(u'bots')
-        unique_together = ('game', 'name')
+        #unique_together = ('game', 'name')
         ordering = ('name', )
 
     def __unicode__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        '''
+    def delete(self, *args, **kwargs):
+        source_name = os.path.basename(self.source.path)
+        game = self.game
+        path = os.path.dirname(__file__)
+        bots_dir_path = os.path.abspath(os.path.join(
+                                        path, '..', '..', 'games',
+                                        game.name_latin, 'bots'))
+        bot_path = os.path.join(bots_dir_path, source_name)
         try:
-            obj = get_object_or_404(Bot, pk=pk)
+            os.remove(bot_path)  # remove bot from bots
         except:
-            obj = self
-        bots = Bot.objects.filter(author=obj.author, game=obj.game)
-        cur_dir = os.path.dirname(__file__)
-        game = obj.game
-        if game:
-            bots_dir = os.path.abspath(os.path.join(cur_dir, '..', '..',
-                                       'games', game.name, 'bots'))
-        else:
-            bots_dir = None
-        bot = bots[0]
-        author = bot.author
-        if bot.pk != obj.pk:
-            os.remove(bot.source.path)
-            name = os.path.basename(bot.source.path)
-            if bots_dir:
-                bot.delete()
-        if game:
-            shutil.copy(obj.source.path, bots_dir)
-            new_lines = []
-            if game:
-                with open(os.path.join(bots_dir, '..',
-                          'players_files'), 'r') as config:
-                    lines = config.readlines()
-                    for line in lines:
-                        line1 = line[1:len(line) - 1]
-                        line1 = line1.split('\" \"')
-                        if not line1[0] == author:
-                            new_lines.append(line)
-                with open(os.path.join(bots_dir, '..',
-                          'players_files'), 'w') as config:
-                    config.writelines(new_lines)
-                    bot_path = os.path.join('games', game.name, 'bots',
-                                            os.path.basename(obj.source.path))
-                    config.write('\"{}\" \"{}\" \"{}\"\n'.format(
-                                 obj.author.username,
-                                 obj.name,
-                                 bot_path))
-        '''
+            pass
+
+        new_lines = []
+        author = self.author.username
+        players_files_path = os.path.abspath(os.path.join(bots_dir_path, '..',
+                                             'players_files'))
+        #print players_files_path
+        with open(players_files_path, 'r') as players_files:
+            lines = players_files.readlines()
+        for line in lines:
+            line1 = line[1:len(line) - 2].split('\" \"')
+            print line1[0], author
+            if line1[0] != author:
+                new_lines.append(line)
+        with open(players_files_path, 'w') as players_files:
+            players_files.writelines(new_lines)
+        super(Bot, self).delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
         super(Bot, self).save(*args, **kwargs)
+        path = os.path.dirname(__file__)
+        source_path = self.source.path
+        source_name = os.path.basename(source_path)
+        game = self.game
+        author = self.author
+        objects = Bot.objects.filter(game=game, author=author)
+        for obj in objects:
+            if obj.pk != self.pk:
+                obj.delete()
+        bots_dir_path = os.path.abspath(os.path.join(path, '..', '..', 'games',
+                                        game.name_latin, 'bots'))
+        shutil.copy(source_path, bots_dir_path)
+        players_files_path = os.path.abspath(os.path.join(bots_dir_path, '..',
+                                             'players_files'))
+        players_path = os.path.join('games', game.name_latin, 'bots',
+                                    source_name)
+        with open(players_files_path, 'a') as players_files:
+            players_files.write('\"{}\" \"{}\" \"{}\"\n'.format(
+                                author.username, self.name, players_path))
