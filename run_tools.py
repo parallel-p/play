@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 import config_helpers
 import pickle
@@ -23,8 +22,11 @@ def parse_bots_file(filename):
 def create_players(filename):
     import player
     for number, cmd in enumerate(parse_bots_file(filename)):
-        yield player.Player(cmd, cmd.split()[-1].split('/')[-1],
-                            'Bot #{}'.format(number))
+        yield player.Player(
+            cmd,
+            cmd.split()[-1].split('/')[-1],
+            'Bot #{}'.format(number)
+        )
 
 
 def play(args):
@@ -51,18 +53,17 @@ def visualize(game_controller):
 
 
 def dump_game_controller(gc, filename=None):
+    promt = 'Would you like to save game log? (y/n): '
     if not filename:
-        print('Would you like to save game log? (y/n)', end=' : ')
         while True:
-            answer = input()
-            if answer in 'yY':
-                print('Enter name of the file')
-                filename = input()
+            answer = input(promt)
+            if answer in ['y', 'Y']:
+                filename = input('Enter name of the log file:\n')
                 break
-            elif answer in 'nN':
+            elif answer in ['n', 'N']:
                 return
-    with open(filename, 'wb') as f:
-        f.write(pickle.dumps(gc))
+    file_ = open(filename, 'wb')
+    pickle.dump(gc, file_)
 
 
 def load_game_controller(filename):
@@ -72,14 +73,17 @@ def load_game_controller(filename):
 
 
 def print_final_scores(gc):
-    print ('\n\nFinal scores:')
-    output = sorted([(score, name) for name, score in\
-                                    gc.get_scores().items()])[::-1]
+    print('\n\nFinal scores:')
+    output = reversed(
+        sorted([(score, name) for name, score in gc.get_scores().items()])
+    )
     for score, name in output:
-        print ('{player.bot_name:30s} by '
-               '{player.author_name:30s} \t {score}'.format(player=name,
-                                                            score=score))
-    print('\n\n')
+        print('{:30s} by {:30s}\t{}'.format(
+            name.bot_name,
+            name.author_name,
+            score
+        ))
+    print('\n')
 
 
 def new_game(args):
@@ -87,7 +91,8 @@ def new_game(args):
     if not args.only_run and game_controller:
         if args.visualize:
             visualize(game_controller)
-        print_final_scores(game_controller)
+        else:
+            print_final_scores(game_controller)
         if not args.save_to:
             dump_game_controller(game_controller)
         else:
@@ -113,9 +118,16 @@ def main():
         help='visualize game after run'
     )
 
-    arg_parser.add_argument('-s', '--save-to', help='save game log to file')
-    arg_parser.add_argument('-f', '--from-file',
-                            help='visualize log from file')
+    arg_parser.add_argument(
+        '-s', '--save-to',
+        help='save game log to specified file'
+    )
+
+    arg_parser.add_argument(
+        '-f', '--from-file',
+        help='visualize game log from specified file'
+    )
+
     arg_parser.add_argument(
         '-r', '--only-run', action='store_true',
         help='don\'t visualize and save logs, only run game'
