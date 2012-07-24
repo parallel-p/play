@@ -209,10 +209,12 @@ class ComplexBot(BaseBot):
         import psutil
         logger.info('executing \'%s\'', self._player_command)
         try:
-            self._process = psutil.Popen(self._player_command.split(),
-                                         stdout=PIPE,
-                                         stdin=PIPE,
-                                         stderr=PIPE)
+            self._process = psutil.Popen(
+                self._player_command.split(),
+                stdout=PIPE,
+                stdin=PIPE,
+                # stderr=PIPE
+            )
         except OSError as e:
             logger.critical('executing of \'%s\' failed: invalid command',
                             self._player_command)
