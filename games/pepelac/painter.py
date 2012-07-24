@@ -75,7 +75,7 @@ class Painter:
                                              )
 
     def dead_reason(self, jury_state, player):
-        ans = 'Dead reason: '
+        ans = 'Death reason: '
         if jury_state.dead_reasons[player] == 1:
             ans += 'killed by other player'
         elif jury_state.dead_reasons[player] == 0:
