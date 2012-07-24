@@ -6,10 +6,24 @@
 {% block html_title %}Загрузка стратегий{% endblock %}
 
 {% block content %}
-<form method="POST" action="{% url 'bot_add' %}" enctype="multipart/form-data">
+<h3>Игра <a href="{% url 'game' game.pk %}">{{ game.name }}</a></h3>
+<form method="POST" action="{% url 'bot_add' game.pk %}" enctype="multipart/form-data">
     <table>
         {% csrf_token %}
-        {{ form }}
+        <tr>
+            <td><label for="{{ form.name.auto_id }}">Имя бота</label></td>
+            <td>{{ form.name }}</td>
+            {% if form.name.errors %}
+            <td class="error">{{ form.name.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td><label for="{{ form.source.auto_id }}">Файл</label></td>
+            <td>{{ form.source }}</td>
+            {% if form.source.errors %}
+            <td class="error">{{ form.source.errors.0 }}</td>
+            {% endif %}
+        </tr>
         <tr>
             <td colspan="2">
                 <input type="submit">

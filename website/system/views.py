@@ -10,22 +10,25 @@ def games_list(request):
     return render(request, 'games_list.html', {'object_list': qs})
 
 
-def bots_list(request):
-    qs = Bots.objects.all()
-    return render(request, 'bots_list.html', {'object_list': qs})
+def game(request, game_pk):
+    obj = get_object_or_404(Game, pk=game_pk)
+    return render(request, 'game.html', {'object': obj})
 
 
 @login_required
-def bot_add(request):
+def bot_add(request, game_pk):
+    _game = get_object_or_404(Game, pk=game_pk)
     if request.method == 'POST':
         form = BotForm(request.POST, request.FILES)
-        print form
         if form.is_valid():
-            form.save()
-            return redirect(bots_list)
+            bot = form.save()
+            bot.author = request.user
+            bot.game = _game
+            bot.save()
+            return redirect(game, _game.pk)
     else:
         form = BotForm()
-    return render(request, 'bot_add.html', {'form': form})
+    return render(request, 'bot_add.html', {'game': _game, 'form': form})
 
 
 @login_required

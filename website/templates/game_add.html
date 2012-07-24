@@ -18,6 +18,13 @@
             {% endif %}
         </tr>
         <tr>
+            <td><label for="{{ form.name.auto_id }}">Название на латинице*</label></td>
+            <td>{{ form.name_latin }}</td>
+            {% if form.name_latin.errors %}
+            <td class="error">{{ form.name_latin.errors.0 }}</td>
+            {% endif %}
+        </tr>
+        <tr>
             <td><label for="{{ form.image.auto_id }}">Изображение</label></td>
             <td>{{ form.image }}</td>
             {% if form.image.errors %}
@@ -32,7 +39,7 @@
             {% endif %}
         </tr>
         <tr>
-            <td><label for="{{ form.source.auto_id }}">Исходные файлы *</label></td>
+            <td><label for="{{ form.source.auto_id }}">Архив с файлами игры *</label></td>
             <td>{{ form.source }}</td>
             {% if form.source.errors %}
             <td class="error">{{ form.source.errors.0 }}</td>

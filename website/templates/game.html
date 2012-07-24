@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load url from future %}
+{% load thumbnail %}
+
+{% block html_title %}{{ object.name }}{% endblock %}
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+<h3>{{ object.name }}</h3>
+<p>{% if object.image %}<image src="{% thumbnail object.image 60x60 %}" class="thumb">{% endif %}
+{{ object.description }}</p>
+<a href="{% url 'bot_add' object.pk %}">Сдать стратегию</a>
+{% endblock %}
