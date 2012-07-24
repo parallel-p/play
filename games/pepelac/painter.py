@@ -75,13 +75,13 @@ class Painter:
                                              )
 
     def dead_reason(self, jury_state, player):
-        ans = 'Death reason: '
-        if jury_state.dead_reasons[player] == -1:
-            ans += 'wrong move'
+        ans = 'Dead reason: '
+        if jury_state.dead_reasons[player] == 1:
+            ans += 'killed by other player'
         elif jury_state.dead_reasons[player] == 0:
             ans += 'killed by armageddon'
         else:
-            ans += 'killed by other player'
+            ans += jury_state.dead_reasons[player]
         return ans
 
     def cut_name(self, name):
