@@ -97,7 +97,7 @@ class TournamentSystemOlympic(TournamentSystem):
         starting from zero.
             ``rounds_overall`` - number of rounds in the tournament. '''
         rounds_left = rounds_overall - int(round_number) - 1
-        names = ['final', 'semifinal', 'quarterfinal', '1/8 final', '1/16 final']
+        names = ['1/16 final', '1/8 final', 'quarterfinal', 'semifinal', 'final']
         return names[rounds_left - 1]
 
     def _save_data(self):
