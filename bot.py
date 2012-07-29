@@ -69,7 +69,7 @@ class BaseBot:
                 self._player_command.split(),
                 stdout=PIPE,
                 stdin=PIPE,
-                # stderr=PIPE
+                stderr=PIPE
             )
         except OSError:
             logger.critical('executing of \'%s\' failed: invalid command',
@@ -100,7 +100,8 @@ class BaseBot:
         responsible for reading data from `readable_stream` and turning it
         to a valid `move` object.
 
-        If bot's process isn't running, raise ProcessNotRunningException.
+        If bot's process isn't running, raise ProcessNotRunningException..
+
         '''
 
         if self._process is None:
@@ -161,8 +162,8 @@ class BaseBot:
         try:
             serialize(player_state, self._process.stdin)
             self._deserialize_result = deserialize(self._process.stdout)
-        except Exception as e:
-            self._get_move_exception = e
+        except (BaseException, Exception) as exc:
+            self._get_move_exception = exc
 
     def kill_process(self):
         '''
@@ -336,11 +337,11 @@ class ComplexBot(BaseBot):
 
 def is_psutil():
     '''
-    Returns if psutil installed
+    Returns if psutil is installed.
     '''
     try:
         import psutil
-    except Exception:
+    except ImportError:
         return False
     else:
         return True
