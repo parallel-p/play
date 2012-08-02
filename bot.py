@@ -214,7 +214,7 @@ class ComplexBot(BaseBot):
                 self._player_command.split(),
                 stdout=PIPE,
                 stdin=PIPE,
-                # stderr=PIPE
+                stderr=PIPE
             )
         except OSError as e:
             logger.critical('executing of \'%s\' failed: invalid command',
