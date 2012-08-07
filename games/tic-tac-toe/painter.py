@@ -9,6 +9,7 @@ RIGHT_MARGIN = 256
 LINE_WIDTH = 1
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
+
 def get_path(filename):
     return os.path.join(MY_DIR, filename)
 
@@ -33,17 +34,17 @@ class Painter:
         self._height = FRAME_SIDE
 
         self._cross_ico = image_resize(get_path(
-                                      os.path.join('images',
-                                                   'cross.png'
-                                                   )
-                                      ), self._cell_side - 4
-                                      )
+                                       os.path.join('images',
+                                                    'cross.png'
+                                                    )
+                                       ), self._cell_side - 4
+                                       )
         self._toe_ico = image_resize(get_path(
-                                      os.path.join('images',
-                                                   'toe.png'
-                                                   )
-                                      ), self._cell_side - 4
-                                      )
+                                     os.path.join('images',
+                                                  'toe.png'
+                                                  )
+                                     ), self._cell_side - 4
+                                     )
 
     def cut_name(self, name):
         if (len(name) > MAX_NAME_LENGTH):
@@ -74,7 +75,7 @@ class Painter:
                           )
         draw = ImageDraw.Draw(image)
         self.draw_table(draw)
-        
+
         for idx, element in enumerate(jury_state.field):
             x = (idx % 3) * self._cell_side + FREE_SIDE
             y = (idx // 3) * self._cell_side
@@ -88,10 +89,10 @@ class Painter:
                             (x + 2, y + 2),
                             self._toe_ico
                             )
-        
+
         del draw
 
-        image.save('test.jpeg', 'jpeg') #if you want to save picture in file
+        #image.save('test.jpeg', 'jpeg')  #if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='jpeg')
         return bytes.getvalue()
