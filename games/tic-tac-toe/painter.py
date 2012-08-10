@@ -93,7 +93,12 @@ class Painter:
 
     def draw_winner(self, font, draw, text, text_size):
         while (font.getsize(text)[0] > self._width):
-            font = ImageFont.truetype('times.ttf', text_size - 10)
+            font = ImageFont.truetype(get_path(
+                                      os.path.join('fonts',
+                                                   'times.ttf'
+                                                   )
+                                      ), text_size - 10
+                                      )
             text_size -= 10
         (width, height) = font.getsize(text)
         x = (self._width - width) // 2
@@ -118,13 +123,21 @@ class Painter:
             self.draw_empty_table(draw)
             self.draw_pictures(image, jury_state.field)
 
-            font = ImageFont.truetype('times.ttf', 60)
+            font = ImageFont.truetype(get_path(
+                                      os.path.join('fonts',
+                                                   'times.ttf'
+                                                   )
+                                      ), 60)
             self._letter_height = font.getsize('A')[1]
             for idx, player in enumerate(self.players):
                 self.draw_player_on_the_left(font, draw, idx)
         else:
             text_size = 500
-            font = ImageFont.truetype('times.ttf', text_size)
+            font = ImageFont.truetype(get_path(
+                                      os.path.join('fonts',
+                                                   'times.ttf'
+                                                   )
+                                      ), text_size)
             idx = 0
             if self.players[1].author_name == jury_state.winner.author_name:
                 idx = 1
@@ -134,7 +147,7 @@ class Painter:
 
         del draw
 
-        #image.save('test.jpeg', 'jpeg')  # if you want to save picture in file
+        image.save('test.jpeg', 'jpeg')  # if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='jpeg')
         return bytes.getvalue()
