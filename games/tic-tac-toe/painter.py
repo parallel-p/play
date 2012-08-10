@@ -91,6 +91,15 @@ class Painter:
                   fill='black', font=font
                   )
 
+    def draw_winner(self, font, draw, text, text_size):
+        while (font.getsize(text)[0] > self._width):
+            font = ImageFont.truetype('times.ttf', text_size - 10)
+            text_size -= 10
+        (width, height) = font.getsize(text)
+        x = (self._width - width) // 2
+        y = (self._height - height) // 2
+        draw.text((x, y), text, fill='black', font=font)
+
     def paint(self, jury_state):
         '''
         Paints the state of the game;
@@ -104,13 +113,24 @@ class Painter:
                           'white'
                           )
         draw = ImageDraw.Draw(image)
-        self.draw_empty_table(draw)
-        self.draw_pictures(image, jury_state.field)
 
-        font = ImageFont.truetype('times.ttf', 60)
-        self._letter_height = font.getsize('A')[1]
-        for idx, player in enumerate(self.players):
-            self.draw_player_on_the_left(font, draw, idx)
+        if jury_state.winner is None:
+            self.draw_empty_table(draw)
+            self.draw_pictures(image, jury_state.field)
+
+            font = ImageFont.truetype('times.ttf', 60)
+            self._letter_height = font.getsize('A')[1]
+            for idx, player in enumerate(self.players):
+                self.draw_player_on_the_left(font, draw, idx)
+        else:
+            text_size = 500
+            font = ImageFont.truetype('times.ttf', text_size)
+            idx = 0
+            if self.players[1].author_name == jury_state.winner.author_name:
+                idx = 1
+            text = jury_state.winner.author_name +\
+                '(' + self._symbols[idx] + ') WIN'
+            self.draw_winner(font, draw, text, text_size)
 
         del draw
 
