@@ -6,7 +6,9 @@ import os
 FRAME_SIDE = 1024
 FREE_SIDE = 1024
 RIGHT_MARGIN = 256
-LINE_WIDTH = 1
+Y_MARGIN = 20
+LINE_WIDTH = 3
+MAX_NAME_LENGTH = 15
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -23,6 +25,7 @@ def image_resize(path, output_weight):
 
 class Painter:
     _is_initialized = False
+    _symbols = ['X', 'O']
 
     def __init__(self, players):
         self.players = players
@@ -51,7 +54,7 @@ class Painter:
             name = name[:MAX_NAME_LENGTH - 3] + '...'
         return name
 
-    def draw_table(self, draw):
+    def draw_empty_table(self, draw):
         for x in range(FREE_SIDE, FREE_SIDE + FRAME_SIDE + 1,
                        self._cell_side):
             draw.line([(x, 0), (x, FRAME_SIDE)], width=LINE_WIDTH,
@@ -60,6 +63,33 @@ class Painter:
         for y in range(0, FRAME_SIDE + 1, self._cell_side):
             draw.line([(FREE_SIDE, y), (FREE_SIDE + FRAME_SIDE, y)],
                       width=LINE_WIDTH, fill='grey')
+
+    def draw_pictures(self, image, field):
+        for idx, element in enumerate(field):
+            x = (idx % 3) * self._cell_side + FREE_SIDE
+            y = (idx // 3) * self._cell_side
+            if element == 'X':
+                image.paste(self._cross_ico,
+                            (x + 2, y + 2),
+                            self._cross_ico
+                            )
+            if element == 'O':
+                image.paste(self._toe_ico,
+                            (x + 2, y + 2),
+                            self._toe_ico
+                            )
+
+    def draw_player_on_the_left(self, font, draw, idx):
+        y = (Y_MARGIN + self._letter_height) * idx
+        draw.text((0, y),
+                  self._symbols[idx] + ': ',
+                  fill='black', font=font
+                  )
+        x = font.getsize('X: ')[0]
+        draw.text((x, y),
+                  self.cut_name(self.players[idx].author_name),
+                  fill='black', font=font
+                  )
 
     def paint(self, jury_state):
         '''
@@ -74,25 +104,17 @@ class Painter:
                           'white'
                           )
         draw = ImageDraw.Draw(image)
-        self.draw_table(draw)
+        self.draw_empty_table(draw)
+        self.draw_pictures(image, jury_state.field)
 
-        for idx, element in enumerate(jury_state.field):
-            x = (idx % 3) * self._cell_side + FREE_SIDE
-            y = (idx // 3) * self._cell_side
-            if element == 'X':
-                image.paste(self._cross_ico,
-                            (x + 2, y + 2),
-                            self._cross_ico
-                            )
-            if element == 'O':
-                image.paste(self._toe_ico,
-                            (x + 2, y + 2),
-                            self._toe_ico
-                            )
+        font = ImageFont.truetype('times.ttf', 60)
+        self._letter_height = font.getsize('A')[1]
+        for idx, player in enumerate(self.players):
+            self.draw_player_on_the_left(font, draw, idx)
 
         del draw
 
-        #image.save('test.jpeg', 'jpeg')  #if you want to save picture in file
+        #image.save('test.jpeg', 'jpeg')  # if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='jpeg')
         return bytes.getvalue()
