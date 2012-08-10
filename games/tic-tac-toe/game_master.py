@@ -56,6 +56,10 @@ class GameMaster:
                 continue
 
         scores[self._players[turn]] = 1
+
+        self._state.winner = self._players[turn]
+        self._simulator.report_state(self._state)
+        
         self._simulator.finish_game(scores)
 
     def _is_valid_move(self, js, move):
