@@ -1,2 +1,6 @@
+class DeserializeMoveException(Exception):
+    pass
+
+
 def deserialize(stream):
-    return tuple([int(n) for n in stream.readline().decode().split()])
+    return [int(n) for n in stream.readline().decode().split()]
