@@ -28,6 +28,7 @@ nosetests.xml
 # Logs
 logs
 games/pepelac/players_config
+games/tic-tac-toe/players_config
 commands
 
 # Databases
