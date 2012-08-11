@@ -159,7 +159,7 @@ class Painter:
 
         del draw
 
-        image.save('test.jpeg', 'jpeg')  # if you want to save picture in file
+        #image.save('test.jpeg', 'jpeg')  # if you want to save picture in file
         bytes = BytesIO()
         image.save(bytes, format='jpeg')
         return bytes.getvalue()
