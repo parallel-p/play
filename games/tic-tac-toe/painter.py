@@ -26,6 +26,9 @@ def image_resize(path, output_weight):
 class Painter:
     _is_initialized = False
     _symbols = ['X', 'O']
+    _lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
+              [0, 3, 6], [1, 4, 7], [2, 5, 8],
+              [0, 4, 8], [2, 4, 6]]
 
     def __init__(self, players):
         self.players = players
@@ -36,23 +39,25 @@ class Painter:
         self._width = FRAME_SIDE + FREE_SIDE + RIGHT_MARGIN
         self._height = FRAME_SIDE
 
-        self._cross_ico = image_resize(get_path(
-                                       os.path.join('images',
-                                                    'cross.png'
-                                                    )
-                                       ), self._cell_side - 4
-                                       )
-        self._toe_ico = image_resize(get_path(
-                                     os.path.join('images',
-                                                  'toe.png'
-                                                  )
-                                     ), self._cell_side - 4
-                                     )
-
     def cut_name(self, name):
         if (len(name) > MAX_NAME_LENGTH):
             name = name[:MAX_NAME_LENGTH - 3] + '...'
         return name
+
+    def draw_cross(self, draw, x, y):
+        draw.line([(x, y), (x + self._cell_side, y + self._cell_side)],
+                  fill='black', width=LINE_WIDTH
+                  )
+        draw.line([(x + self._cell_side, y), (x, y + self._cell_side)],
+                  fill='black', width=LINE_WIDTH
+                  )
+
+    def draw_toe(self, draw, x, y):
+        for i in range(5):
+            draw.ellipse((x + i, y + i,
+                          x + self._cell_side - i, y + self._cell_side - i),
+                         outline='black'
+                         )
 
     def draw_empty_table(self, draw):
         for x in range(FREE_SIDE, FREE_SIDE + FRAME_SIDE + 1,
@@ -64,20 +69,18 @@ class Painter:
             draw.line([(FREE_SIDE, y), (FREE_SIDE + FRAME_SIDE, y)],
                       width=LINE_WIDTH, fill='grey')
 
-    def draw_pictures(self, image, field):
+    def get_coordinates(self, num):
+        return ((num % 3) * self._cell_side + FREE_SIDE,
+                (num // 3) * self._cell_side
+                )
+
+    def draw_pictures(self, image, draw, field):
         for idx, element in enumerate(field):
-            x = (idx % 3) * self._cell_side + FREE_SIDE
-            y = (idx // 3) * self._cell_side
+            (x, y) = self.get_coordinates(idx)
             if element == 'X':
-                image.paste(self._cross_ico,
-                            (x + 2, y + 2),
-                            self._cross_ico
-                            )
+                self.draw_cross(draw, x, y)
             if element == 'O':
-                image.paste(self._toe_ico,
-                            (x + 2, y + 2),
-                            self._toe_ico
-                            )
+                self.draw_toe(draw, x, y)
 
     def draw_player_on_the_left(self, font, draw, idx):
         y = (Y_MARGIN + self._letter_height) * idx
@@ -105,6 +108,13 @@ class Painter:
         y = (self._height - height) // 2
         draw.text((x, y), text, fill='black', font=font)
 
+    def draw_winner_line(self, draw, idx):
+        for cell in self._lines[idx]:
+            (x, y) = self.get_coordinates(cell)
+            draw.rectangle((x, y, x + self._cell_side, y + self._cell_side),
+                           fill='red', outline='black'
+                           )
+
     def paint(self, jury_state):
         '''
         Paints the state of the game;
@@ -121,7 +131,9 @@ class Painter:
 
         if jury_state.winner is None:
             self.draw_empty_table(draw)
-            self.draw_pictures(image, jury_state.field)
+            if jury_state.line != -1:
+                self.draw_winner_line(draw, jury_state.line)
+            self.draw_pictures(image, draw, jury_state.field)
 
             font = ImageFont.truetype(get_path(
                                       os.path.join('fonts',
