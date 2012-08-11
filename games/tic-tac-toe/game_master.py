@@ -22,6 +22,7 @@ class GameMaster:
     def tick(self, js):
         scores = dict(zip(self._players, [0, 0]))
         turn = 0
+        self._state.line = -1
         for i in range(9):
             turn = i % 2
             print('turn:', turn)
@@ -39,12 +40,13 @@ class GameMaster:
                     self._state.field[move[0] * 3 + move[1] - 4] = 'X'
                 else:
                     self._state.field[move[0] * 3 + move[1] - 4] = 'O'
-                if self._eq3([[0, 1, 2], [3, 4, 5], [6, 7, 8],
-                              [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                              [0, 4, 8], [2, 4, 6]], self._state.field):
+                idx = self._eq3([[0, 1, 2], [3, 4, 5], [6, 7, 8],
+                                 [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                                 [0, 4, 8], [2, 4, 6]], self._state.field)
+                if idx != -1:
+                    self._state.line = idx
                     break
-            except (IncorrectMoveException,
-                    DeserializeMoveException, OSError) as exception:
+            except (IncorrectMoveException, OSError) as exception:
                 print(exception)
                 turn ^= 1
             except Exception:
@@ -57,9 +59,11 @@ class GameMaster:
 
         scores[self._players[turn]] = 1
 
+        if self._state.line != -1:
+            self._simulator.report_state(self._state)
         self._state.winner = self._players[turn]
         self._simulator.report_state(self._state)
-        
+
         self._simulator.finish_game(scores)
 
     def _is_valid_move(self, js, move):
@@ -68,12 +72,12 @@ class GameMaster:
                 js.field[move[0] * 3 + move[1] - 4] == '.')
 
     def _eq3(self, lst, field):
-        for row in lst:
-            all_clear = True
+        for idx, row in enumerate(lst):
+            finish = True
             for i in range(2):
                 if field[row[i]] != field[row[i + 1]]:
-                    all_clear = False
-            all_clear &= field[row[0]] != '.'
-            if all_clear:
-                return True
-        return False
+                    finish = False
+            finish &= field[row[0]] != '.'
+            if finish:
+                return idx
+        return -1
