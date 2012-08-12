@@ -2,7 +2,7 @@ class JuryState:
     def __init__(self, field, winner=None, line=-1):
         '''
         field - List of cells ('.', 'X', 'O')
-        winnner - Winner of the game (type is Player).
+        winner - Winner of the game (type is Player).
                   It is equal to None is game is not finished
         line - line of winner
         '''
