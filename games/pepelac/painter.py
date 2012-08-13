@@ -64,11 +64,17 @@ class Painter:
                                                            )
                                               ), self._width // 3
                                               )
-        self._patron_ico_fight = image_resize(get_path('images/patron-90.png'),
-                                              80
+        self._patron_ico_fight = image_resize(get_path(
+                                              os.path.join('images',
+                                                           'patron-90.png'
+                                                           )
+                                              ), 80
                                               )
-        self._patron_ico_left = image_resize(get_path('images/patron-90.png'),
-                                             SMALL_SIDE
+        self._patron_ico_left = image_resize(get_path(
+                                             os.path.join('images',
+                                                          'patron-90.png'
+                                                          )
+                                             ), SMALL_SIDE
                                              )
 
     def dead_reason(self, jury_state, player):
