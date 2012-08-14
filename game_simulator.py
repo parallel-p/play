@@ -73,8 +73,9 @@ class GameSimulator:
         try:
             self._create_bots()
             start_time = time.time()
-            game_master = config.GameMaster(self._game_controller,
-                                            self._start_state)
+            #game_master = config.GameMaster(self._game_controller,
+            #                                self._start_state)
+            game_master = config.GameMaster(self, self._start_state)
             while not self._game_controller.is_finished:
                 copied_js =\
                            copy.deepcopy(self._game_controller.jury_states[-1])
