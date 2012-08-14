@@ -259,65 +259,65 @@ class ComplexBot(BaseBot):
         if self._process is None:
             raise ProcessNotRunningException()
 
+        #try:
+        real_time = self._get_real_time()
+        #cpu_time = self._get_cpu_time()
+        self._get_move_exception = None
+
+        get_move_thread = threading.Thread(
+            target=self._get_move,
+            args=(player_state, serialize, deserialize)
+        )
+        get_move_thread.start()
+
+        if self._count_of_moves % config.time_limit_count_of_moves == 0:
+            self._real_time_remainder = 0
+            self._cpu_time_remainder = 0
+        self._count_of_moves += 1
+        real_time_start = self._get_real_time()
+        #cpu_time_start = self._get_cpu_time()
+
         try:
-            real_time = self._get_real_time()
-            cpu_time = self._get_cpu_time()
-            self._get_move_exception = None
+            while get_move_thread.is_alive():
+                real_time = self._get_real_time()
+                #cpu_time = self._get_cpu_time()
 
-            get_move_thread = threading.Thread(
-                target=self._get_move,
-                args=(player_state, serialize, deserialize)
-            )
-            get_move_thread.start()
+                real_executing_time = real_time - real_time_start +\
+                    self._real_time_remainder
+                if real_executing_time > config.real_time_limit_seconds:
+                    self.kill_process()
+                    logger.error('bot with cmd \'%s\' exceeded '
+                                 'time limit', self._player_command)
+                    raise TimeLimitException
 
-            if self._count_of_moves % config.time_limit_count_of_moves == 0:
-                self._real_time_remainder = 0
-                self._cpu_time_remainder = 0
-            self._count_of_moves += 1
-            real_time_start = self._get_real_time()
-            cpu_time_start = self._get_cpu_time()
+                #cpu_executing_time = (cpu_time - cpu_time_start +
+                #                      self._cpu_time_remainder)
+                #if cpu_executing_time > config.cpu_time_limit_seconds:
+                #    self.kill_process()
+                #    logger.error('bot with cmd \'%s\' exceeded '
+                #                 'cpu time limit', self._player_command)
+                #    raise TimeLimitException
 
-            try:
-                while get_move_thread.is_alive():
-                    real_time = self._get_real_time()
-                    cpu_time = self._get_cpu_time()
+                if hasattr(config, 'observe_period'):
+                    time.sleep(config.observe_period)
+        finally:
+            self._real_time_remainder += real_time - real_time_start
+            #self._cpu_time_remainder += cpu_time - cpu_time_start
 
-                    real_executing_time = real_time - real_time_start +\
-                        self._real_time_remainder
-                    if real_executing_time > config.real_time_limit_seconds:
-                        self.kill_process()
-                        logger.error('bot with cmd \'%s\' exceeded '
-                                     'time limit', self._player_command)
-                        raise TimeLimitException
+        if self._get_move_exception:
+            logger.error('exception has been raised during '
+                         'interaction with bot')
+            raise self._get_move_exception
 
-                    cpu_executing_time = (cpu_time - cpu_time_start +
-                                          self._cpu_time_remainder)
-                    if cpu_executing_time > config.cpu_time_limit_seconds:
-                        self.kill_process()
-                        logger.error('bot with cmd \'%s\' exceeded '
-                                     'cpu time limit', self._player_command)
-                        raise TimeLimitException
-
-                    if hasattr(config, 'observe_period'):
-                        time.sleep(config.observe_period)
-            finally:
-                self._real_time_remainder += real_time - real_time_start
-                self._cpu_time_remainder += cpu_time - cpu_time_start
-
-            if self._get_move_exception:
-                logger.error('exception has been raised during '
-                             'interaction with bot')
-                raise self._get_move_exception
-
-            logger.debug('elapsed real time: %f sec, '
-                         'elapsed cpu time: %f sec, '
-                         'used memory: %f mb',
-                         self._get_real_time() - real_time,
-                         self._get_cpu_time() - cpu_time,
-                         self._get_memory())
-            return self._deserialize_result
-        except psutil.NoSuchProcess:
-            raise ProcessNotRunningException()
+        '''logger.debug('elapsed real time: %f sec, '
+                     'elapsed cpu time: %f sec, '
+                     'used memory: %f mb',
+                     self._get_real_time() - real_time,
+                     self._get_cpu_time() - cpu_time,
+                     self._get_memory())'''
+        return self._deserialize_result
+        #except psutil.NoSuchProcess:
+        #    raise ProcessNotRunningException()
 
     def kill_process(self):
         '''
