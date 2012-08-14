@@ -28,31 +28,31 @@ class GameMaster:
             print('turn:', turn)
             current_player = self._players[turn]
             killed = True
-            try:
-                ps = PlayerState(self._state.field)
-                move = self._simulator.get_move(
-                    current_player, ps, serialize, deserialize)
-                if not self._is_valid_move(self._state, move):
-                    turn ^= 1
-                    raise IncorrectMoveException('Incorrect move')
+            #try:
+            ps = PlayerState(self._state.field)
+            move = self._simulator.get_move(
+                current_player, ps, serialize, deserialize)
+            if not self._is_valid_move(self._state, move):
+                turn ^= 1
+                raise IncorrectMoveException('Incorrect move')
 
-                if turn == 0:
-                    self._state.field[move[0] * 3 + move[1] - 4] = 'X'
-                else:
-                    self._state.field[move[0] * 3 + move[1] - 4] = 'O'
-                idx = self._eq3([[0, 1, 2], [3, 4, 5], [6, 7, 8],
-                                 [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                                 [0, 4, 8], [2, 4, 6]], self._state.field)
-                if idx != -1:
-                    self._state.line = idx
-                    break
-            except (IncorrectMoveException, OSError) as exception:
-                print(exception)
-                turn ^= 1
-            except Exception:
-                turn ^= 1
+            if turn == 0:
+                self._state.field[move[0] * 3 + move[1] - 4] = 'X'
             else:
-                killed = False
+                self._state.field[move[0] * 3 + move[1] - 4] = 'O'
+            idx = self._eq3([[0, 1, 2], [3, 4, 5], [6, 7, 8],
+                             [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                             [0, 4, 8], [2, 4, 6]], self._state.field)
+            if idx != -1:
+                self._state.line = idx
+                break
+            #except (IncorrectMoveException, OSError) as exception:
+            #    print(exception)
+            #    turn ^= 1
+            #except Exception:
+            #    turn ^= 1
+            #else:
+            #    killed = False
             if killed:
                 self._simulator.report_state(self._state)
                 continue
