@@ -1,14 +1,17 @@
 def list_to_str(lst):
-    return ' '.join(map(str, lst))
+    return ''.join(map(str, lst))
 
 
 def serialize(player_state, stream):
-    representation = '\n'.join(
-        [list_to_str(player_state.field[i]) for i in range(3)] +
-        [list_to_str(player_state.field[i]) for i in range(3, 6)] +
-        [list_to_str(player_state.field[i]) for i in range(6, 9)]
-    )
+    print(player_state.field)
+    field = player_state.field
+    representation = '\n'.join([list_to_str([field[0], field[1], field[2]]),
+                               list_to_str([field[3], field[4], field[5]]),
+                               list_to_str([field[6], field[7], field[8]])])
+    print('representation:', representation)
+    print('representation.encode():', representation.encode())
     stream.write(representation.encode())
+    print('HERE')
     stream.flush()
 
 
