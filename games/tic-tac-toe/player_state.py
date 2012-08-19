@@ -1,5 +1,5 @@
 def list_to_str(lst):
-    return ''.join(map(str, lst))
+    return ' '.join(map(str, lst))
 
 
 def serialize(player_state, stream):
