@@ -34,7 +34,6 @@ games/tic-tac-toe/players_config
 games/tic-tac-toe/players_files
 games/tic-tac-toe/bots/*.exe
 commands
-out
 results.jpeg
 
 # Databases
