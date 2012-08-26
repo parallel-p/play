@@ -29,9 +29,13 @@ nosetests.xml
 logs
 games/pepelac/players_config
 games/pepelac/players_files
+games/pepelac/bots/*.exe
 games/tic-tac-toe/players_config
 games/tic-tac-toe/players_files
+games/tic-tac-toe/bots/*.exe
 commands
+out
+results.jpeg
 
 # Databases
 *.db
