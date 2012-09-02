@@ -6,8 +6,7 @@ import os
 
 if len(sys.argv) < 5:
     print('Usage: create_video.py <path to game env> <folder with game logs> '
-          '<filemask of logs (regular expression)> <resw_name> '
-          '[-f <framerate>] [--silent]')
+          '<filemask of logs> <resw_name> [-f <framerate>] [--silent]')
     exit()
 
 if __name__ == '__main__':

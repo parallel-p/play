@@ -58,7 +58,7 @@ class ImageDrawTree:
                 width=3)
             font = ImageFont.truetype(get_path('times.ttf'), 33)
             draw.text((indent + eps, winner_line - eps), winner,
-                fill=colors[round_id + 2], font=font)
+                fill=colors[(round_id + 2) % len(colors)], font=font)
         data = self._get_data(filename)
         FRAME_SIDE = len(data[0]) * 200  # based on numbers of players
         RIGHT_MARGIN = 1000
@@ -72,9 +72,9 @@ class ImageDrawTree:
 
         f_line, s_line = 50, 150  # y-coordinates of first player
         indent = 5  # indent for first players
-        round_ind = [(50, 150), (100, 300), (200, 600), (400, 1200), (800, 2400)]  # other indents
+        round_ind = lambda num: (50 * 2 ** num, 150 * 2 ** num) # other indents
         for round_id in range(rounds_count):
-            f_line, s_line = round_ind[round_id][0], round_ind[round_id][1]
+            f_line, s_line = round_ind(round_id)[0], round_ind(round_id)[1]
             for game in data[round_id]:
                 if round_id == 0:
                     players = [str(game[0][0]), str(game[1][0])]

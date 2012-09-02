@@ -8,6 +8,7 @@ from game_controller import GameController
 from textwrap import wrap
 from PIL import Image, ImageDraw, ImageFont
 from math import log10
+from fnmatch import fnmatch
 
 
 def get_image_format(data):
@@ -196,7 +197,7 @@ class VideoVisualizer:
         '''
         controllers = []
         for filename in os.listdir(self.working_dir):
-            if re.search(self.file_mask, filename):
+            if fnmatch(filename, self.file_mask):
                 controllers.append(self._get_game_controller(os.path.join(
                                    self.working_dir, filename)))
         # The games should be given in the right order:
