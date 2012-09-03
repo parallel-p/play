@@ -24,8 +24,9 @@ class GameSimulator:
         jury_state and game_signature
         '''
         self._start_state = start_state
-        self._game_controller = GameController(players,
-            game_signature, start_state, self)
+        self._game_controller = GameController(
+            players, game_signature, start_state, self
+        )
 
     def _create_bots(self):
         '''
@@ -78,7 +79,7 @@ class GameSimulator:
             game_master = config.GameMaster(self, self._start_state)
             while not self._game_controller.is_finished:
                 copied_js =\
-                           copy.deepcopy(self._game_controller.jury_states[-1])
+                    copy.deepcopy(self._game_controller.jury_states[-1])
                 try:
                     game_master.tick(copied_js)
                 except:
