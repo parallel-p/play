@@ -34,9 +34,9 @@ file_list = {
     'games/pepelac/generator.py': 'pepelac/generator.py',
     'games/pepelac/config.py': 'pepelac/config.py',
     'development_tools/__init__.py': 'development_tools/__init__.py',
-    'development_tools/frame_visualizer.py':\
+    'development_tools/frame_visualizer.py':
                                     'development_tools/frame_visualizer.py',
-    'development_tools/ascii_visualizer.py':\
+    'development_tools/ascii_visualizer.py':
                                     'development_tools/ascii_visualizer.py',
     'game_controller.py': 'game_controller.py',
     'tournament_stages/round.py': 'tournament_stages/round.py',
@@ -44,7 +44,7 @@ file_list = {
     'tournament_stages/exceptions.py': 'tournament_stages/exceptions.py',
     'tournament_stages/game.py': 'tournament_stages/game.py',
     'tournament_stages/series.py': 'tournament_stages/series.py',
-    'tournament_stages/game_signature.py':\
+    'tournament_stages/game_signature.py':
                                       'tournament_stages/game_signature.py',
     'tournament_stages/tournament.py': 'tournament_stages/tournament.py',
     'README': 'README',
