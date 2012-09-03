@@ -16,8 +16,9 @@ class GameControllerTest(unittest.TestCase):
         self.signature = ''
         self.jury_state = ''
         self._simulator = Mock()
-        self.game = game_controller.GameController(self.players,\
-                    self.signature, self.jury_state, self._simulator)
+        self.game = game_controller.GameController(
+            self.players, self.signature, self.jury_state, self._simulator
+        )
         self.game.is_finished = False
         self.game._scores = {'5'}
 
