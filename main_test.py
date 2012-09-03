@@ -75,8 +75,9 @@ class MainTest(unittest.TestCase):
         self.main._load_players.assert_called_once_with()
         self.main._make_good_tournament_id.assert_called_once_with()
         self.main._run_tournament.assert_called_once_with()
-        self.main._print_tournament_results.assert_called_once_with(\
-            self.main.tournament.tournament_system)
+        self.main._print_tournament_results.assert_called_once_with(
+            self.main.tournament.tournament_system
+        )
 
 
 if __name__ == '__main__':
