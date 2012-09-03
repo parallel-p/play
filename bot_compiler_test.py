@@ -26,15 +26,15 @@ print('Hello, world!', end='')
 
 
 config = [
-"John Smith" "HelloC" "hello1",
-"John Smith" "HelloPas" "hello2",
-"John Smith" "HelloPython" "hello3"
+    "John Smith" "HelloC" "hello1",
+    "John Smith" "HelloPas" "hello2",
+    "John Smith" "HelloPython" "hello3"
 ]
 
 players = [
-["John Smith", "HelloC", "hello1.cpp"],
-["John Smith", "HelloPas", "hello2.pas"],
-["John Smith", "HelloPython", "hello3.py"]
+    ["John Smith", "HelloC", "hello1.cpp"],
+    ["John Smith", "HelloPas", "hello2.pas"],
+    ["John Smith", "HelloPython", "hello3.py"]
 ]
 
 
@@ -73,9 +73,12 @@ class BotCompilerTest(unittest.TestCase):
         f.close()
         for bot in bots:
             command_line = bot.split("\'")[5]
-            process = subprocess.Popen(command_line, shell=True,
+            process = subprocess.Popen(
+                command_line,
+                shell=True,
                 cwd=os.path.abspath(os.curdir),
-                stdout=subprocess.PIPE)
+                stdout=subprocess.PIPE
+            )
             out = process.stdout.read()
             process.kill()
             self.assertEqual(out, b'Hello, world!')

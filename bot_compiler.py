@@ -65,16 +65,19 @@ class BotCompiler():
             try:
                 return_code = subprocess.call(compiler_string)
             except FileNotFoundError:
-                raise Exception('Compiler for file ' + filename +
-                    ' not found. Play requires g++, fpc and python.')
+                raise Exception(
+                    'Compiler for file {} not found. '
+                    'Play requires g++, fpc and python.'.format(filename))
         else:
             return_code = 0
         if return_code == 0:
             compile_string = self.define_execfile(filename, extension)
             return compile_string
         else:
-            raise Exception('Compilation Error: compiler exit code '
-                + str(int(return_code)))
+            raise Exception(
+                'Compilation Error: compiler exit code '
+                + str(int(return_code))
+            )
 
     def compile(self, players, players_config_file):
         ''' Compilates all bot source codes for each player and writes
