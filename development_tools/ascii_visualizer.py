@@ -59,7 +59,7 @@ class AsciiVisualizer:
             'jump': '0123456789JjFfRrGg',
             'auto': 'AaMmPp',
             'quit': 'QqEe'
-            }
+        }
 
     def _jury_state_count(self):
         return len(self.game_controller.jury_states)
@@ -94,7 +94,9 @@ class AsciiVisualizer:
 
     def _error(self, msg, end='\n'):
         '''prints an error message in bright red color'''
-        print(Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET, end=end)
+        print(
+            Fore.RED + Style.BRIGHT + msg + Style.NORMAL + Fore.RESET, end=end
+        )
 
     def _prompt(self, msg):
         '''prints a prompt in bright yellow color'''
@@ -120,7 +122,7 @@ class AsciiVisualizer:
                     'D': 'D',
                     'H': 'H',
                     'F': 'E'
-                    }
+                }
                 arrow = nixdict.get(key)
                 if not arrow and key in '56':
                     k = getch()
@@ -143,7 +145,8 @@ class AsciiVisualizer:
 
     def _print_frame(self, index):
         self.frame_number = index
-        frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
+        frame_text =\
+            '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
             self.painter_factory(self.game_controller.get_players())
                 .ascii_paint(
@@ -175,9 +178,10 @@ press Home to see the full information', end='')
             self._print_frame(index)
             return
         self.frame_number = index
-        frame_text = '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
+        frame_text =\
+            '{color}Frame #{0:04d} of {1:d} :{nocolor}\n{2:s}\n'.format(
             self.frame_number + 1, self._jury_state_count(),
-            self.painter_factory(self.game_controller.get_players())\
+            self.painter_factory(self.game_controller.get_players())
                 .ascii_paint(
                     self.game_controller.jury_states[index]),
             color=Fore.YELLOW + Style.BRIGHT,
@@ -191,8 +195,8 @@ press Home to see the full information', end='')
         self.lock.acquire()
         height = len(frame_text)
         for line in range(len(frame_text)):
-            if (line >= len(self.prev_frame) or frame_text[line] !=
-                                                self.prev_frame[line]):
+            if line >= len(self.prev_frame) or\
+                    frame_text[line] != self.prev_frame[line]:
                 if name == 'nt':
                     print(pos(line + 1, 1), frame_text[line], sep='')
                 else:
@@ -231,7 +235,7 @@ press Home to see the full information', end='')
     def auto(self, addv, time, jscount, endframe, name):
         while (self.frame_number + addv < jscount and
                 self.frame_number + addv >= 0 and
-                    self.frame_number != endframe):
+                self.frame_number != endframe):
             self._print_frame_diff(self.frame_number + addv)
             sleep(time)
             if self.stop:
@@ -261,13 +265,15 @@ press Home to see the full information', end='')
                 if arrow == 'H':
                     self._print_frame_diff(0)
                 elif arrow == 'E':
-                    self._print_frame_diff(len(self.game_controller.jury_states) - 1)
+                    self._print_frame_diff(
+                        len(self.game_controller.jury_states) - 1
+                    )
                 elif arrow == 'N':
                     self._print_frame_diff(
                         min(
                             len(self.game_controller.jury_states) - 1,
                             self.frame_number +
-                                ceil(len(self.game_controller.jury_states) / 20)
+                            ceil(len(self.game_controller.jury_states) / 20)
                         )
                     )
                 elif arrow == 'U':
@@ -275,7 +281,8 @@ press Home to see the full information', end='')
                         max(0, self.frame_number -
                             ceil(len(self.game_controller.jury_states) / 20))
                     )
-                elif arrow == 'C' or arrow is None and key in self.key_sets['next']:  # next
+                elif arrow == 'C' or\
+                        arrow is None and key in self.key_sets['next']:  # next
                     if self.frame_number < self._jury_state_count() - 1:
                         if name == 'posix':
                             self._print_frame_diff(self.frame_number + 1)
@@ -284,16 +291,20 @@ press Home to see the full information', end='')
                     else:
                         self._print_frame_diff(self.frame_number)
                         self._error('this is the last frame.')
-                elif arrow == 'D' or arrow is None and key in self.key_sets['prev']:  # prev
+                elif arrow == 'D' or\
+                        arrow is None and key in self.key_sets['prev']:  # prev
                     if self.frame_number > 0:
                         self._print_frame_diff(self.frame_number - 1)
                     else:
                         self._print_frame_diff(self.frame_number)
                         self._error('this is the first frame.')
-                elif arrow == 'A' or arrow is None and key in self.key_sets['auto']:
+                elif arrow == 'A' or\
+                        arrow is None and key in self.key_sets['auto']:
                     while True:
                         reply = self._prompt(
-                            'Enter FPS and, optionally, the frame to stop on (separated by a space)')
+                            'Enter FPS and, optionally, the frame to stop on '
+                            '(separated by a space)'
+                        )
                         if reply:
                             cmd = reply.split()
                             try:
@@ -316,8 +327,16 @@ press Home to see the full information', end='')
                                     if not thread or not thread.is_alive():
                                         self.stop = False
                                         self.prev_frame = None
-                                        thread = Thread(target=self.auto,
-                                                        args=(addv, time, jscount, endframe, name))
+                                        thread = Thread(
+                                            target=self.auto,
+                                            args=(
+                                                addv,
+                                                time,
+                                                jscount,
+                                                endframe,
+                                                name
+                                            )
+                                        )
                                         thread.start()
                                 except KeyboardInterrupt:
                                     _clear()
@@ -327,13 +346,15 @@ press Home to see the full information', end='')
                 elif arrow is None and key in self.key_sets['quit']:
                     print('Quit')
                     return None
-                elif arrow == 'B' or arrow is None and key in self.key_sets['jump']:
+                elif arrow == 'B' or\
+                        arrow is None and key in self.key_sets['jump']:
                     while True:
                         frame = self._prompt('Enter frame number')
                         # Add some fool-protection...
                         if frame.isnumeric():
                             number = int(frame) - 1
-                            if number >= 0 and number < self._jury_state_count():
+                            if number >= 0\
+                                    and number < self._jury_state_count():
                                 self._print_frame(number)
                                 break
                             else:
@@ -355,5 +376,6 @@ press Home to see the full information', end='')
         ''' Dumps full game into something writable. '''
         for index, jury_state in enumerate(self.game_controller.jury_states):
             writable.write('Frame #{0:d}:\n{1:s}\n'.format(
-                index, self.painter_factory(
-                    self.game_controller.get_players()).ascii_paint(jury_state)))
+                index, self.painter_factory(self.game_controller.get_players())
+                .ascii_paint(jury_state))
+            )
