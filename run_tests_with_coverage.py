@@ -13,7 +13,7 @@ if __name__ == '__main__':
     arg_parser.add_argument(
         '-hr', '--html-report',
         help='Directory save htmlreport to'
-        )
+    )
     args = arg_parser.parse_args()
 
 
