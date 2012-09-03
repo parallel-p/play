@@ -73,7 +73,7 @@ class VideoVisualizer:
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.link(begname, '{:09d}'.format(self._frame_count +\
+            os.link(begname, '{:09d}'.format(self._frame_count +
                                              loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
@@ -101,8 +101,10 @@ class VideoVisualizer:
         painter = self.painter(controller._players)
         for ind, jstate in enumerate(controller.jury_states):
             if self.log:
-                print(chr(13) + '    Generating game images... {}/{}'\
-                    .format(ind + 1, len(controller.jury_states)), end='')
+                print(chr(13) + '    Generating game images... {}/{}'.format(
+                    ind + 1, len(controller.jury_states)),
+                    end=''
+                )
             image = painter.paint(jstate)
             self.ext = self.ext or get_image_format(image)
             file_list.append(self._create_tempfile(self.ext))
@@ -118,8 +120,12 @@ class VideoVisualizer:
         if self.table_drawer is not None:
             tfile = self._create_tempfile(self.ext)
             with open(tfile[1], 'wb') as f:
-                imagew = self.table_drawer(os.path.join(self.working_dir,
-                         'tournament.data'), round_id, self.mode, self.ext)
+                imagew = self.table_drawer(
+                    os.path.join(self.working_dir, 'tournament.data'),
+                    round_id,
+                    self.mode,
+                    self.ext
+                )
                 f.write(imagew)
             im = Image.open(tfile[1])
             ratio = min(self.size[0] / im.size[0], self.size[1] / im.size[1])
@@ -127,7 +133,13 @@ class VideoVisualizer:
                                self.size[0] / im.size[1])
             if ratio_turned > ratio:
                 im = im.transpose(Image.ROTATE_270)
-                im = im.resize((int(im.size[0] * ratio_turned), int(im.size[1] * ratio_turned)), Image.ANTIALIAS)
+                im = im.resize(
+                    (
+                        int(im.size[0] * ratio_turned),
+                        int(im.size[1] * ratio_turned)
+                    ),
+                    Image.ANTIALIAS
+                )
             else:
                 im = im.resize((int(im.size[0] * ratio),
                                 int(im.size[1] * ratio)), Image.ANTIALIAS)
@@ -156,8 +168,13 @@ class VideoVisualizer:
                      width=40) +
                 wrap('Game:       ' + str(contr.signature.game_id), width=40) +
                 [''] +
-                wrap('Players: ' + ', '.join(map(lambda x: x.bot_name + ' by ' + x.author_name,
-                     contr._players)), width=40))
+                wrap('Players: ' + ', '.join(
+                    map(
+                        lambda x: x.bot_name + ' by ' + x.author_name,
+                        contr._players
+                    )
+                ), width=40)
+                )
 
         im = Image.new(self.mode, self.size, 'blue')
         draw = ImageDraw.Draw(im)
@@ -227,11 +244,15 @@ class VideoVisualizer:
         print('Compiling the video file...')
         try:
             with open(os.devnull, 'w') as fnull:
-                subprocess.Popen('ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
-                                 self.ext, self.size[0], self.size[1],
-                                 output_name).split(), stderr=fnull,
-                                 stdin=subprocess.PIPE).communicate(
-                                 'y\n'.encode() * 10)
+                subprocess.Popen(
+                    'ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
+                        self.ext,
+                        self.size[0],
+                        self.size[1],
+                        output_name
+                    ).split(),
+                    stderr=fnull,
+                    stdin=subprocess.PIPE).communicate('y\n'.encode() * 10)
             self._change_path(0)
             shutil.copyfile(os.path.join(self._paths[1], output_name),
                             os.path.join(self.working_dir, output_name))
