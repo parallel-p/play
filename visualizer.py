@@ -56,6 +56,7 @@ class VideoVisualizer:
         self._frame_count = 0
         self.log = not _silent
         self._tempfiles = []
+        self._link_type = None
         self.ext = None
         self.mode = None
 
@@ -68,13 +69,31 @@ class VideoVisualizer:
             self._paths[0] = os.path.abspath('.')
         os.chdir(self._paths[num])
 
+    def _create_link(src, dest):
+        if self._link_type is None:  # first call
+            try:
+                os.symlink(src, dest)  # try symbolic links
+            except:
+                try:
+                    os.link(src, dest)  # try hard links
+                except:
+                    # everything disabled - just copy the file
+                    shutil.copyfile(src, dest)
+                    self._link_type = shutil.copyfile
+                else:
+                    self._link_type = os.link
+            else:
+                self._link_type = os.symlink
+        else:
+            self._link_type(src, dest)
+
     def _create_frame(self, fname, number):
         self._change_path(1)
         begname = '{:09d}'.format(self._frame_count) + self.ext
         shutil.copyfile(fname[1], begname)
         for loop in range(number * self.inframe - 1):
-            os.link(begname, '{:09d}'.format(self._frame_count +
-                                             loop + 1) + self.ext)
+            self._create_link(begname, '{:09d}'.format(self._frame_count +
+                                                       loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
         os.close(fname[0])
