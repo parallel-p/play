@@ -4,17 +4,33 @@ import pickle
 import re
 import shutil
 import tempfile
+import platform
+import ctypes
 from game_controller import GameController
 from textwrap import wrap
 from PIL import Image, ImageDraw, ImageFont
 from math import log10
 from fnmatch import fnmatch
 
+def get_free_space(folder):
+    # I will need it to check whether I have to dump my images to a temporary
+    # video to prevent filling up the disk space.
+    if platform.system() == 'Windows':
+        free_bytes = ctypes.c_ulonglong(0)
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(folder),
+            None,
+            None,
+            ctypes.pointer(free_bytes)
+        )
+        return free_bytes.value
+    else:
+        return os.statvfs(folder).f_bfree
 
 def get_image_format(data):
     '''Gets image format from its data (bytearray).'''
     # Source: getimageinfo.py (from code.google.com)
-    if data[:3] == b'GIF':
+    if data.startswith(b'GIF'):
         return '.gif'
     elif data.startswith(b'\211PNG\r\n\032\n'):
         return '.png'
@@ -31,7 +47,7 @@ class VideoVisualizer:
     '''Composes video file from game data.'''
 
     def __init__(self, _framerate, _painter_obj, _file_mask, _working_dir='.',
-                 _silent=False, _table_drawer=None):
+                 out_name='result.avi', _silent=False, _table_drawer=None):
         '''
         Constructor. Parameters:
             * _framerate - framerate of video (max=24)
@@ -46,13 +62,12 @@ class VideoVisualizer:
         self.file_mask = _file_mask
         self.working_dir = _working_dir
         self.framerate = _framerate
+        self._fout_name = os.path.join(os.path.abspath('.'), out_name)
+        self._fout_ext = out_name[out_name.rfind('.'):]
         self.inframe = int(48.0 / _framerate)
-        self.file_list = None
-        # Image filemask given to ffmpeg
-        self.imagefile_name = None
-        # Image size
         self.size = None
         self._paths = [os.path.abspath('.'), tempfile.mkdtemp()]
+        self._ctempnum = None
         self._frame_count = 0
         self.log = not _silent
         self._tempfiles = []
@@ -65,11 +80,9 @@ class VideoVisualizer:
         return self._tempfiles[-1]
 
     def _change_path(self, num):
-        if num == 1 and os.path.abspath('.') != self._paths[1]:
-            self._paths[0] = os.path.abspath('.')
         os.chdir(self._paths[num])
 
-    def _create_link(src, dest):
+    def _create_link(self, src, dest):
         if self._link_type is None:  # first call
             try:
                 os.symlink(src, dest)  # try symbolic links
@@ -87,17 +100,75 @@ class VideoVisualizer:
         else:
             self._link_type(src, dest)
 
+    def _dump_to_tempvideo(self):
+        self._change_path(1)
+        if self._ctempnum is None:
+            os.mkdir('tempvideos')
+            self._ctempnum = 0
+        try:
+            with open(os.devnull, 'w') as fnull:
+                subprocess.Popen(
+                    'ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
+                        self.ext,
+                        self.size[0],
+                        self.size[1],
+                        os.path.join('tempvideos', 'video{:02d}'.format(
+                                     self._ctempnum) + self._fout_ext)
+                    ).split(),
+                    stderr=fnull,
+                    stdin=subprocess.PIPE).communicate('y\n'.encode())
+        except FileNotFoundError:
+            raise FileNotFoundError('You need to install ffmpeg to create'
+                                    ' videos.')
+        self._ctempnum += 1
+        for i in os.listdir('.'):
+            if i != 'tempvideos':
+                os.remove(i);
+        self._frame_count = 0
+        self._change_path(0)
+
     def _create_frame(self, fname, number):
         self._change_path(1)
         begname = '{:09d}'.format(self._frame_count) + self.ext
-        shutil.copyfile(fname[1], begname)
+        os.close(fname[0])
+        os.replace(fname[1], begname)
         for loop in range(number * self.inframe - 1):
             self._create_link(begname, '{:09d}'.format(self._frame_count +
                                                        loop + 1) + self.ext)
         self._frame_count += self.inframe * number
         self._change_path(0)
-        os.close(fname[0])
-        os.remove(fname[1])
+
+    def compile_everything(self):
+        self._change_path(1)
+        if self._ctempnum is not None:
+            if len(os.listdir('.')) > 1:
+                self._dump_to_tempvideo()
+                self._change_path(1)
+            os.chdir('tempvideos')
+            call_str = 'ffmpeg -i concat:' + '|'.join(sorted(os.listdir('.'))) + ' ' + self._fout_name
+            print('Calling "', call_str, '"', sep='')
+            input('Press Enter to continue.')
+            with open(os.devnull, 'w') as fnull:
+                subprocess.Popen(
+                    call_str.split(), stdout=fnull,
+                    stderr=fnull, stdin=subprocess.PIPE
+                ).communicate('y\n'.encode())
+        else:
+            try:
+                with open(os.devnull, 'w') as fnull:
+                    subprocess.Popen(
+                        'ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
+                            self.ext,
+                            self.size[0],
+                            self.size[1],
+                            self._fout_name
+                       ).split(),
+                        stderr=fnull,
+                        stdin=subprocess.PIPE).communicate('y\n'.encode())
+            except FileNotFoundError:
+                raise FileNotFoundError('You need to install ffmpeg to create'
+                                        ' videos.')
+        self._change_path(0)
 
     def _get_game_controller(self, filename):
         '''Unpickles a game controller.'''
@@ -223,10 +294,10 @@ class VideoVisualizer:
                       fill=(255, 255, 255))
             y += dy
         im.save(temptitle[1])
-        # Compiling a video file:
+        # Adding to video:
         self._create_frame(temptitle, 2 * self.framerate)
 
-    def compile(self, output_name):
+    def compile(self):
         '''
         Compiles all games given by the specified filemask into one video file.
         The file will be saved into the log folder.
@@ -241,6 +312,7 @@ class VideoVisualizer:
 
         vfile_list = []
         prev_rnd = controllers[0].signature.round_id
+        c_free_space = get_free_space(self._paths[1])
         for ind, controller in enumerate(controllers):
             if self.log:
                 print('Processing game {}:{}:{}:{} ({} of {}):'.format(
@@ -254,31 +326,26 @@ class VideoVisualizer:
                 self._draw_tournament_status(prev_rnd)
             self.generate_tournament_status(controller)
             if self.log:
-                print('\n    Creating frames...')
-            for fname in t:
+                print()
+            for num, fname in enumerate(t):
+                if self.log:
+                    print(chr(13) + '    Creating frames... {}/{}'.format(num + 1, len(t)), end='')
                 self._create_frame(fname, 1)
+            if self.log:
+                print()
+            if get_free_space(self._paths[1]) <= c_free_space * 2 / 3:
+                # This is to prevent disk space filling.
+                if self.log:
+                    print('    Dumping current images to a temporary video file...')
+                self._dump_to_tempvideo()
+                c_free_space = get_free_space(self._paths[1])
 
         self._draw_tournament_status(prev_rnd + 1)
-        self._change_path(1)
-        print('Compiling the video file...')
-        try:
-            with open(os.devnull, 'w') as fnull:
-                subprocess.Popen(
-                    'ffmpeg -i %09d{} -r 48 -s {}x{} {}'.format(
-                        self.ext,
-                        self.size[0],
-                        self.size[1],
-                        output_name
-                    ).split(),
-                    stderr=fnull,
-                    stdin=subprocess.PIPE).communicate('y\n'.encode() * 10)
-            self._change_path(0)
-            shutil.copyfile(os.path.join(self._paths[1], output_name),
-                            os.path.join(self.working_dir, output_name))
-        except FileNotFoundError:
-            raise FileNotFoundError('You need to install ffmpeg to create'
-                                    ' videos.')
-        print('Compiling finished.')
+        if self.log:
+            print('Compiling the video file...')
+        self.compile_everything()
+        if self.log:
+            print('Compiling finished.')
 
     def __del__(self):
         if self.log:
@@ -287,4 +354,4 @@ class VideoVisualizer:
             if os.path.exists(fname[1]):
                 os.close(fname[0])
                 os.remove(fname[1])
-        shutil.rmtree(self._paths[1])
+        shutil.rmtree(self._paths[1], ignore_errors=True)

@@ -23,8 +23,8 @@ if __name__ == '__main__':
     ts = create()(players_parse(os.path.join(game_path,
                                              config.players_config)))
     visualizer = VideoVisualizer(framerate, config.Painter, log_mask,
-                                 log_path, silent, ts.draw_table
+                                 log_path, res_name, silent, ts.draw_table
                                  if hasattr(ts, 'draw_table') else None)
-    visualizer.compile(res_name)
+    visualizer.compile()
     if not silent:
         print('Compiled in', clock() - beg, 'sec.')

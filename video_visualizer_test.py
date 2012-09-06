@@ -61,7 +61,7 @@ class VideoVisualizerIntegrationTest(unittest.TestCase):
             os.remove(os.path.join('test', 'result.avi'))
 
         visualizer.VideoVisualizer(
-            3, self.painter_obj, '.*\.gc', 'test'
+            3, self.painter_obj, '*.gc', 'test'
         ).compile('result.avi')
 
         # Check whether all images have been removed:

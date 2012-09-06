@@ -21,7 +21,7 @@ if __name__ == '__main__':
     import config
     beg = clock()
     visualizer = VideoVisualizer(framerate, config.Painter, log_name,
-                                 '.', silent)
-    visualizer.compile(res_name)
+                                 '.', res_name, silent)
+    visualizer.compile()
     if not silent:
         print('Created in', clock() - beg, 'sec.')
