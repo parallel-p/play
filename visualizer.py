@@ -145,14 +145,17 @@ class VideoVisualizer:
                 self._dump_to_tempvideo()
                 self._change_path(1)
             os.chdir('tempvideos')
-            call_str = 'ffmpeg -i concat:' + '|'.join(sorted(os.listdir('.'))) + ' ' + self._fout_name
-            print('Calling "', call_str, '"', sep='')
-            input('Press Enter to continue.')
-            with open(os.devnull, 'w') as fnull:
-                subprocess.Popen(
-                    call_str.split(), stdout=fnull,
-                    stderr=fnull, stdin=subprocess.PIPE
-                ).communicate('y\n'.encode())
+            if (len(os.listdir('.')) > 1):
+                call_str = 'ffmpeg -i concat:' + '|'.join(sorted(os.listdir('.'))) + ' ' + self._fout_name
+                ## print('Calling "', call_str, '"', sep='')
+                ## input('Press Enter to continue.')
+                with open(os.devnull, 'w') as fnull:
+                    subprocess.Popen(
+                        call_str.split(), stdout=fnull,
+                        stderr=fnull, stdin=subprocess.PIPE
+                    ).communicate('y\n'.encode())
+            else:
+                os.replace('video00' + self._ctempnum, self._fout_name)
         else:
             try:
                 with open(os.devnull, 'w') as fnull:
@@ -304,7 +307,7 @@ class VideoVisualizer:
         '''
         controllers = []
         for filename in os.listdir(self.working_dir):
-            if fnmatch(filename, self.file_mask):
+            if fnmatch(filename, self.file_mask) or re.search(self.file_mask, filename):
                 controllers.append(self._get_game_controller(os.path.join(
                                    self.working_dir, filename)))
         # The games should be given in the right order:
@@ -333,7 +336,7 @@ class VideoVisualizer:
                 self._create_frame(fname, 1)
             if self.log:
                 print()
-            if get_free_space(self._paths[1]) <= c_free_space * 2 / 3:
+            if get_free_space(self._paths[1]) <= c_free_space * 3 // 4:
                 # This is to prevent disk space filling.
                 if self.log:
                     print('    Dumping current images to a temporary video file...')
