@@ -5,7 +5,6 @@ import re
 import shutil
 import tempfile
 import platform
-import ctypes
 from game_controller import GameController
 from textwrap import wrap
 from PIL import Image, ImageDraw, ImageFont
@@ -16,6 +15,7 @@ def get_free_space(folder):
     # I will need it to check whether I have to dump my images to a temporary
     # video to prevent filling up the disk space.
     if platform.system() == 'Windows':
+        import ctypes
         free_bytes = ctypes.c_ulonglong(0)
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(
             ctypes.c_wchar_p(folder),
@@ -25,7 +25,8 @@ def get_free_space(folder):
         )
         return free_bytes.value
     else:
-        return os.statvfs(folder).f_bfree
+        fs_info = os.statvfs(folder)
+        return fs_info.f_bavail * fs_info.f_bsize
 
 def get_image_format(data):
     '''Gets image format from its data (bytearray).'''
