@@ -1,7 +1,7 @@
 django-flatpages-tinymce==0.1.1
 django-tinymce==1.5.1b2
 easy-thumbnails==1.0.3
-Django==1.4
+Django==2.2.24
 PIL==1.1.7
 South==0.7.5
 
